@@ -9,8 +9,16 @@
     <p>
       @Model.GetMainText()
     </p>
-  
-    <h2>Comment:</h2>
+
+    <h4>Comments:</h4>
+    <ul>
+      @foreach (var comment in Model.GetAllDirectChildren())
+      {
+        <div><li>@comment.GetMainText()</li></div><br>
+        <h5>@comment.GetAuthor()</h5>
+      }
+    </ul>
+    <h2>Add A Comment:</h2>
     <form action="/" method="post">
       <label>Author:</label>
       <input type="text" name="author" value="">

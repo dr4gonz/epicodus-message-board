@@ -20,6 +20,12 @@ namespace MessageBoard
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         return View["index.cshtml", allOriginalPosts];
       };
+      Delete["/"] = _ =>
+      {
+        Post.DeleteAll();
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        return View["index.cshtml", allOriginalPosts];
+      };
       Get["/posts/{id}"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
