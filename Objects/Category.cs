@@ -110,18 +110,53 @@ namespace MessageBoard
         foundId = rdr.GetInt32(0);
         foundName = rdr.GetString(1);
       }
-
       Category foundCategory = new Category(foundName, foundId);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
 
       return foundCategory;
-
     }
 
+    public List<Post> GetPosts(string orderBy = "default")
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = null;
+      switch(orderBy)
+      {
+        case "rating":
+          cmd = new SqlCommand("SELECT * FROM posts JOIN posts_categories ON posts.id=posts_categories.post_id JOIN categories ON categories.id=posts_categories.category_id WHERE category_id = @CategoryId ORDER BY rating DESC;", conn);
+          break;
+        case "newest":
+          cmd = new SqlCommand("SELECT * FROM posts JOIN posts_categories ON posts.id=posts_categories.post_id JOIN categories ON categories.id=posts_categories.category_id WHERE category_id = @CategoryId ORDER BY date ASC;", conn);
+          break;
+        case "oldest":
+          cmd = new SqlCommand("SELECT * FROM posts JOIN posts_categories ON posts.id=posts_categories.post_id JOIN categories ON categories.id=posts_categories.category_id WHERE category_id = @CategoryId ORDER BY date DESC;", conn);
+          break;
+        default:
+          cmd = new SqlCommand("SELECT * FROM posts JOIN posts_categories ON posts.id=posts_categories.post_id JOIN categories ON categories.id=posts_categories.category_id WHERE category_id = @CategoryId ORDER BY posts.id;", conn);
+          break;
+      }
 
-
+      SqlParameter categoryParameter = new SqlParameter("@CategoryId", _id);
+      cmd.Parameters.Add(categoryParameter);
+      rdr = cmd.ExecuteReader();
+      List<Post> allPosts = new List<Post>{};
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string author = rdr.GetString(1);
+        string title = rdr.GetString(2);
+        string mainText = rdr.GetString(3);
+        Post post = new Post(author, title, mainText, id);
+        allPosts.Add(post);
+      }
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+      return allPosts;
+    }
 
   }
 }

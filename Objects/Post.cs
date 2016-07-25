@@ -299,5 +299,18 @@ namespace MessageBoard
 
       return children;
     }
+
+    public void AddCategory(Category category)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("INSERT INTO posts_categories (post_id, category_id) VALUES (@PostId, @CategoryId);", conn);
+      SqlParameter postParameter = new SqlParameter("@PostId", _id);
+      SqlParameter categoryParameter = new SqlParameter("@CategoryId", category.GetId());
+      cmd.Parameters.Add(postParameter);
+      cmd.Parameters.Add(categoryParameter);
+      cmd.ExecuteNonQuery();
+      conn.Close();
+    }
   }
 }

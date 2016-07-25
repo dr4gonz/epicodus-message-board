@@ -15,6 +15,8 @@ namespace MessageBoard
     public void Dispose()
     {
       Category.DeleteAll();
+      Post.DeleteAll();
+      Comment.DeleteAll();
     }
 
     [Fact]
@@ -58,6 +60,24 @@ namespace MessageBoard
       Category foundCategory = Category.Find(testCategory.GetId());
       //Assert
       Assert.Equal(testCategory, foundCategory);
+    }
+
+    [Fact]
+    public void Category_GetPosts_GetsPostsByCategory()
+    {
+      //Arrange
+      Category testCategory = new Category("Fishing");
+      testCategory.Save();
+      Post firstPost = new Post("Bob", "Fishing", "I like to fish");
+      firstPost.Save();
+      Post secondPost = new Post("Bob", "Fishing", "I like to fish");
+      secondPost.Save();
+      firstPost.AddCategory(testCategory);
+      List<Post> expectedResult = new List<Post>{firstPost};
+      //Act
+      List<Post> result = testCategory.GetPosts();
+      //Assert
+      Assert.Equal(expectedResult, result);
     }
 
   }

@@ -177,7 +177,5 @@ namespace MessageBoard
       Assert.Equal(expectedResult, result);
     }
 
-
-
   }
 }
