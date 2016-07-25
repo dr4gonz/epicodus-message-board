@@ -8,11 +8,13 @@ namespace MessageBoard
 {
   public class PostTest
   {
-    //overrride sqlconnection string
-
+    public PostTest()
+    {
+      DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+    }
     public void Dispose()
     {
-      // Post.DeleteAll()
+      Post.DeleteAll();
     }
 
     [Fact]
@@ -23,7 +25,15 @@ namespace MessageBoard
       Post secondPost = new Post("Bob", "Fishing", "I like to fish");
       //Assert
       Assert.Equal(firstPost, secondPost);
+    }
 
+    [Fact]
+    public void Post_DatabaseEmptyAtFirst()
+    {
+      //Arrange, act
+      int result = Post.GetAll().Count;
+      //Assert
+      Assert.Equal(0, result);
     }
   }
 }
