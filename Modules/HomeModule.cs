@@ -15,7 +15,7 @@ namespace MessageBoard
       };
       Post["/"] = _ =>
       {
-        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], DateTime.Now);
+        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now);
         newOriginalPost.Save();
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         return View["index.cshtml", allOriginalPosts];
@@ -31,10 +31,18 @@ namespace MessageBoard
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
         return View["post.cshtml", selectedOriginalPost];
       };
-      Post["/posts/{id}/comment"] = parameters =>
+      Post["/posts/{id}"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
         Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id);
+        newComment.Save();
+        return View["post.cshtml", selectedOriginalPost];
+      };
+      Post["/posts/{id}/reply"] = parameters =>
+      {
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id);
+        newComment.SetParentId(Request.Form["parent-id"]);
         newComment.Save();
         return View["post.cshtml", selectedOriginalPost];
       };

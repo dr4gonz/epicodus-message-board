@@ -68,9 +68,9 @@ namespace MessageBoard
       //Arrange
       Category testCategory = new Category("Fishing");
       testCategory.Save();
-      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       firstPost.Save();
-      OriginalPost secondPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost secondPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       secondPost.Save();
       firstPost.AddCategory(testCategory);
       List<OriginalPost> expectedResult = new List<OriginalPost>{firstPost};

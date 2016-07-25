@@ -22,8 +22,8 @@ namespace MessageBoard
     public void OriginalPost_Equals_TrueIfOriginalPostsSame()
     {
       //Arrange, act
-      OriginalPost firstOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
-      OriginalPost secondOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost firstOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
+      OriginalPost secondOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       //Assert
       Assert.Equal(firstOriginalPost, secondOriginalPost);
     }
@@ -41,7 +41,7 @@ namespace MessageBoard
     public void OriginalPost_Save_SavesOriginalPostToDatabase()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       //Act
       testOriginalPost.Save();
       OriginalPost foundOriginalPost = OriginalPost.GetAll()[0];
@@ -53,7 +53,7 @@ namespace MessageBoard
     public void OriginalPost_Find_FindsOriginalPostInDatabase()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       //Act
       OriginalPost foundOriginalPost = OriginalPost.Find(testOriginalPost.GetId());
@@ -65,7 +65,7 @@ namespace MessageBoard
     public void OriginalPost_DeleteById_DeletesOriginalPostFromDatabase()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       //Act
       OriginalPost.DeleteById(testOriginalPost.GetId());
@@ -78,7 +78,7 @@ namespace MessageBoard
     public void OriginalPost_Delete_DeletesOriginalPostFromDatabase()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       //Act
       testOriginalPost.Delete();
@@ -91,7 +91,7 @@ namespace MessageBoard
     public void OriginalPost_Update_UpdatesOriginalPostInDatabaseById()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       //Act
       OriginalPost.UpdateById("Bob", "Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId());
@@ -105,7 +105,7 @@ namespace MessageBoard
     public void OriginalPost_Update_UpdatesOriginalPostInDatabaseByReference()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       //Act
       testOriginalPost.Update("Fishing at the lake", "I like to fish at the lake");
@@ -119,7 +119,7 @@ namespace MessageBoard
     public void OriginalPost_Remove_RedactsInDatabase()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       //Act
       testOriginalPost.Remove();
@@ -133,7 +133,7 @@ namespace MessageBoard
     public void OriginalPost_GetAllChildComments_ReturnsComment()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       Comment testComment = new Comment("Matt", "This stuff is really cool!", 0, testOriginalPost.GetId());
       testComment.Save();
@@ -148,7 +148,7 @@ namespace MessageBoard
     public void OriginalPost_GetAllChildCommentsSortedByRating_ReturnsOrderedComments()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, testOriginalPost.GetId());
       firstComment.Save();
@@ -165,7 +165,7 @@ namespace MessageBoard
     public void OriginalPost_GetAllDirectChildren_ReturnsComment()
     {
       //Arrange
-      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testOriginalPost.Save();
       Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, testOriginalPost.GetId());
       firstComment.Save();
@@ -180,7 +180,7 @@ namespace MessageBoard
     [Fact]
     public void OriginalPost_DeleteChildrenDeletesFromDatabase()
     {
-      OriginalPost testPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost testPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       testPost.Save();
       Comment firstComment = new Comment("Matt", "First", 0, testPost.GetId());
       firstComment.Save();
@@ -198,9 +198,9 @@ namespace MessageBoard
     public void Post_SearchByKeyword_SearchesByTitleKeyword()
     {
       //Arrange
-      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, DateTime.Now);
       firstPost.Save();
-      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim", DateTime.Now);
+      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, DateTime.Now);
       secondPost.Save();
       //Act
       List<OriginalPost> foundPosts = OriginalPost.SearchByKeyword("Fishing");
@@ -214,15 +214,41 @@ namespace MessageBoard
     public void Post_SearchByKeyword_SearchesByTextKeyword()
     {
       //Arrange
-      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like the outdoors", DateTime.Now);
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like the outdoors", 0, DateTime.Now);
       firstPost.Save();
-      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim", DateTime.Now);
+      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, DateTime.Now);
       secondPost.Save();
       //Act
       List<OriginalPost> foundPosts = OriginalPost.SearchByKeyword("outdoors");
       List<OriginalPost> expectedResults = new List<OriginalPost>{firstPost};
       //Assert
       Assert.Equal(expectedResults, foundPosts);
+    }
+
+    [Fact]
+    public void Comment_Upvote_Adds1ToCommentRating()
+    {
+      OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, DateTime.Now);
+      newOriginalPost.Save();
+      //Act
+      int expectedResult = 1;
+      newOriginalPost.Upvote();
+      int result = newOriginalPost.GetRating();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
+
+    [Fact]
+    public void Comment_Downvote_Subtracts1ToCommentRating()
+    {
+      OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 1, DateTime.Now);
+      newOriginalPost.Save();
+      //Act
+      int expectedResult = 0;
+      newOriginalPost.Downvote();
+      int result = newOriginalPost.GetRating();
+      //Assert
+      Assert.Equal(expectedResult, result);
     }
 
   }

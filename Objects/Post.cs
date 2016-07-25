@@ -11,14 +11,16 @@ namespace MessageBoard
     private string _title;
     private string _mainText;
     private DateTime? _time;
+    private int _rating;
 
-    public OriginalPost(string author, string title, string mainText, DateTime? time, int id=0)
+    public OriginalPost(string author, string title, string mainText, int rating, DateTime? time, int id=0)
     {
       _id = id;
       _author = author;
       _title = title;
       _mainText = mainText;
       _time = time;
+      _rating = rating;
     }
 
     public int GetId()
@@ -41,6 +43,11 @@ namespace MessageBoard
       return _mainText;
     }
 
+    public int GetRating()
+    {
+      return _rating;
+    }
+
     public override bool Equals(System.Object obj)
     {
       if(!(obj is OriginalPost)) return false;
@@ -52,6 +59,7 @@ namespace MessageBoard
         bool titleEquality = _title == otherOriginalPost._title;
         bool mainTextEquality = _mainText == otherOriginalPost._mainText;
         bool timeEquality = _time == otherOriginalPost._time;
+        bool ratingEquality = _rating == otherOriginalPost._rating;
         return(idEquality && authorEquality && titleEquality && mainTextEquality);
       }
     }
@@ -79,8 +87,9 @@ namespace MessageBoard
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
+        int rating = rdr.GetInt32(4);
         DateTime time = rdr.GetDateTime(5);
-        OriginalPost post = new OriginalPost(author, title, mainText, time, id);
+        OriginalPost post = new OriginalPost(author, title, mainText, rating, time, id);
         allOriginalPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -93,15 +102,17 @@ namespace MessageBoard
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text, time) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText, @Date);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text, rating, time) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText, @Rating, @Date);", conn);
 
       SqlParameter authorParameter = new SqlParameter("@Author", _author);
       SqlParameter titleParameter = new SqlParameter("@Title", _title);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", _mainText);
+      SqlParameter ratingParameter = new SqlParameter("@Rating", _rating);
       SqlParameter dateParameter = new SqlParameter("@Date", _time);
       cmd.Parameters.Add(authorParameter);
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
+      cmd.Parameters.Add(ratingParameter);
       cmd.Parameters.Add(dateParameter);
 
       rdr = cmd.ExecuteReader();
@@ -129,7 +140,8 @@ namespace MessageBoard
       string foundAuthor = null;
       string foundTitle = null;
       string foundMainText = null;
-      DateTime? time = null;
+      int foundRating = 0;
+      DateTime? foundTime = null;
 
       rdr = cmd.ExecuteReader();
 
@@ -139,10 +151,10 @@ namespace MessageBoard
         foundAuthor = rdr.GetString(1);
         foundTitle = rdr.GetString(2);
         foundMainText = rdr.GetString(3);
-        time = rdr.GetDateTime(5);
+        foundTime = rdr.GetDateTime(5);
+        foundRating = rdr.GetInt32(4);
       }
-
-      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, time, foundId);
+      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundRating, foundTime, foundId);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
@@ -172,7 +184,7 @@ namespace MessageBoard
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, title = @Title, main_text = @MainText OUTPUT INSERTED.time WHERE id = @OriginalPostId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, title = @Title, main_text = @MainText OUTPUT INSERTED.rating, INSERTED.time WHERE id = @OriginalPostId;", conn);
       SqlDataReader rdr = null;
 
       SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
@@ -185,15 +197,17 @@ namespace MessageBoard
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
 
+      int rating = 0;
       DateTime? time = null;
       rdr = cmd.ExecuteReader();
 
       while(rdr.Read())
       {
-        time = rdr.GetDateTime(0);
+        rating = rdr.GetInt32(0);
+        time = rdr.GetDateTime(1);
       }
 
-      OriginalPost post = new OriginalPost(newAuthor, newTitle, newMainText, time, id);
+      OriginalPost post = new OriginalPost(newAuthor, newTitle, newMainText, rating, time, id);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
@@ -213,6 +227,31 @@ namespace MessageBoard
     {
       this.Update(_author, newTitle, newMainText);
     }
+
+    public void Update(int newRating)
+     {
+       SqlConnection conn = DB.Connection();
+       SqlDataReader rdr = null;
+       conn.Open();
+
+       SqlCommand cmd = new SqlCommand("UPDATE posts SET rating = @NewRating OUTPUT INSERTED.rating WHERE id = @PostId;", conn);
+
+       SqlParameter newRatingParameter = new SqlParameter("@NewRating", newRating);
+       cmd.Parameters.Add(newRatingParameter);
+
+       SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
+       cmd.Parameters.Add(postIdParameter);
+
+       rdr = cmd.ExecuteReader();
+
+       while(rdr.Read())
+       {
+         this._rating = rdr.GetInt32(0);
+       }
+
+       if(rdr != null) rdr.Close();
+       if(conn != null) conn.Close();
+     }
 
     public static void RemoveById(int id)
     {
@@ -348,8 +387,9 @@ namespace MessageBoard
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
+        int rating = rdr.GetInt32(4);
         DateTime time = rdr.GetDateTime(5);
-        OriginalPost post = new OriginalPost(author, title, mainText, time, id);
+        OriginalPost post = new OriginalPost(author, title, mainText, rating, time, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -370,6 +410,15 @@ namespace MessageBoard
       cmd.ExecuteNonQuery();
 
       if(conn!=null) conn.Close();
+    }
+
+    public void Upvote()
+    {
+      this.Update(this.GetRating() + 1);
+    }
+    public void Downvote()
+    {
+      this.Update(this.GetRating() - 1);
     }
 
 
