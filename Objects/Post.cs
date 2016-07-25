@@ -312,5 +312,34 @@ namespace MessageBoard
       cmd.ExecuteNonQuery();
       conn.Close();
     }
+
+    public static List<Post> SearchByKeyword(string keyword)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      keyword = "%" + keyword + "%";
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("SELECT * FROM posts WHERE title LIKE @TitleKeyword OR main_text LIKE @TextKeyword;", conn);
+      SqlParameter keywordTitleParameter = new SqlParameter("@TitleKeyword", keyword);
+      SqlParameter keywordTextParameter = new SqlParameter("@TextKeyword", keyword);
+      cmd.Parameters.Add(keywordTitleParameter);
+      cmd.Parameters.Add(keywordTextParameter);
+      rdr = cmd.ExecuteReader();
+      List<Post> allPosts = new List<Post>{};
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string author = rdr.GetString(1);
+        string title = rdr.GetString(2);
+        string mainText = rdr.GetString(3);
+        Post post = new Post(author, title, mainText, id);
+        allPosts.Add(post);
+      }
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+      return allPosts;
+    }
+
+
   }
 }
