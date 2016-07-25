@@ -19,13 +19,17 @@
       }
     </ul>
     <h2>Add A Comment:</h2>
-    <form action="/" method="post">
+    <form action="/posts/@Model.GetId()/comment" method="post">
       <label>Author:</label>
-      <input type="text" name="author" value="">
+      <input type="text" name="comment-author" value="">
       <label>Main Text:</label>
-      <input type="text" name="main-text" value="">
+      <input type="text" name="comment-main-text" value="">
       <input type="hidden" name="post-id" value="@Model.GetId()">
       <button type="submit" name="button">Submit</button>
+    </form>
+    <form action="/posts/@Model.GetId()/comment" method="post">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit" name="button">Delete all Comments</button>
     </form>
   </body>
 </html>

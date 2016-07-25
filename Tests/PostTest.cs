@@ -15,6 +15,7 @@ namespace MessageBoard
     public void Dispose()
     {
       OriginalPost.DeleteAll();
+      Comment.DeleteAll();
     }
 
     [Fact]
@@ -129,54 +130,69 @@ namespace MessageBoard
     }
 
     [Fact]
-    public void Post_GetAllChildComments_ReturnsComment()
+    public void OriginalPost_GetAllChildComments_ReturnsComment()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
-      Comment testComment = new Comment("Matt", "This stuff is really cool!", 0, testPost.GetId());
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
+      Comment testComment = new Comment("Matt", "This stuff is really cool!", 0, testOriginalPost.GetId());
       testComment.Save();
       List<Comment> expectedResult = new List<Comment>{testComment};
       //Act
-      List<Comment> result = testPost.GetAllChildComments();
+      List<Comment> result = testOriginalPost.GetAllChildComments();
       //Assert
       Assert.Equal(expectedResult, result);
     }
 
     [Fact]
-    public void Post_GetAllChildCommentsSortedByRating_ReturnsOrderedComments()
+    public void OriginalPost_GetAllChildCommentsSortedByRating_ReturnsOrderedComments()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
-      Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, testPost.GetId());
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
+      Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, testOriginalPost.GetId());
       firstComment.Save();
-      Comment secondComment = new Comment("Henry", "This stuff is just okay", 5, testPost.GetId());
+      Comment secondComment = new Comment("Henry", "This stuff is just okay", 5, testOriginalPost.GetId());
       secondComment.Save();
       List<Comment> expectedResult = new List<Comment>{secondComment, firstComment};
       //Act
-      List<Comment> result = testPost.GetAllChildComments("rating");
+      List<Comment> result = testOriginalPost.GetAllChildComments("rating");
       //Assert
       Assert.Equal(expectedResult, result);
     }
 
     [Fact]
-    public void Post_GetAllDirectChildren_ReturnsComment()
+    public void OriginalPost_GetAllDirectChildren_ReturnsComment()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
-      Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, testPost.GetId());
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
+      Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, testOriginalPost.GetId());
       firstComment.Save();
-      Comment secondComment = new Comment("Henry", "This stuff is just okay", 5, (testPost.GetId()+1));
+      Comment secondComment = new Comment("Henry", "This stuff is just okay", 5, (testOriginalPost.GetId()+1));
       secondComment.Save();
       List<Comment> expectedResult = new List<Comment>{firstComment};
       //Act
-      List<Comment> result = testPost.GetAllChildComments();
+      List<Comment> result = testOriginalPost.GetAllChildComments();
       //Assert
       Assert.Equal(expectedResult, result);
     }
-
+    [Fact]
+    public void OriginalPost_DeleteChildrenDeletesFromDatabase()
+    {
+      OriginalPost testPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testPost.Save();
+      Comment firstComment = new Comment("Matt", "First", 0, testPost.GetId());
+      firstComment.Save();
+      Comment secondComment = new Comment("Matt", "Second", 0, testPost.GetId()+1);
+      secondComment.Save();
+      List<Comment> expectedResult = new List<Comment>{secondComment};
+      //Act
+      testPost.DeleteAllChildren();
+      List<Comment> result = Comment.GetAll();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
 
 
   }

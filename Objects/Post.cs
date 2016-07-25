@@ -146,7 +146,7 @@ namespace MessageBoard
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM posts WHERE id = @OriginalPostId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM posts WHERE id = @OriginalPostId; DELETE FROM comments WHERE post_id = @OriginalPostId;", conn);
 
       SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
       cmd.Parameters.Add(postIdParameter);
@@ -265,19 +265,19 @@ namespace MessageBoard
       switch(orderBy)
       {
         case "rating":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId, parent_id = 0 ORDER BY rating DESC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY rating DESC;", conn);
           break;
         case "newest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId, parent_id = 0 ORDER BY date ASC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY date ASC;", conn);
           break;
         case "oldest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId, parent_id = 0 ORDER BY date DESC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY date DESC;", conn);
           break;
         default:
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId, parent_id = 0 ORDER BY id;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY id;", conn);
           break;
       }
-      SqlParameter postIdParameter = new SqlParameter("@PostId", _id);
+      SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
       cmd.Parameters.Add(postIdParameter);
 
       rdr = cmd.ExecuteReader();
@@ -298,6 +298,20 @@ namespace MessageBoard
       if(conn != null) conn.Close();
 
       return children;
+    }
+    public void DeleteAllChildren()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM comments WHERE post_id = @PostId;", conn);
+
+      SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
+      cmd.Parameters.Add(postIdParameter);
+
+      cmd.ExecuteNonQuery();
+
+      if(conn!=null) conn.Close();
     }
   }
 }
