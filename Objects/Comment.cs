@@ -121,6 +121,54 @@ namespace MessageBoard
       }
     }
 
+    public List<Comment> GetChildren(string orderBy = "default")
+    {
+      List<Comment> allChildren = new List<Comment>{};
+
+      SqlConnection conn = DB.Connection();
+      SqlDataReader rdr = null;
+      conn.Open();
+      SqlCommand cmd = null;
+      switch(orderBy)
+      {
+        case "rating":
+          cmd = new SqlCommand("SELECT * FROM comments WHERE parent_id = @ParentId ORDER BY rating DESC;", conn);
+          break;
+        case "newest":
+          cmd = new SqlCommand("SELECT * FROM comments WHERE parent_id = @ParentId ORDER BY time ASC;", conn);
+          break;
+        case "oldest":
+          cmd = new SqlCommand("SELECT * FROM comments WHERE parent_id = @ParentId ORDER BY time DESC;", conn);
+          break;
+        default:
+          cmd = new SqlCommand("SELECT * FROM comments WHERE parent_id = @ParentId ORDER BY id;", conn);
+          break;
+      }
+      SqlParameter parentIdParameter = new SqlParameter("@ParentId", _id);
+      cmd.Parameters.Add(parentIdParameter);
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        int newCommentId = rdr.GetInt32(0);
+        string newCommentAuthor = rdr.GetString(1);
+        string newCommentMainText = rdr.GetString(2);
+        int newCommentRating = rdr.GetInt32(3);
+        int newCommentPostId = rdr.GetInt32(4);
+        int newCommentParentId = rdr.GetInt32(5);
+        DateTime newCommentDateTime = rdr.GetDateTime(6);
+
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
+        allChildren.Add(newComment);
+      }
+
+      if(rdr != null) rdr.Close();
+      if(conn != null) conn.Close();
+
+      return allChildren;
+    }
+
     public void Save()
    {
      SqlConnection conn = DB.Connection();
@@ -262,38 +310,6 @@ namespace MessageBoard
     public void Remove()
     {
       this.Update("[Removed]");
-    }
-
-    public List<Comment> GetChildren()
-    {
-      List<Comment> allChildren = new List<Comment>{};
-
-      SqlConnection conn = DB.Connection();
-      SqlDataReader rdr = null;
-      conn.Open();
-
-      SqlCommand cmd = new SqlCommand("SELECT * FROM comments WHERE parent_id = @ParentId ORDER BY rating;", conn);
-      SqlParameter ParentIdParameter = new SqlParameter("@ParentId", this.GetId());
-      cmd.Parameters.Add(ParentIdParameter);
-      rdr = cmd.ExecuteReader();
-
-      while(rdr.Read())
-      {
-        int newCommentId = rdr.GetInt32(0);
-        string newCommentAuthor = rdr.GetString(1);
-        string newCommentMainText = rdr.GetString(2);
-        int newCommentRating = rdr.GetInt32(3);
-        int newCommentPostId = rdr.GetInt32(4);
-        DateTime newCommentDateTime = rdr.GetDateTime(6);
-
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
-        allChildren.Add(newComment);
-      }
-
-      if(rdr != null) rdr.Close();
-      if(conn != null) conn.Close();
-
-      return allChildren;
     }
     public void Upvote()
     {

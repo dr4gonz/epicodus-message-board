@@ -177,5 +177,25 @@ namespace MessageBoard
       //Assert
       Assert.Equal(expectedResult, result);
     }
+
+    [Fact]
+    public void Comment_GetChildren_GetCommentsByRating()
+    {
+      //Arrange
+      Comment parentComment = new Comment("Matt", "This is the parent!!", 0, 1, testDate);
+      parentComment.Save();
+      Comment newComment1 = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
+      newComment1.SetParentId(parentComment.GetId());
+      newComment1.Save();
+      Comment newComment2 = new Comment("Matt", "This stuff is really cool!", 5, 1, testDate);
+      newComment2.SetParentId(parentComment.GetId());
+      newComment2.Save();
+      //Act
+      List<Comment> result = parentComment.GetChildren("rating");
+      List<Comment> expectedResult = new List<Comment> {newComment2, newComment1};
+      //Assert
+      Assert.Equal(expectedResult, result);
+
+    }
   }
 }
