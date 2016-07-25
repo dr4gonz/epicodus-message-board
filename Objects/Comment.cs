@@ -14,14 +14,14 @@ namespace MessageBoard
     private int _parentId;
     private int _rating;
 
-    public Comment(string author, string mainText, int rating, int id = 0)
+    public Comment(string author, string mainText, int rating, int postId, int id = 0)
     {
       _id = id;
       _author = author;
       _mainText = mainText;
       _rating = rating;
       _parentId = 0;
-      _postId = 0;
+      _postId = postId;
     }
 
     public int GetId()
@@ -50,26 +50,7 @@ namespace MessageBoard
     }
     public void SetParentId(int newParentId)
     {
-      SqlConnection conn = DB.Connection();
-      SqlDataReader rdr = null;
-      conn.Open();
-
-      SqlCommand cmd = new SqlCommand("UPDATE comments SET parent_id = @ParentId OUTPUT INSERTED.parent_id WHERE id = @CommentId;", conn);
-
-      SqlParameter ParentIdParameter= new SqlParameter("@ParentId", newParentId);
-      cmd.Parameters.Add(ParentIdParameter);
-
-      SqlParameter CommentIdParameter= new SqlParameter("@CommentId", this.GetId());
-      cmd.Parameters.Add(CommentIdParameter);
-
-      rdr = cmd.ExecuteReader();
-
-      while(rdr.Read())
-      {
-        this._parentId = rdr.GetInt32(0);
-      }
-      if(conn!=null) conn.Close();
-      if(rdr!=null) rdr.Close();
+      _parentId = newParentId;
     }
     public void SetPostId(int newPostId)
     {
@@ -102,8 +83,9 @@ namespace MessageBoard
         string newCommentAuthor = rdr.GetString(1);
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
+        int newCommentPostId = rdr.GetInt32(4);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentId);
         allComments.Add(newComment);
       }
 
@@ -126,7 +108,8 @@ namespace MessageBoard
         bool authorEquality = (this._author == newComment.GetAuthor());
         bool mainTextEquality = (this._mainText == newComment.GetMainText());
         bool ratingEquality = (this._rating == newComment.GetRating());
-        return (idEquality && authorEquality&& mainTextEquality && ratingEquality);
+        bool postIdEquality = (this._postId == newComment.GetPostId());
+        return (idEquality && authorEquality && mainTextEquality && ratingEquality && postIdEquality);
       }
     }
 
@@ -136,7 +119,7 @@ namespace MessageBoard
      SqlDataReader rdr = null;
      conn.Open();
 
-     SqlCommand cmd = new SqlCommand("INSERT INTO comments (author, main_text, rating) OUTPUT INSERTED.id VALUES(@Author, @MainText, @Rating);", conn);
+     SqlCommand cmd = new SqlCommand("INSERT INTO comments (author, main_text, rating, post_id, parent_id) OUTPUT INSERTED.id VALUES(@Author, @MainText, @Rating, @PostId, @ParentId);", conn);
 
      SqlParameter commentAuthorParameter = new SqlParameter("@Author", this.GetAuthor());
      cmd.Parameters.Add(commentAuthorParameter);
@@ -146,6 +129,12 @@ namespace MessageBoard
 
      SqlParameter ratingParameter = new SqlParameter("@Rating", this.GetRating());
      cmd.Parameters.Add(ratingParameter);
+
+     SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetPostId());
+     cmd.Parameters.Add(postIdParameter);
+
+     SqlParameter parentIdParameter = new SqlParameter("@ParentId", this.GetParentId());
+     cmd.Parameters.Add(parentIdParameter);
 
      rdr = cmd.ExecuteReader();
 
@@ -157,6 +146,7 @@ namespace MessageBoard
      if(rdr != null) rdr.Close();
      if(conn != null) conn.Close();
    }
+
    public static Comment Find(int id)
    {
      SqlConnection conn = DB.Connection();
@@ -173,6 +163,7 @@ namespace MessageBoard
      string foundCommentAuthor = null;
      string foundCommentMainText = null;
      int foundCommentRating = 0;
+     int foundPostId = 0;
 
      while(rdr.Read())
      {
@@ -180,8 +171,9 @@ namespace MessageBoard
          foundCommentAuthor = rdr.GetString(1);
          foundCommentMainText = rdr.GetString(2);
          foundCommentRating = rdr.GetInt32(3);
+         foundPostId = rdr.GetInt32(4);
      }
-     Comment newComment = new Comment(foundCommentAuthor, foundCommentMainText, foundCommentRating, foundCommentId);
+     Comment newComment = new Comment(foundCommentAuthor, foundCommentMainText, foundCommentRating, foundPostId, foundCommentId);
 
      if(rdr != null) rdr.Close();
      if(conn != null) conn.Close();
@@ -253,8 +245,9 @@ namespace MessageBoard
         string newCommentAuthor = rdr.GetString(1);
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
+        int newCommentPostId = rdr.GetInt32(4);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentId);
         allChildren.Add(newComment);
       }
 
