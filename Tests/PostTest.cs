@@ -194,6 +194,35 @@ namespace MessageBoard
       Assert.Equal(expectedResult, result);
     }
 
+    [Fact]
+    public void Post_SearchByKeyword_SearchesByTitleKeyword()
+    {
+      //Arrange
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      firstPost.Save();
+      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim");
+      secondPost.Save();
+      //Act
+      List<OriginalPost> foundPosts = OriginalPost.SearchByKeyword("Fishing");
+      List<OriginalPost> expectedResults = new List<OriginalPost>{firstPost};
+      //Assert
+      Assert.Equal(expectedResults, foundPosts);
+    }
+
+    [Fact]
+    public void Post_SearchByKeyword_SearchesByTextKeyword()
+    {
+      //Arrange
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like the outdoors");
+      firstPost.Save();
+      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim");
+      secondPost.Save();
+      //Act
+      List<OriginalPost> foundPosts = OriginalPost.SearchByKeyword("outdoors");
+      List<OriginalPost> expectedResults = new List<OriginalPost>{firstPost};
+      //Assert
+      Assert.Equal(expectedResults, foundPosts);
+    }
 
   }
 }

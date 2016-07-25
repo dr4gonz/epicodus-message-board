@@ -299,6 +299,47 @@ namespace MessageBoard
 
       return children;
     }
+
+    public void AddCategory(Category category)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("INSERT INTO posts_categories (post_id, category_id) VALUES (@PostId, @CategoryId);", conn);
+      SqlParameter postParameter = new SqlParameter("@PostId", _id);
+      SqlParameter categoryParameter = new SqlParameter("@CategoryId", category.GetId());
+      cmd.Parameters.Add(postParameter);
+      cmd.Parameters.Add(categoryParameter);
+      cmd.ExecuteNonQuery();
+      conn.Close();
+    }
+
+    public static List<OriginalPost> SearchByKeyword(string keyword)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      keyword = "%" + keyword + "%";
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("SELECT * FROM posts WHERE title LIKE @TitleKeyword OR main_text LIKE @TextKeyword;", conn);
+      SqlParameter keywordTitleParameter = new SqlParameter("@TitleKeyword", keyword);
+      SqlParameter keywordTextParameter = new SqlParameter("@TextKeyword", keyword);
+      cmd.Parameters.Add(keywordTitleParameter);
+      cmd.Parameters.Add(keywordTextParameter);
+      rdr = cmd.ExecuteReader();
+      List<OriginalPost> allPosts = new List<OriginalPost>{};
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string author = rdr.GetString(1);
+        string title = rdr.GetString(2);
+        string mainText = rdr.GetString(3);
+        OriginalPost post = new OriginalPost(author, title, mainText, id);
+        allPosts.Add(post);
+      }
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+      return allPosts;
+    }
+
     public void DeleteAllChildren()
     {
       SqlConnection conn = DB.Connection();
@@ -313,5 +354,8 @@ namespace MessageBoard
 
       if(conn!=null) conn.Close();
     }
+
+
+
   }
 }
