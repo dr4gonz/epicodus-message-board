@@ -149,5 +149,31 @@ namespace MessageBoard
       Assert.Equal(testChildren, allChildren);
 
     }
+
+    [Fact]
+    public void Comment_Upvote_Adds1ToCommentRating()
+    {
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
+      newComment.Save();
+      //Act
+      int expectedResult = 1;
+      newComment.Upvote();
+      int result = newComment.GetRating();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
+
+    [Fact]
+    public void Comment_Downvote_Subtracts1ToCommentRating()
+    {
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 1, 1);
+      newComment.Save();
+      //Act
+      int expectedResult = 0;
+      newComment.Downvote();
+      int result = newComment.GetRating();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
   }
 }
