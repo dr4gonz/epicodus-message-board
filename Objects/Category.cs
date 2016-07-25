@@ -150,7 +150,8 @@ namespace MessageBoard
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        OriginalPost post = new OriginalPost(author, title, mainText, id);
+        int rating = rdr.GetInt32(4);
+        OriginalPost post = new OriginalPost(author, title, mainText, rating, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();

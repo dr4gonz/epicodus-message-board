@@ -15,7 +15,7 @@ namespace MessageBoard
       };
       Post["/"] = _ =>
       {
-        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"]);
+        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0);
         newOriginalPost.Save();
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         return View["index.cshtml", allOriginalPosts];

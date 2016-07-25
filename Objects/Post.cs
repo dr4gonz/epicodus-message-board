@@ -10,13 +10,15 @@ namespace MessageBoard
     private string _author;
     private string _title;
     private string _mainText;
+    private int _rating;
 
-    public OriginalPost(string author, string title, string mainText, int id=0)
+    public OriginalPost(string author, string title, string mainText, int rating, int id=0)
     {
       _id = id;
       _author = author;
       _title = title;
       _mainText = mainText;
+      _rating = rating;
     }
 
     public int GetId()
@@ -37,6 +39,11 @@ namespace MessageBoard
     public string GetMainText()
     {
       return _mainText;
+    }
+
+    public int GetRating()
+    {
+      return _rating;
     }
 
     public override bool Equals(System.Object obj)
@@ -76,7 +83,8 @@ namespace MessageBoard
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        OriginalPost post = new OriginalPost(author, title, mainText, id);
+        int rating = rdr.GetInt32(4);
+        OriginalPost post = new OriginalPost(author, title, mainText, rating, id);
         allOriginalPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -89,14 +97,16 @@ namespace MessageBoard
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text, rating) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText, @Rating);", conn);
 
       SqlParameter authorParameter = new SqlParameter("@Author", _author);
       SqlParameter titleParameter = new SqlParameter("@Title", _title);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", _mainText);
+      SqlParameter ratingParameter = new SqlParameter("@Rating", _rating);
       cmd.Parameters.Add(authorParameter);
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
+      cmd.Parameters.Add(ratingParameter);
 
       rdr = cmd.ExecuteReader();
 
@@ -123,6 +133,7 @@ namespace MessageBoard
       string foundAuthor = null;
       string foundTitle = null;
       string foundMainText = null;
+      int foundRating = 0;
 
       rdr = cmd.ExecuteReader();
 
@@ -132,9 +143,10 @@ namespace MessageBoard
         foundAuthor = rdr.GetString(1);
         foundTitle = rdr.GetString(2);
         foundMainText = rdr.GetString(3);
+        foundRating = rdr.GetInt32(4);
       }
 
-      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundId);
+      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundRating, foundId);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
@@ -197,6 +209,31 @@ namespace MessageBoard
     {
       this.Update(_author, newTitle, newMainText);
     }
+
+    public void Update(int newRating)
+     {
+       SqlConnection conn = DB.Connection();
+       SqlDataReader rdr = null;
+       conn.Open();
+
+       SqlCommand cmd = new SqlCommand("UPDATE posts SET rating = @NewRating OUTPUT INSERTED.rating WHERE id = @PostId;", conn);
+
+       SqlParameter newRatingParameter = new SqlParameter("@NewRating", newRating);
+       cmd.Parameters.Add(newRatingParameter);
+
+       SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
+       cmd.Parameters.Add(postIdParameter);
+
+       rdr = cmd.ExecuteReader();
+
+       while(rdr.Read())
+       {
+         this._rating = rdr.GetInt32(0);
+       }
+
+       if(rdr != null) rdr.Close();
+       if(conn != null) conn.Close();
+     }
 
     public static void RemoveById(int id)
     {
@@ -332,7 +369,8 @@ namespace MessageBoard
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        OriginalPost post = new OriginalPost(author, title, mainText, id);
+        int rating = rdr.GetInt32(4);
+        OriginalPost post = new OriginalPost(author, title, mainText, rating, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -353,6 +391,15 @@ namespace MessageBoard
       cmd.ExecuteNonQuery();
 
       if(conn!=null) conn.Close();
+    }
+
+    public void Upvote()
+    {
+      this.Update(this.GetRating() + 1);
+    }
+    public void Downvote()
+    {
+      this.Update(this.GetRating() - 1);
     }
 
 
