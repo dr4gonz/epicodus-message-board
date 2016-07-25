@@ -6,124 +6,124 @@ using System.Data.SqlClient;
 
 namespace MessageBoard
 {
-  public class PostTest : IDisposable
+  public class OriginalPostTest : IDisposable
   {
-    public PostTest()
+    public OriginalPostTest()
     {
       DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
     }
     public void Dispose()
     {
-      Post.DeleteAll();
+      OriginalPost.DeleteAll();
     }
 
     [Fact]
-    public void Post_Equals_TrueIfPostsSame()
+    public void OriginalPost_Equals_TrueIfOriginalPostsSame()
     {
       //Arrange, act
-      Post firstPost = new Post("Bob", "Fishing", "I like to fish");
-      Post secondPost = new Post("Bob", "Fishing", "I like to fish");
+      OriginalPost firstOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      OriginalPost secondOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
       //Assert
-      Assert.Equal(firstPost, secondPost);
+      Assert.Equal(firstOriginalPost, secondOriginalPost);
     }
 
     [Fact]
-    public void Post_DatabaseEmptyAtFirst()
+    public void OriginalPost_DatabaseEmptyAtFirst()
     {
       //Arrange, act
-      int result = Post.GetAll().Count;
+      int result = OriginalPost.GetAll().Count;
       //Assert
       Assert.Equal(0, result);
     }
 
     [Fact]
-    public void Post_Save_SavesPostToDatabase()
+    public void OriginalPost_Save_SavesOriginalPostToDatabase()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
       //Act
-      testPost.Save();
-      Post foundPost = Post.GetAll()[0];
+      testOriginalPost.Save();
+      OriginalPost foundOriginalPost = OriginalPost.GetAll()[0];
       //Assert
-      Assert.Equal(testPost, foundPost);
+      Assert.Equal(testOriginalPost, foundOriginalPost);
     }
 
     [Fact]
-    public void Post_Find_FindsPostInDatabase()
+    public void OriginalPost_Find_FindsOriginalPostInDatabase()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
       //Act
-      Post foundPost = Post.Find(testPost.GetId());
+      OriginalPost foundOriginalPost = OriginalPost.Find(testOriginalPost.GetId());
       //Assert
-      Assert.Equal(testPost, foundPost);
+      Assert.Equal(testOriginalPost, foundOriginalPost);
     }
 
     [Fact]
-    public void Post_DeleteById_DeletesPostFromDatabase()
+    public void OriginalPost_DeleteById_DeletesOriginalPostFromDatabase()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
       //Act
-      Post.DeleteById(testPost.GetId());
-      int result = Post.GetAll().Count;
-      //Assert
-      Assert.Equal(0, result);
-    }
-
-    [Fact]
-    public void Post_Delete_DeletesPostFromDatabase()
-    {
-      //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
-      //Act
-      testPost.Delete();
-      int result = Post.GetAll().Count;
+      OriginalPost.DeleteById(testOriginalPost.GetId());
+      int result = OriginalPost.GetAll().Count;
       //Assert
       Assert.Equal(0, result);
     }
 
     [Fact]
-    public void Post_Update_UpdatesPostInDatabaseById()
+    public void OriginalPost_Delete_DeletesOriginalPostFromDatabase()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
       //Act
-      Post.UpdateById("Bob", "Fishing at the lake", "I like to fish at the lake", testPost.GetId());
+      testOriginalPost.Delete();
+      int result = OriginalPost.GetAll().Count;
+      //Assert
+      Assert.Equal(0, result);
+    }
+
+    [Fact]
+    public void OriginalPost_Update_UpdatesOriginalPostInDatabaseById()
+    {
+      //Arrange
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
+      //Act
+      OriginalPost.UpdateById("Bob", "Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId());
       string expectedResult = "Fishing at the lake";
-      string result = Post.Find(testPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
       //Assert
       Assert.Equal(expectedResult, result);
     }
 
     [Fact]
-    public void Post_Update_UpdatesPostInDatabaseByReference()
+    public void OriginalPost_Update_UpdatesOriginalPostInDatabaseByReference()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
       //Act
-      testPost.Update("Fishing at the lake", "I like to fish at the lake");
+      testOriginalPost.Update("Fishing at the lake", "I like to fish at the lake");
       string expectedResult = "Fishing at the lake";
-      string result = Post.Find(testPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
       //Assert
       Assert.Equal(expectedResult, result);
     }
 
     [Fact]
-    public void Post_Remove_RedactsInDatabase()
+    public void OriginalPost_Remove_RedactsInDatabase()
     {
       //Arrange
-      Post testPost = new Post("Bob", "Fishing", "I like to fish");
-      testPost.Save();
+      OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish");
+      testOriginalPost.Save();
       //Act
-      testPost.Remove();
+      testOriginalPost.Remove();
       string expectedResult = "[removed]";
-      string result = Post.Find(testPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
       //Assert
       Assert.Equal(expectedResult, result);    }
   }

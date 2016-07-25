@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>@Model.GetTitle()</title>
+  </head>
+  <body>
+    <h2>@Model.GetTitle()</h2>
+    <p>
+      @Model.GetMainText()
+    </p>
+  
+    <h2>Comment:</h2>
+    <form action="/" method="post">
+      <label>Author:</label>
+      <input type="text" name="author" value="">
+      <label>Main Text:</label>
+      <input type="text" name="main-text" value="">
+      <input type="hidden" name="post-id" value="@Model.GetId()">
+      <button type="submit" name="button">Submit</button>
+    </form>
+  </body>
+</html>
