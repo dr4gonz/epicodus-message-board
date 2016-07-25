@@ -87,7 +87,21 @@ namespace MessageBoard
     }
 
     [Fact]
-    public void Post_Update_UpdatesPostInDatabase()
+    public void Post_Update_UpdatesPostInDatabaseById()
+    {
+      //Arrange
+      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      testPost.Save();
+      //Act
+      Post.UpdateById("Fishing at the lake", "I like to fish at the lake", testPost.GetId());
+      string expectedResult = "Fishing at the lake";
+      string result = Post.Find(testPost.GetId()).GetTitle();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
+
+    [Fact]
+    public void Post_Update_UpdatesPostInDatabaseByReference()
     {
       //Arrange
       Post testPost = new Post("Bob", "Fishing", "I like to fish");

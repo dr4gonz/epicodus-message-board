@@ -160,13 +160,14 @@ namespace MessageBoard
       DeleteById(_id);
     }
 
-    public void Update(string newTitle, string newMainText)
+    public static Post UpdateById(string newTitle, string newMainText, int id)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("UPDATE posts SET title = @Title, main_text = @MainText WHERE id = @PostId;", conn);
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("UPDATE posts SET title = @Title, main_text = @MainText OUTPUT INSERTED.author WHERE id = @PostId;", conn);
 
-      SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
+      SqlParameter postIdParameter = new SqlParameter("@PostId", id);
       SqlParameter titleParameter = new SqlParameter("@Title", newTitle);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", newMainText);
 
@@ -174,12 +175,28 @@ namespace MessageBoard
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
 
-      cmd.ExecuteNonQuery();
+      string author = null;
 
+      rdr = cmd.ExecuteReader();
+      while(rdr.Read())
+      {
+        author = rdr.GetString(0);
+      }
+      Post post = new Post(author, newTitle, newMainText, id);
+
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+
+      return post;
+    }
+
+    public void Update(string newTitle, string newMainText)
+    {
+      UpdateById(newTitle, newMainText, _id);
       _title = newTitle;
       _mainText = newMainText;
-
-      if (conn != null) conn.Close();
     }
+
+
   }
 }
