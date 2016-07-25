@@ -60,7 +60,7 @@ namespace MessageBoard
         bool mainTextEquality = _mainText == otherOriginalPost._mainText;
         bool timeEquality = _time == otherOriginalPost._time;
         bool ratingEquality = _rating == otherOriginalPost._rating;
-        return(idEquality && authorEquality && titleEquality && mainTextEquality);
+        return(idEquality && authorEquality && titleEquality && mainTextEquality && timeEquality && ratingEquality);
       }
     }
 
@@ -78,7 +78,7 @@ namespace MessageBoard
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("SELECT * FROM posts;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM posts ORDER BY rating;", conn); //remove ORDER BY
       rdr = cmd.ExecuteReader();
       List<OriginalPost> allOriginalPosts = new List<OriginalPost>{};
       while(rdr.Read())
