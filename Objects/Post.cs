@@ -160,43 +160,50 @@ namespace MessageBoard
       DeleteById(_id);
     }
 
-    public static Post UpdateById(string newTitle, string newMainText, int id)
+    public static Post UpdateById(string newAuthor, string newTitle, string newMainText, int id)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("UPDATE posts SET title = @Title, main_text = @MainText OUTPUT INSERTED.author WHERE id = @PostId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, title = @Title, main_text = @MainText OUTPUT INSERTED.author WHERE id = @PostId;", conn);
 
       SqlParameter postIdParameter = new SqlParameter("@PostId", id);
       SqlParameter titleParameter = new SqlParameter("@Title", newTitle);
+      SqlParameter authorParameter = new SqlParameter("@Author", newAuthor);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", newMainText);
 
+      cmd.Parameters.Add(authorParameter);
       cmd.Parameters.Add(postIdParameter);
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
 
       string author = null;
 
-      rdr = cmd.ExecuteReader();
-      while(rdr.Read())
-      {
-        author = rdr.GetString(0);
-      }
-      Post post = new Post(author, newTitle, newMainText, id);
+      cmd.ExecuteNonQuery();
 
-      if (rdr != null) rdr.Close();
+      Post post = new Post(newAuthor, newTitle, newMainText, id);
+
       if (conn != null) conn.Close();
 
       return post;
     }
 
-    public void Update(string newTitle, string newMainText)
+    public void Update(string newAuthor, string newTitle, string newMainText)
     {
-      UpdateById(newTitle, newMainText, _id);
+      UpdateById(newAuthor, newTitle, newMainText, _id);
+      _author = newAuthor;
       _title = newTitle;
       _mainText = newMainText;
     }
 
+    public void Update(string newTitle, string newMainText)
+    {
+      this.Update(_author, newTitle, newMainText);
+    }
+
+    public void Remove()
+    {
+      this.Update("[removed]", "[removed]");
+    }
 
   }
 }

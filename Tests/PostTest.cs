@@ -93,7 +93,7 @@ namespace MessageBoard
       Post testPost = new Post("Bob", "Fishing", "I like to fish");
       testPost.Save();
       //Act
-      Post.UpdateById("Fishing at the lake", "I like to fish at the lake", testPost.GetId());
+      Post.UpdateById("Bob", "Fishing at the lake", "I like to fish at the lake", testPost.GetId());
       string expectedResult = "Fishing at the lake";
       string result = Post.Find(testPost.GetId()).GetTitle();
       //Assert
