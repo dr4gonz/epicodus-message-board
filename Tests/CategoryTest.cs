@@ -48,5 +48,17 @@ namespace MessageBoard
       Assert.Equal(testCategory, foundCategory);
     }
 
+    [Fact]
+    public void Category_Find_FindsCategoryInDatabase()
+    {
+      //Arrange
+      Category testCategory = new Category("Fishing");
+      testCategory.Save();
+      //Act
+      Category foundCategory = Category.Find(testCategory.GetId());
+      //Assert
+      Assert.Equal(testCategory, foundCategory);
+    }
+
   }
 }

@@ -90,6 +90,36 @@ namespace MessageBoard
       if (conn != null) conn.Close();
     }
 
+    public static Category Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("SELECT * FROM categories WHERE id = @CategoryId;", conn);
+
+      SqlParameter categoryIdParameter = new SqlParameter("@CategoryId", id);
+      cmd.Parameters.Add(categoryIdParameter);
+
+      int foundId = 0;
+      string foundName = null;
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        foundId = rdr.GetInt32(0);
+        foundName = rdr.GetString(1);
+      }
+
+      Category foundCategory = new Category(foundName, foundId);
+
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+
+      return foundCategory;
+
+    }
+
 
 
 
