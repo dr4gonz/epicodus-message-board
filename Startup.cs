@@ -42,6 +42,5 @@ namespace MessageBoard
   public static class DBConfiguration
   {
     public static string ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board;Integrated Security=SSPI;";
-    // public static string ConnectionString = "Data Source=DESKTOP-7OLC9FT\\SQLEXPRESS;Initial Catalog=band_tracker;Integrated Security=SSPI;";
   }
 }
