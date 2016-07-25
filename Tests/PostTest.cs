@@ -125,6 +125,26 @@ namespace MessageBoard
       string expectedResult = "[removed]";
       string result = Post.Find(testPost.GetId()).GetTitle();
       //Assert
-      Assert.Equal(expectedResult, result);    }
+      Assert.Equal(expectedResult, result);
+    }
+
+    [Fact]
+    public void Post_GetAllChildComments_ReturnsComment()
+    {
+      //Arrange
+      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      testPost.Save();
+      Comment testComment = new Comment("Matt", "This stuff is really cool!", 0, testPost.GetId());
+      testComment.Save();
+      List<Comment> expectedResult = new List<Comment>{testComment};
+      //Act
+      List<Comment> result = testPost.GetAllChildComments();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
   }
+
+
+
+
 }
