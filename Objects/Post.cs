@@ -176,8 +176,6 @@ namespace MessageBoard
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
 
-      string author = null;
-
       cmd.ExecuteNonQuery();
 
       Post post = new Post(newAuthor, newTitle, newMainText, id);
@@ -200,9 +198,14 @@ namespace MessageBoard
       this.Update(_author, newTitle, newMainText);
     }
 
+    public static void RemoveById(int id)
+    {
+      UpdateById("[removed]", "[removed]", "[removed]", id);
+    }
+
     public void Remove()
     {
-      this.Update("[removed]", "[removed]");
+      RemoveById(_id);
     }
 
   }

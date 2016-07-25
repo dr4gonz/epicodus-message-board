@@ -113,5 +113,18 @@ namespace MessageBoard
       //Assert
       Assert.Equal(expectedResult, result);
     }
+
+    [Fact]
+    public void Post_Remove_RedactsInDatabase()
+    {
+      //Arrange
+      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      testPost.Save();
+      //Act
+      testPost.Remove();
+      string expectedResult = "[removed]";
+      string result = Post.Find(testPost.GetId()).GetTitle();
+      //Assert
+      Assert.Equal(expectedResult, result);    }
   }
 }
