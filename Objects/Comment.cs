@@ -13,8 +13,9 @@ namespace MessageBoard
     private int _postId;
     private int _parentId;
     private int _rating;
+    private DateTime? _time;
 
-    public Comment(string author, string mainText, int rating, int postId, int id = 0)
+    public Comment(string author, string mainText, int rating, int postId, DateTime? time, int id = 0)
     {
       _id = id;
       _author = author;
@@ -22,6 +23,7 @@ namespace MessageBoard
       _rating = rating;
       _parentId = 0;
       _postId = postId;
+      _time = time;
     }
 
     public int GetId()
@@ -47,6 +49,10 @@ namespace MessageBoard
     public int GetRating()
     {
       return _rating;
+    }
+    public DateTime? GetTime()
+    {
+      return _time;
     }
     public void SetParentId(int newParentId)
     {
@@ -84,8 +90,9 @@ namespace MessageBoard
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
         int newCommentPostId = rdr.GetInt32(4);
+        DateTime newCommentDateTime = rdr.GetDateTime(6);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
         allComments.Add(newComment);
       }
 
@@ -109,7 +116,8 @@ namespace MessageBoard
         bool mainTextEquality = (this._mainText == newComment.GetMainText());
         bool ratingEquality = (this._rating == newComment.GetRating());
         bool postIdEquality = (this._postId == newComment.GetPostId());
-        return (idEquality && authorEquality && mainTextEquality && ratingEquality && postIdEquality);
+        bool dateTimeEquality = (this._time == newComment.GetTime());
+        return (idEquality && authorEquality && mainTextEquality && ratingEquality && postIdEquality && dateTimeEquality);
       }
     }
 
@@ -119,7 +127,7 @@ namespace MessageBoard
      SqlDataReader rdr = null;
      conn.Open();
 
-     SqlCommand cmd = new SqlCommand("INSERT INTO comments (author, main_text, rating, post_id, parent_id) OUTPUT INSERTED.id VALUES(@Author, @MainText, @Rating, @PostId, @ParentId);", conn);
+     SqlCommand cmd = new SqlCommand("INSERT INTO comments (author, main_text, rating, post_id, parent_id, time) OUTPUT INSERTED.id VALUES(@Author, @MainText, @Rating, @PostId, @ParentId, @Time);", conn);
 
      SqlParameter commentAuthorParameter = new SqlParameter("@Author", this.GetAuthor());
      cmd.Parameters.Add(commentAuthorParameter);
@@ -135,6 +143,9 @@ namespace MessageBoard
 
      SqlParameter parentIdParameter = new SqlParameter("@ParentId", this.GetParentId());
      cmd.Parameters.Add(parentIdParameter);
+
+     SqlParameter timeParameter = new SqlParameter("@Time", this.GetTime());
+     cmd.Parameters.Add(timeParameter);
 
      rdr = cmd.ExecuteReader();
 
@@ -164,6 +175,7 @@ namespace MessageBoard
      string foundCommentMainText = null;
      int foundCommentRating = 0;
      int foundPostId = 0;
+     DateTime? foundTime = null;
 
      while(rdr.Read())
      {
@@ -172,8 +184,9 @@ namespace MessageBoard
          foundCommentMainText = rdr.GetString(2);
          foundCommentRating = rdr.GetInt32(3);
          foundPostId = rdr.GetInt32(4);
+         foundTime = rdr.GetDateTime(6);
      }
-     Comment newComment = new Comment(foundCommentAuthor, foundCommentMainText, foundCommentRating, foundPostId, foundCommentId);
+     Comment newComment = new Comment(foundCommentAuthor, foundCommentMainText, foundCommentRating, foundPostId, foundTime, foundCommentId);
 
      if(rdr != null) rdr.Close();
      if(conn != null) conn.Close();
@@ -271,8 +284,9 @@ namespace MessageBoard
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
         int newCommentPostId = rdr.GetInt32(4);
+        DateTime newCommentDateTime = rdr.GetDateTime(6);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
         allChildren.Add(newComment);
       }
 

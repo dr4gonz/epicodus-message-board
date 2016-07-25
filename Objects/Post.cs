@@ -61,6 +61,7 @@ namespace MessageBoard
         bool timeEquality = _time == otherOriginalPost._time;
         bool ratingEquality = _rating == otherOriginalPost._rating;
         return(idEquality && authorEquality && titleEquality && mainTextEquality && timeEquality && ratingEquality);
+
       }
     }
 
@@ -298,8 +299,9 @@ namespace MessageBoard
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
         int newCommentPostId = rdr.GetInt32(4);
+        DateTime newCommentDateTime = rdr.GetDateTime(6);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
         allChildren.Add(newComment);
       }
 
@@ -344,8 +346,9 @@ namespace MessageBoard
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
         int newCommentPostId = rdr.GetInt32(4);
+        DateTime newCommentDateTime = rdr.GetDateTime(6);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
         children.Add(newComment);
       }
 
