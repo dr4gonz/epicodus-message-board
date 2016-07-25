@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>@Model.GetTitle()</title>
+  </head>
+  <body>
+    <h2>@Model.GetTitle()</h2>
+    <p>
+      @Model.GetMainText()
+    </p>
+
+    <h4>Comments:</h4>
+    <ul>
+      @foreach (var comment in Model.GetAllDirectChildren())
+      {
+        <div><li>@comment.GetMainText()</li></div><br>
+        <h5>@comment.GetAuthor()</h5>
+      }
+    </ul>
+    <h2>Add A Comment:</h2>
+    <form action="/posts/@Model.GetId()/comment" method="post">
+      <label>Author:</label>
+      <input type="text" name="comment-author" value="">
+      <label>Main Text:</label>
+      <input type="text" name="comment-main-text" value="">
+      <input type="hidden" name="post-id" value="@Model.GetId()">
+      <button type="submit" name="button">Submit</button>
+    </form>
+    <form action="/posts/@Model.GetId()/comment" method="post">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit" name="button">Delete all Comments</button>
+    </form>
+  </body>
+</html>

@@ -4,14 +4,14 @@ using System.Data.SqlClient;
 
 namespace MessageBoard
 {
-  public class Post
+  public class OriginalPost
   {
     private int _id;
     private string _author;
     private string _title;
     private string _mainText;
 
-    public Post(string author, string title, string mainText, int id=0)
+    public OriginalPost(string author, string title, string mainText, int id=0)
     {
       _id = id;
       _author = author;
@@ -41,14 +41,14 @@ namespace MessageBoard
 
     public override bool Equals(System.Object obj)
     {
-      if(!(obj is Post)) return false;
+      if(!(obj is OriginalPost)) return false;
       else
       {
-        Post otherPost = (Post) obj;
-        bool idEquality = _id == otherPost._id;
-        bool authorEquality = _author == otherPost._author;
-        bool titleEquality = _title == otherPost._title;
-        bool mainTextEquality = _mainText == otherPost._mainText;
+        OriginalPost otherOriginalPost = (OriginalPost) obj;
+        bool idEquality = _id == otherOriginalPost._id;
+        bool authorEquality = _author == otherOriginalPost._author;
+        bool titleEquality = _title == otherOriginalPost._title;
+        bool mainTextEquality = _mainText == otherOriginalPost._mainText;
         return(idEquality && authorEquality && titleEquality && mainTextEquality);
       }
     }
@@ -62,26 +62,26 @@ namespace MessageBoard
       conn.Close();
     }
 
-    public static List<Post> GetAll()
+    public static List<OriginalPost> GetAll()
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
       SqlCommand cmd = new SqlCommand("SELECT * FROM posts;", conn);
       rdr = cmd.ExecuteReader();
-      List<Post> allPosts = new List<Post>{};
+      List<OriginalPost> allOriginalPosts = new List<OriginalPost>{};
       while(rdr.Read())
       {
         int id = rdr.GetInt32(0);
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        Post post = new Post(author, title, mainText, id);
-        allPosts.Add(post);
+        OriginalPost post = new OriginalPost(author, title, mainText, id);
+        allOriginalPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
-      return allPosts;
+      return allOriginalPosts;
     }
 
     public void Save()
@@ -109,14 +109,14 @@ namespace MessageBoard
       if (conn != null) conn.Close();
     }
 
-    public static Post Find(int id)
+    public static OriginalPost Find(int id)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("SELECT * FROM posts WHERE id = @PostId;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM posts WHERE id = @OriginalPostId;", conn);
 
-      SqlParameter postIdParameter = new SqlParameter("@PostId", id);
+      SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
       cmd.Parameters.Add(postIdParameter);
 
       int foundId = 0;
@@ -134,21 +134,21 @@ namespace MessageBoard
         foundMainText = rdr.GetString(3);
       }
 
-      Post foundPost = new Post(foundAuthor, foundTitle, foundMainText, foundId);
+      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundId);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
 
-      return foundPost;
+      return foundOriginalPost;
     }
 
     public static void DeleteById(int id)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM posts WHERE id = @PostId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM posts WHERE id = @OriginalPostId; DELETE FROM comments WHERE post_id = @OriginalPostId;", conn);
 
-      SqlParameter postIdParameter = new SqlParameter("@PostId", id);
+      SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
       cmd.Parameters.Add(postIdParameter);
 
       cmd.ExecuteNonQuery();
@@ -160,13 +160,13 @@ namespace MessageBoard
       DeleteById(_id);
     }
 
-    public static Post UpdateById(string newAuthor, string newTitle, string newMainText, int id)
+    public static OriginalPost UpdateById(string newAuthor, string newTitle, string newMainText, int id)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, title = @Title, main_text = @MainText OUTPUT INSERTED.author WHERE id = @PostId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, title = @Title, main_text = @MainText OUTPUT INSERTED.author WHERE id = @OriginalPostId;", conn);
 
-      SqlParameter postIdParameter = new SqlParameter("@PostId", id);
+      SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
       SqlParameter titleParameter = new SqlParameter("@Title", newTitle);
       SqlParameter authorParameter = new SqlParameter("@Author", newAuthor);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", newMainText);
@@ -178,7 +178,7 @@ namespace MessageBoard
 
       cmd.ExecuteNonQuery();
 
-      Post post = new Post(newAuthor, newTitle, newMainText, id);
+      OriginalPost post = new OriginalPost(newAuthor, newTitle, newMainText, id);
 
       if (conn != null) conn.Close();
 
@@ -265,19 +265,19 @@ namespace MessageBoard
       switch(orderBy)
       {
         case "rating":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId, parent_id = 0 ORDER BY rating DESC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY rating DESC;", conn);
           break;
         case "newest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId, parent_id = 0 ORDER BY date ASC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY date ASC;", conn);
           break;
         case "oldest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId, parent_id = 0 ORDER BY date DESC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY date DESC;", conn);
           break;
         default:
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId, parent_id = 0 ORDER BY id;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY id;", conn);
           break;
       }
-      SqlParameter postIdParameter = new SqlParameter("@PostId", _id);
+      SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
       cmd.Parameters.Add(postIdParameter);
 
       rdr = cmd.ExecuteReader();
@@ -340,6 +340,22 @@ namespace MessageBoard
       return allPosts;
     }
 
+    public void DeleteAllChildren()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
 
+      SqlCommand cmd = new SqlCommand("DELETE FROM comments WHERE post_id = @PostId;", conn);
+
+      SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
+      cmd.Parameters.Add(postIdParameter);
+
+      cmd.ExecuteNonQuery();
+
+      if(conn!=null) conn.Close();
+    }
+
+
+    
   }
 }
