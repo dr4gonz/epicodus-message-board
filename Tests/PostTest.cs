@@ -94,7 +94,7 @@ namespace MessageBoard
       OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
       testOriginalPost.Save();
       //Act
-      OriginalPost.UpdateById("Bob", "Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId(), DateTime.Now);
+      OriginalPost.UpdateById("Bob", "Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId());
       string expectedResult = "Fishing at the lake";
       string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
       //Assert
@@ -108,7 +108,7 @@ namespace MessageBoard
       OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
       testOriginalPost.Save();
       //Act
-      testOriginalPost.Update("Fishing at the lake", "I like to fish at the lake", DateTime.Now);
+      testOriginalPost.Update("Fishing at the lake", "I like to fish at the lake");
       string expectedResult = "Fishing at the lake";
       string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
       //Assert
@@ -167,7 +167,7 @@ namespace MessageBoard
       //Arrange
       OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
       testOriginalPost.Save();
-      Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, testOriginalPost.GetId(), DateTime.Now);
+      Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, testOriginalPost.GetId());
       firstComment.Save();
       Comment secondComment = new Comment("Henry", "This stuff is just okay", 5, (testOriginalPost.GetId()+1));
       secondComment.Save();
@@ -193,36 +193,34 @@ namespace MessageBoard
       //Assert
       Assert.Equal(expectedResult, result);
     }
-<<<<<<< HEAD
 
     [Fact]
     public void Post_SearchByKeyword_SearchesByTitleKeyword()
     {
       //Arrange
-      Post firstPost = new Post("Bob", "Fishing", "I like to fish", DateTime.Now);
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
       firstPost.Save();
-      Post secondPost = new Post("Joe", "Swimming", "I like to swim", DateTime.Now);
+      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim", DateTime.Now);
       secondPost.Save();
       //Act
-      List<Post> foundPosts = Post.SearchByKeyword("Fishing");
-      List<Post> expectedResults = new List<Post>{firstPost};
+      List<OriginalPost> foundPosts = OriginalPost.SearchByKeyword("Fishing");
+      List<OriginalPost> expectedResults = new List<OriginalPost>{firstPost};
       //Assert
       Assert.Equal(expectedResults, foundPosts);
     }
-=======
->>>>>>> master
+
 
     [Fact]
     public void Post_SearchByKeyword_SearchesByTextKeyword()
     {
       //Arrange
-      Post firstPost = new Post("Bob", "Fishing", "I like the outdoors", DateTime.Now);
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like the outdoors", DateTime.Now);
       firstPost.Save();
-      Post secondPost = new Post("Joe", "Swimming", "I like to swim", DateTime.Now);
+      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim", DateTime.Now);
       secondPost.Save();
       //Act
-      List<Post> foundPosts = Post.SearchByKeyword("outdoors");
-      List<Post> expectedResults = new List<Post>{firstPost};
+      List<OriginalPost> foundPosts = OriginalPost.SearchByKeyword("outdoors");
+      List<OriginalPost> expectedResults = new List<OriginalPost>{firstPost};
       //Assert
       Assert.Equal(expectedResults, foundPosts);
     }

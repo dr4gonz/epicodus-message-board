@@ -15,7 +15,7 @@ namespace MessageBoard
     public void Dispose()
     {
       Category.DeleteAll();
-      Post.DeleteAll();
+      OriginalPost.DeleteAll();
       Comment.DeleteAll();
     }
 
@@ -68,14 +68,14 @@ namespace MessageBoard
       //Arrange
       Category testCategory = new Category("Fishing");
       testCategory.Save();
-      Post firstPost = new Post("Bob", "Fishing", "I like to fish");
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
       firstPost.Save();
-      Post secondPost = new Post("Bob", "Fishing", "I like to fish");
+      OriginalPost secondPost = new OriginalPost("Bob", "Fishing", "I like to fish", DateTime.Now);
       secondPost.Save();
       firstPost.AddCategory(testCategory);
-      List<Post> expectedResult = new List<Post>{firstPost};
+      List<OriginalPost> expectedResult = new List<OriginalPost>{firstPost};
       //Act
-      List<Post> result = testCategory.GetPosts();
+      List<OriginalPost> result = testCategory.GetPosts();
       //Assert
       Assert.Equal(expectedResult, result);
     }

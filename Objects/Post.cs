@@ -79,7 +79,7 @@ namespace MessageBoard
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        DateTime time = rdr.GetDateTime(4);
+        DateTime time = rdr.GetDateTime(5);
         OriginalPost post = new OriginalPost(author, title, mainText, time, id);
         allOriginalPosts.Add(post);
       }
@@ -93,7 +93,7 @@ namespace MessageBoard
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text, date) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText, @Date);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text, time) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText, @Date);", conn);
 
       SqlParameter authorParameter = new SqlParameter("@Author", _author);
       SqlParameter titleParameter = new SqlParameter("@Title", _title);
@@ -139,10 +139,10 @@ namespace MessageBoard
         foundAuthor = rdr.GetString(1);
         foundTitle = rdr.GetString(2);
         foundMainText = rdr.GetString(3);
-        time = rdr.GetDateTime(4);
+        time = rdr.GetDateTime(5);
       }
 
-      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundId, time);
+      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, time, foundId);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
@@ -172,7 +172,8 @@ namespace MessageBoard
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, title = @Title, main_text = @MainText OUTPUT INSERTED.author WHERE id = @OriginalPostId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, title = @Title, main_text = @MainText OUTPUT INSERTED.time WHERE id = @OriginalPostId;", conn);
+      SqlDataReader rdr = null;
 
       SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
       SqlParameter titleParameter = new SqlParameter("@Title", newTitle);
@@ -184,10 +185,17 @@ namespace MessageBoard
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
 
-      cmd.ExecuteNonQuery();
+      DateTime? time = null;
+      rdr = cmd.ExecuteReader();
 
-      OriginalPost post = new OriginalPost(newAuthor, newTitle, newMainText, id);
+      while(rdr.Read())
+      {
+        time = rdr.GetDateTime(0);
+      }
 
+      OriginalPost post = new OriginalPost(newAuthor, newTitle, newMainText, time, id);
+
+      if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
 
       return post;
@@ -230,10 +238,10 @@ namespace MessageBoard
           cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY rating DESC;", conn);
           break;
         case "newest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY date ASC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY time ASC;", conn);
           break;
         case "oldest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY date DESC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY time DESC;", conn);
           break;
         default:
           cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY id;", conn);
@@ -276,10 +284,10 @@ namespace MessageBoard
           cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY rating DESC;", conn);
           break;
         case "newest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY date ASC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY time ASC;", conn);
           break;
         case "oldest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY date DESC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY time DESC;", conn);
           break;
         default:
           cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY id;", conn);
@@ -321,7 +329,7 @@ namespace MessageBoard
       conn.Close();
     }
 
-    public static List<Post> SearchByKeyword(string keyword)
+    public static List<OriginalPost> SearchByKeyword(string keyword)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
@@ -333,15 +341,15 @@ namespace MessageBoard
       cmd.Parameters.Add(keywordTitleParameter);
       cmd.Parameters.Add(keywordTextParameter);
       rdr = cmd.ExecuteReader();
-      List<Post> allPosts = new List<Post>{};
+      List<OriginalPost> allPosts = new List<OriginalPost>{};
       while(rdr.Read())
       {
         int id = rdr.GetInt32(0);
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        DateTime time = rdr.GetDateTime(4);
-        Post post = new Post(author, title, mainText, time, id);
+        DateTime time = rdr.GetDateTime(5);
+        OriginalPost post = new OriginalPost(author, title, mainText, time, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -363,6 +371,7 @@ namespace MessageBoard
 
       if(conn!=null) conn.Close();
     }
+
 
   }
 }
