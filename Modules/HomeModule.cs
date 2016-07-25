@@ -34,14 +34,14 @@ namespace MessageBoard
       Post["/posts/{id}"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id);
+        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id, DateTime.Now);
         newComment.Save();
         return View["post.cshtml", selectedOriginalPost];
       };
       Post["/posts/{id}/reply"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id);
+        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id, DateTime.Now);
         newComment.SetParentId(Request.Form["parent-id"]);
         newComment.Save();
         return View["post.cshtml", selectedOriginalPost];

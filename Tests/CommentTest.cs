@@ -8,6 +8,8 @@ namespace MessageBoard
 {
   public class CommentTest : IDisposable
   {
+    DateTime testDate = new DateTime(2016, 7, 22);
+
     public CommentTest()
     {
       DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
@@ -31,8 +33,8 @@ namespace MessageBoard
     public void Test_ChecksIfCommentsAreEqual()
     {
       //Arrange, Act
-      Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
-      Comment secondComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
+      Comment firstComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
+      Comment secondComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
       //Assert
       Assert.Equal(firstComment, secondComment);
     }
@@ -42,7 +44,7 @@ namespace MessageBoard
    public void Comment_SavesToDatabase()
    {
      //Arrange
-     Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
+     Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
      newComment.Save();
      //Act
      List<Comment> result = Comment.GetAll();
@@ -55,7 +57,7 @@ namespace MessageBoard
    public void Comment_SavesSavesWithID()
    {
      //Arrange
-     Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
+     Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
      newComment.Save();
      //Act
      Comment savedComment = Comment.GetAll()[0];
@@ -68,7 +70,7 @@ namespace MessageBoard
     public void Comment_FindsCommentInDatabase()
     {
       //Arrange
-      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
       newComment.Save();
       //Act
       Comment foundComment = Comment.Find(newComment.GetId());
@@ -80,7 +82,7 @@ namespace MessageBoard
     public void Comment_UpdateUpdatesCommentInDatabase()
     {
       //Arrange
-      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
       newComment.Save();
       string newMainText = "This stuff is really cool";
       //Act
@@ -95,11 +97,11 @@ namespace MessageBoard
     {
       //Arrange
       string mainText1 = "This stuff is really cool";
-      Comment testComment1 = new Comment("Matt", mainText1, 0, 1);
+      Comment testComment1 = new Comment("Matt", mainText1, 0, 1, testDate);
       testComment1.Save();
 
       string mainText2 = "This stuff is lame";
-      Comment testComment2 = new Comment("Matt", mainText2, 0, 1);
+      Comment testComment2 = new Comment("Matt", mainText2, 0, 1, testDate);
       testComment2.Save();
       //Act
       testComment2.Delete();
@@ -112,7 +114,7 @@ namespace MessageBoard
     public void Comment_Remove_RemovesMainTextInDatabase()
     {
       string mainText = "This stuff is really cool";
-      Comment testComment = new Comment("Matt", mainText, 0, 1);
+      Comment testComment = new Comment("Matt", mainText, 0, 1, testDate);
       testComment.Save();
       //Act
       testComment.Remove();
@@ -125,7 +127,7 @@ namespace MessageBoard
     public void Comment_SetParentId_SetsParentId()
     {
       //Arrange
-      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
       newComment.Save();
       //Act
       newComment.SetParentId(4);
@@ -137,9 +139,9 @@ namespace MessageBoard
     public void Comment_GetChildren_GetAllChildrenOfComment()
     {
       //Arrange
-      Comment newComment1 = new Comment("Matt", "This stuff is really cool!", 0, 1);
+      Comment newComment1 = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
       newComment1.Save();
-      Comment newComment2 = new Comment("Matt", "This stuff is really cool!", 0, 1);
+      Comment newComment2 = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
       newComment2.SetParentId(newComment1.GetId());
       newComment2.Save();
       //Act
@@ -153,7 +155,7 @@ namespace MessageBoard
     [Fact]
     public void Comment_Upvote_Adds1ToCommentRating()
     {
-      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1);
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate);
       newComment.Save();
       //Act
       int expectedResult = 1;
@@ -166,7 +168,7 @@ namespace MessageBoard
     [Fact]
     public void Comment_Downvote_Subtracts1ToCommentRating()
     {
-      Comment newComment = new Comment("Matt", "This stuff is really cool!", 1, 1);
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 1, 1, testDate);
       newComment.Save();
       //Act
       int expectedResult = 0;
