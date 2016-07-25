@@ -70,9 +70,8 @@ namespace MessageBoard
       }
       if(conn!=null) conn.Close();
       if(rdr!=null) rdr.Close();
-
     }
-    public void setPostId(int newPostId)
+    public void SetPostId(int newPostId)
     {
       _postId = newPostId;
     }
@@ -235,5 +234,34 @@ namespace MessageBoard
       this.Update("[Removed]");
     }
 
+    public List<Comment> GetChildren()
+    {
+      List<Comment> allChildren = new List<Comment>{};
+
+      SqlConnection conn = DB.Connection();
+      SqlDataReader rdr = null;
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM comments WHERE parent_id = @ParentId;", conn);
+      SqlParameter ParentIdParameter = new SqlParameter("@ParentId", this.GetId());
+      cmd.Parameters.Add(ParentIdParameter);
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        int newCommentId = rdr.GetInt32(0);
+        string newCommentAuthor = rdr.GetString(1);
+        string newCommentMainText = rdr.GetString(2);
+        int newCommentRating = rdr.GetInt32(3);
+
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentId);
+        allChildren.Add(newComment);
+      }
+
+      if(rdr != null) rdr.Close();
+      if(conn != null) conn.Close();
+
+      return allChildren;
+    }
   }
 }

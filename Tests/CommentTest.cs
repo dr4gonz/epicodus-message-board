@@ -133,5 +133,21 @@ namespace MessageBoard
       //Assert
       Assert.Equal(4, result);
     }
+    [Fact]
+    public void Comment_GetChildren_GetAllChildrenOfComment()
+    {
+      //Arrange
+      Comment newComment1 = new Comment("Matt", "This stuff is really cool!", 0);
+      newComment1.Save();
+      Comment newComment2 = new Comment("Matt", "This stuff is really cool!", 0);
+      newComment2.Save();
+      //Act
+      newComment2.SetParentId(newComment1.GetId());
+      List<Comment> allChildren = newComment1.GetChildren();
+      List<Comment> testChildren = new List<Comment> {newComment2};
+      //Assert
+      Assert.Equal(testChildren, allChildren);
+
+    }
   }
 }
