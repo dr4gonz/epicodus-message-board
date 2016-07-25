@@ -83,5 +83,63 @@ namespace MessageBoard
       if (conn != null) conn.Close();
       return allPosts;
     }
+
+    public void Save()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText);", conn);
+
+      SqlParameter authorParameter = new SqlParameter("@Author", _author);
+      SqlParameter titleParameter = new SqlParameter("@Title", _title);
+      SqlParameter mainTextParameter = new SqlParameter("@MainText", _mainText);
+      cmd.Parameters.Add(authorParameter);
+      cmd.Parameters.Add(titleParameter);
+      cmd.Parameters.Add(mainTextParameter);
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        _id = rdr.GetInt32(0);
+      }
+
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+    }
+
+    public static Post Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("SELECT * FROM posts WHERE id = @PostId;", conn);
+
+      SqlParameter postIdParameter = new SqlParameter("@PostId", id);
+      cmd.Parameters.Add(postIdParameter);
+
+      int foundId = 0;
+      string foundAuthor = null;
+      string foundTitle = null;
+      string foundMainText = null;
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        foundId = rdr.GetInt32(0);
+        foundAuthor = rdr.GetString(1);
+        foundTitle = rdr.GetString(2);
+        foundMainText = rdr.GetString(3);
+      }
+
+      Post foundPost = new Post(foundAuthor, foundTitle, foundMainText, foundId);
+
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+
+      return foundPost;
+    }
   }
 }

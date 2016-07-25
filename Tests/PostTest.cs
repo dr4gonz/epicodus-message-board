@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace MessageBoard
 {
-  public class PostTest
+  public class PostTest : IDisposable
   {
     public PostTest()
     {
@@ -34,6 +34,30 @@ namespace MessageBoard
       int result = Post.GetAll().Count;
       //Assert
       Assert.Equal(0, result);
+    }
+
+    [Fact]
+    public void Post_Save_SavesPostToDatabase()
+    {
+      //Arrange
+      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      //Act
+      testPost.Save();
+      Post foundPost = Post.GetAll()[0];
+      //Assert
+      Assert.Equal(testPost, foundPost);
+    }
+
+    [Fact]
+    public void Post_Find_FindsPostInDatabase()
+    {
+      //Arrange
+      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      testPost.Save();
+      //Act
+      Post foundPost = Post.Find(testPost.GetId());
+      //Assert
+      Assert.Equal(testPost, foundPost);
     }
   }
 }
