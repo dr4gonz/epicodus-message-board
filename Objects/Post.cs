@@ -146,7 +146,6 @@ namespace MessageBoard
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlDataReader rdr = null;
       SqlCommand cmd = new SqlCommand("DELETE FROM posts WHERE id = @PostId;", conn);
 
       SqlParameter postIdParameter = new SqlParameter("@PostId", id);
@@ -159,6 +158,28 @@ namespace MessageBoard
     public void Delete()
     {
       DeleteById(_id);
+    }
+
+    public void Update(string newTitle, string newMainText)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("UPDATE posts SET title = @Title, main_text = @MainText WHERE id = @PostId;", conn);
+
+      SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
+      SqlParameter titleParameter = new SqlParameter("@Title", newTitle);
+      SqlParameter mainTextParameter = new SqlParameter("@MainText", newMainText);
+
+      cmd.Parameters.Add(postIdParameter);
+      cmd.Parameters.Add(titleParameter);
+      cmd.Parameters.Add(mainTextParameter);
+
+      cmd.ExecuteNonQuery();
+
+      _title = newTitle;
+      _mainText = newMainText;
+
+      if (conn != null) conn.Close();
     }
   }
 }

@@ -85,5 +85,19 @@ namespace MessageBoard
       //Assert
       Assert.Equal(0, result);
     }
+
+    [Fact]
+    public void Post_Update_UpdatesPostInDatabase()
+    {
+      //Arrange
+      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      testPost.Save();
+      //Act
+      testPost.Update("Fishing at the lake", "I like to fish at the lake");
+      string expectedResult = "Fishing at the lake";
+      string result = Post.Find(testPost.GetId()).GetTitle();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
   }
 }
