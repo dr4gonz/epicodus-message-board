@@ -208,15 +208,29 @@ namespace MessageBoard
       RemoveById(_id);
     }
 
-    public List<Comment> GetAllChildComments()
+    public List<Comment> GetAllChildComments(string orderBy = "default")
     {
       List<Comment> allChildren = new List<Comment>{};
 
       SqlConnection conn = DB.Connection();
       SqlDataReader rdr = null;
       conn.Open();
-
-      SqlCommand cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId;", conn);
+      SqlCommand cmd = null;
+      switch(orderBy)
+      {
+        case "rating":
+          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY rating DESC;", conn);
+          break;
+        case "newest":
+          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY date ASC;", conn);
+          break;
+        case "oldest":
+          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY date DESC;", conn);
+          break;
+        default:
+          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY id;", conn);
+          break;
+      }
       SqlParameter postIdParameter = new SqlParameter("@PostId", _id);
       cmd.Parameters.Add(postIdParameter);
 
