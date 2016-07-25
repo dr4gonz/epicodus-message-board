@@ -313,7 +313,7 @@ namespace MessageBoard
       conn.Close();
     }
 
-    public static List<Post> SearchByKeyword(string keyword)
+    public static List<OriginalPost> SearchByKeyword(string keyword)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
@@ -325,14 +325,14 @@ namespace MessageBoard
       cmd.Parameters.Add(keywordTitleParameter);
       cmd.Parameters.Add(keywordTextParameter);
       rdr = cmd.ExecuteReader();
-      List<Post> allPosts = new List<Post>{};
+      List<OriginalPost> allPosts = new List<OriginalPost>{};
       while(rdr.Read())
       {
         int id = rdr.GetInt32(0);
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        Post post = new Post(author, title, mainText, id);
+        OriginalPost post = new OriginalPost(author, title, mainText, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -356,6 +356,6 @@ namespace MessageBoard
     }
 
 
-    
+
   }
 }

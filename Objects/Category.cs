@@ -118,7 +118,7 @@ namespace MessageBoard
       return foundCategory;
     }
 
-    public List<Post> GetPosts(string orderBy = "default")
+    public List<OriginalPost> GetPosts(string orderBy = "default")
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
@@ -143,14 +143,14 @@ namespace MessageBoard
       SqlParameter categoryParameter = new SqlParameter("@CategoryId", _id);
       cmd.Parameters.Add(categoryParameter);
       rdr = cmd.ExecuteReader();
-      List<Post> allPosts = new List<Post>{};
+      List<OriginalPost> allPosts = new List<OriginalPost>{};
       while(rdr.Read())
       {
         int id = rdr.GetInt32(0);
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        Post post = new Post(author, title, mainText, id);
+        OriginalPost post = new OriginalPost(author, title, mainText, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();

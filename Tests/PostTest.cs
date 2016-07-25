@@ -193,36 +193,33 @@ namespace MessageBoard
       //Assert
       Assert.Equal(expectedResult, result);
     }
-<<<<<<< HEAD
 
     [Fact]
     public void Post_SearchByKeyword_SearchesByTitleKeyword()
     {
       //Arrange
-      Post firstPost = new Post("Bob", "Fishing", "I like to fish");
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish");
       firstPost.Save();
-      Post secondPost = new Post("Joe", "Swimming", "I like to swim");
+      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim");
       secondPost.Save();
       //Act
-      List<Post> foundPosts = Post.SearchByKeyword("Fishing");
-      List<Post> expectedResults = new List<Post>{firstPost};
+      List<OriginalPost> foundPosts = OriginalPost.SearchByKeyword("Fishing");
+      List<OriginalPost> expectedResults = new List<OriginalPost>{firstPost};
       //Assert
       Assert.Equal(expectedResults, foundPosts);
     }
-=======
->>>>>>> master
 
     [Fact]
     public void Post_SearchByKeyword_SearchesByTextKeyword()
     {
       //Arrange
-      Post firstPost = new Post("Bob", "Fishing", "I like the outdoors");
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like the outdoors");
       firstPost.Save();
-      Post secondPost = new Post("Joe", "Swimming", "I like to swim");
+      OriginalPost secondPost = new OriginalPost("Joe", "Swimming", "I like to swim");
       secondPost.Save();
       //Act
-      List<Post> foundPosts = Post.SearchByKeyword("outdoors");
-      List<Post> expectedResults = new List<Post>{firstPost};
+      List<OriginalPost> foundPosts = OriginalPost.SearchByKeyword("outdoors");
+      List<OriginalPost> expectedResults = new List<OriginalPost>{firstPost};
       //Assert
       Assert.Equal(expectedResults, foundPosts);
     }
