@@ -10,13 +10,15 @@ namespace MessageBoard
     private string _author;
     private string _title;
     private string _mainText;
+    private DateTime? _time;
 
-    public OriginalPost(string author, string title, string mainText, int id=0)
+    public OriginalPost(string author, string title, string mainText, DateTime? time, int id=0)
     {
       _id = id;
       _author = author;
       _title = title;
       _mainText = mainText;
+      _time = time;
     }
 
     public int GetId()
@@ -49,6 +51,7 @@ namespace MessageBoard
         bool authorEquality = _author == otherOriginalPost._author;
         bool titleEquality = _title == otherOriginalPost._title;
         bool mainTextEquality = _mainText == otherOriginalPost._mainText;
+        bool timeEquality = _time == otherOriginalPost._time;
         return(idEquality && authorEquality && titleEquality && mainTextEquality);
       }
     }
@@ -76,7 +79,8 @@ namespace MessageBoard
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        OriginalPost post = new OriginalPost(author, title, mainText, id);
+        DateTime time = rdr.GetDateTime(4);
+        OriginalPost post = new OriginalPost(author, title, mainText, time, id);
         allOriginalPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -89,14 +93,16 @@ namespace MessageBoard
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text, date) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText, @Date);", conn);
 
       SqlParameter authorParameter = new SqlParameter("@Author", _author);
       SqlParameter titleParameter = new SqlParameter("@Title", _title);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", _mainText);
+      SqlParameter dateParameter = new SqlParameter("@Date", _time);
       cmd.Parameters.Add(authorParameter);
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
+      cmd.Parameters.Add(dateParameter);
 
       rdr = cmd.ExecuteReader();
 
@@ -123,6 +129,7 @@ namespace MessageBoard
       string foundAuthor = null;
       string foundTitle = null;
       string foundMainText = null;
+      DateTime? time = null;
 
       rdr = cmd.ExecuteReader();
 
@@ -132,9 +139,10 @@ namespace MessageBoard
         foundAuthor = rdr.GetString(1);
         foundTitle = rdr.GetString(2);
         foundMainText = rdr.GetString(3);
+        time = rdr.GetDateTime(4);
       }
 
-      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundId);
+      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundId, time);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
@@ -332,7 +340,8 @@ namespace MessageBoard
         string author = rdr.GetString(1);
         string title = rdr.GetString(2);
         string mainText = rdr.GetString(3);
-        Post post = new Post(author, title, mainText, id);
+        DateTime time = rdr.GetDateTime(4);
+        Post post = new Post(author, title, mainText, time, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -355,7 +364,5 @@ namespace MessageBoard
       if(conn!=null) conn.Close();
     }
 
-
-    
   }
 }
