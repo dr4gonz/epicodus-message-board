@@ -141,5 +141,24 @@ namespace MessageBoard
 
       return foundPost;
     }
+
+    public static void DeleteById(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("DELETE FROM posts WHERE id = @PostId;", conn);
+
+      SqlParameter postIdParameter = new SqlParameter("@PostId", id);
+      cmd.Parameters.Add(postIdParameter);
+
+      cmd.ExecuteNonQuery();
+      conn.Close();
+    }
+
+    public void Delete()
+    {
+      DeleteById(_id);
+    }
   }
 }

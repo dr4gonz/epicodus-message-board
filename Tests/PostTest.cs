@@ -59,5 +59,31 @@ namespace MessageBoard
       //Assert
       Assert.Equal(testPost, foundPost);
     }
+
+    [Fact]
+    public void Post_DeleteById_DeletesPostFromDatabase()
+    {
+      //Arrange
+      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      testPost.Save();
+      //Act
+      Post.DeleteById(testPost.GetId());
+      int result = Post.GetAll().Count;
+      //Assert
+      Assert.Equal(0, result);
+    }
+
+    [Fact]
+    public void Post_Delete_DeletesPostFromDatabase()
+    {
+      //Arrange
+      Post testPost = new Post("Bob", "Fishing", "I like to fish");
+      testPost.Save();
+      //Act
+      testPost.Delete();
+      int result = Post.GetAll().Count;
+      //Assert
+      Assert.Equal(0, result);
+    }
   }
 }
