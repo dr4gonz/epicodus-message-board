@@ -80,5 +80,20 @@ namespace MessageBoard
       Assert.Equal(expectedResult, result);
     }
 
+    [Fact]
+    public void Category_SearchByKeyword_SearchesCategoriesByKeyword()
+    {
+      //Arrange
+      Category firstCategory = new Category("Fishing");
+      firstCategory.Save();
+      Category secondCategory = new Category("Swimming");
+      secondCategory.Save();
+      //Act
+      List<Category> result = Category.SearchByKeyword("Fishing");
+      List<Category> expectedResult = new List<Category>{firstCategory};
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
+
   }
 }

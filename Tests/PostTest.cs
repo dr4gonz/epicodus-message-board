@@ -192,5 +192,20 @@ namespace MessageBoard
       Assert.Equal(expectedResults, foundPosts);
     }
 
+    [Fact]
+    public void Post_SearchByKeyword_SearchesByTextKeyword()
+    {
+      //Arrange
+      Post firstPost = new Post("Bob", "Fishing", "I like the outdoors");
+      firstPost.Save();
+      Post secondPost = new Post("Joe", "Swimming", "I like to swim");
+      secondPost.Save();
+      //Act
+      List<Post> foundPosts = Post.SearchByKeyword("outdoors");
+      List<Post> expectedResults = new List<Post>{firstPost};
+      //Assert
+      Assert.Equal(expectedResults, foundPosts);
+    }
+
   }
 }

@@ -158,5 +158,28 @@ namespace MessageBoard
       return allPosts;
     }
 
+    public static List<Category> SearchByKeyword(string keyword)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      keyword = "%" + keyword + "%";
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("SELECT * FROM categories WHERE name LIKE @NameKeyword;", conn);
+      SqlParameter keywordNameParameter = new SqlParameter("@NameKeyword", keyword);
+      cmd.Parameters.Add(keywordNameParameter);
+      rdr = cmd.ExecuteReader();
+      List<Category> allCategories = new List<Category>{};
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        Category category = new Category(name, id);
+        allCategories.Add(category);
+      }
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+      return allCategories;
+    }
+
   }
 }
