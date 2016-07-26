@@ -60,6 +60,13 @@ namespace MessageBoard
         newUser.Save();
         return View["register_success.cshtml", newUser];
       };
+      // Post["/login"] = _ =>
+      // {
+      //   namePassword[0] = Request.Form["user-name"];
+      //   namePassword[1] = Request.Form["password"];
+      //   User.ValidateUserLogin()
+      //
+      // }
     }
   }
 }
