@@ -31,8 +31,8 @@
         <!-- END POST CONTENT DIV -->
 
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
-        <a class="show-comment-form-top">Reply</a>
-        <div class="comment-form-top">
+        <a class="show-comment-form-top show-form">Reply</a>
+        <div class="comment-form-top comment-form">
           <form class="form-group" action="/posts/@Model.GetId()" method="post">
             <label>Author:</label>
             <input class="form-control" type="text" name="comment-author" value="">
@@ -61,8 +61,8 @@
             <!-- END CONTENT OF COMMENT -->
 
             <!-- FORM FOR REPLYING TO TOP LEVEL COMMENT -->
-            <a class="show-comment-form-child" id="child-@comment.GetId()">Reply</a>
-            <div class="comment-form-child" id="child-@comment.GetId()-form">
+            <a class="show-comment-form-child show-form" id="child-@comment.GetId()">Reply</a>
+            <div class="comment-form-child comment-form" id="child-@comment.GetId()-form">
               <form action="/posts/@Model.GetId()/reply" method="post">
                 <label>Author:</label>
                 <input class="form-control" type="text" name="reply-author" value="">
@@ -93,8 +93,18 @@
                       @childComment.GetMainText()
                     </p>
                   </div>
-                  <div class="comment-form">
-
+                  <a class="show-comment-form-grandchild show-form" id="grandchild-@childComment.GetId()">Reply</a>
+                  <div class="comment-form-grandchild comment-form" id="grandchild-@childComment.GetId()-form">
+                    <form action="/posts/@Model.GetId()/reply" method="post">
+                      <label>Author:</label>
+                      <input class="form-control" type="text" name="reply-author" value="">
+                      <label>Main Text:</label>
+                      <input class="form-control" type="text" name="reply-main-text" value="">
+                      <input type="hidden" name="parent-id" value="@childComment.GetId()">
+                      <input type="hidden" name="post-id" value="@Model.GetId()">
+                      <button type="submit" name="button" class="btn btn-primary">Submit</button>
+                    </form>
+                    <a class="hide-comment-form-grandchild">Hide</a>
                   </div>
 
                   <!-- CHILDREN OF CHILD COMMENT -->

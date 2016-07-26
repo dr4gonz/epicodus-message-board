@@ -18,7 +18,7 @@ ul {
   border: 1px solid red;
 }
 
-.comment-form-top, .comment-form-child, .comment-form.grandchild {
+.comment-form-top, .comment-form-child, .comment-form-grandchild {
   display: none;
 }
 
