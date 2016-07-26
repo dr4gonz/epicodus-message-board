@@ -9,6 +9,7 @@ namespace MessageBoard
     private string userName = "";
     private string password = "";
     private bool validate = true;
+    private bool registrationBool = true;
     public HomeModule()
     {
       Get["/"] = _ =>
@@ -79,11 +80,23 @@ namespace MessageBoard
         return View["comment.cshtml", comment];
       };
 
-      Get["/register"] = _ => View["register.cshtml"];
+      Get["/register"] = _ => {
 
-      Post["/register/success"] = _ =>
+        return View["register.cshtml", registrationBool];
+      };
+      Post["/register"] = _ =>
       {
-        User newUser = new User(Request.Form["name"], Request.Form["password1"]);
+        List<User> allUsers = User.GetAll();
+        string newUserName = Request.Form["name"];
+        foreach(var user in allUsers)
+        {
+          if(user.GetName() == newUserName)
+          {
+            registrationBool = false;
+            return View["register.cshtml", registrationBool];
+          }
+        }
+        User newUser = new User(newUserName, Request.Form["password1"]);
         newUser.Save();
         return View["register_success.cshtml", newUser];
       };
