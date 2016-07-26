@@ -145,5 +145,75 @@ namespace MessageBoard
 
       return foundUser;
     }
+
+    public List<Comment> GetComments()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("SELECT * FROM comments WHERE user_id = @UserId;", conn);
+      SqlParameter userIdParameter = new SqlParameter("@UserId", this.GetId());
+      cmd.Parameters.Add(userIdParameter);
+
+      rdr = cmd.ExecuteReader();
+      List<Comment> userComments = new List<Comment> {};
+      int commentId = 0;
+      string commentAuthor = null;
+      string commentMainText = null;
+      int commentRating = 0;
+      int commentPostId = 0;
+      DateTime? commentDateTime = null;
+      int commentUserId = 0;
+      while(rdr.Read())
+      {
+        commentId = rdr.GetInt32(0);
+        commentAuthor = rdr.GetString(1);
+        commentMainText = rdr.GetString(2);
+        commentRating = rdr.GetInt32(3);
+        commentPostId = rdr.GetInt32(4);
+        commentDateTime = rdr.GetDateTime(6);
+        commentUserId = rdr.GetInt32(7);
+        Comment newComment = new Comment(commentAuthor, commentMainText, commentRating, commentPostId, commentDateTime, commentUserId, commentId);
+        userComments.Add(newComment);
+      }
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+      return userComments;
+    }
+
+    public List<OriginalPost> GetOriginalPosts()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("SELECT * FROM posts WHERE user_id = @UserId;", conn);
+      SqlParameter userIdParameter = new SqlParameter("@UserId", this.GetId());
+      cmd.Parameters.Add(userIdParameter);
+
+      rdr = cmd.ExecuteReader();
+      List<OriginalPost> userPosts = new List<OriginalPost> {};
+      int postId = 0;
+      string postAuthor = null;
+      string postTitle = null;
+      string postMainText = null;
+      int postRating = 0;
+      DateTime? postDateTime = null;
+      int postUserId = 0;
+      while(rdr.Read())
+      {
+        postId = rdr.GetInt32(0);
+        postAuthor = rdr.GetString(1);
+        postTitle = rdr.GetString(2);
+        postMainText = rdr.GetString(3);
+        postRating = rdr.GetInt32(4);
+        postDateTime = rdr.GetDateTime(5);
+        postUserId = rdr.GetInt32(6);
+        OriginalPost newPost = new OriginalPost(postAuthor, postTitle, postMainText, postRating, postDateTime, postUserId, postId);
+        userPosts.Add(newPost);
+      }
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+      return userPosts;
+    }
   }
 }

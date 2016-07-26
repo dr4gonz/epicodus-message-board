@@ -75,5 +75,33 @@ namespace MessageBoard
       //Assert
       Assert.Equal(0, result);
     }
+    [Fact]
+    public void User_GetComments_GetsAllOfUsersComments()
+    {
+      //Arrange
+      User testUser = new User("Homer J. Simpson", "230sfd");
+      testUser.Save();
+      Comment newComment = new Comment(testUser.GetName(), "This stuff is really cool!", 0, 1, testDate, testUser.GetId());
+      newComment.Save();
+      //Act
+      List<Comment> expectedResult = new List<Comment> {newComment};
+      List<Comment> result = testUser.GetComments();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
+    [Fact]
+    public void User_GetOriginalPosts_GetsAllOfUsersPost()
+    {
+      //Arrange
+      User testUser = new User("Homer J. Simpson", "230sfd");
+      testUser.Save();
+      OriginalPost newOriginalPost = new OriginalPost(testUser.GetName(), "Fishing", "I like to fish", 0, testDate, testUser.GetId());
+      newOriginalPost.Save();
+      //Act
+      List<OriginalPost> expectedResult = new List<OriginalPost> {newOriginalPost};
+      List<OriginalPost> result = testUser.GetOriginalPosts();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
   }
 }
