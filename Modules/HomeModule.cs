@@ -6,6 +6,9 @@ namespace MessageBoard
 {
   public class HomeModule : NancyModule
   {
+    private List<string> userNamePassword = new List<string> {"empty", "empty"};
+    private string userName = userNamePassword[0];
+    private string password = userNamePassword[1];
     public HomeModule()
     {
       Get["/"] = _ =>
@@ -60,13 +63,17 @@ namespace MessageBoard
         newUser.Save();
         return View["register_success.cshtml", newUser];
       };
-      // Post["/login"] = _ =>
-      // {
-      //   namePassword[0] = Request.Form["user-name"];
-      //   namePassword[1] = Request.Form["password"];
-      //   User.ValidateUserLogin()
-      //
-      // }
+      Post["/login"] = _ =>
+      {
+        userName = Request.Form["user-name"];
+        password = Request.Form["password"];
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allPosts = OriginalPost.GetAll();
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        model.Add("user", currentUser);
+        model.Add("posts", allPosts);
+        return View["index.cshtml", model];
+      };
     }
   }
 }
