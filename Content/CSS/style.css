@@ -18,15 +18,7 @@ ul {
   border: 1px solid red;
 }
 
-.comment-form-top, .comment-form-child, .comment-form-grandchild {
-  display: none;
-}
-
-.child-reply {
-  display: none;
-}
-
-.comment-child-reply {
+.comment-form {
   display: none;
 }
 

@@ -32,7 +32,7 @@ namespace MessageBoard
       Get["/posts/{id}"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        return View["post2.cshtml", selectedOriginalPost];
+        return View["post.cshtml", selectedOriginalPost];
       };
       Post["/posts/{id}"] = parameters =>
       {
@@ -55,6 +55,21 @@ namespace MessageBoard
         Comment.DeleteAll();
         return View["post.cshtml", selectedOriginalPost];
       };
+      Get["/comments/{id}"] = parameters =>
+      {
+        Comment comment = Comment.Find(parameters.id);
+        return View["comment.cshtml", comment];
+      };
+      Post["/comments/{id}"] = parameters =>
+      {
+        Comment comment = Comment.Find(parameters.id);
+        int postId = comment.GetPostId();
+        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, postId, DateTime.Now);
+        newComment.SetParentId(Request.Form["comment-id"]);
+        newComment.Save();
+        return View["comment.cshtml", comment];
+      };
+
     }
   }
 }

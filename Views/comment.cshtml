@@ -19,34 +19,36 @@
     <div class="row">
       <!-- MAIN CONTENT -->
       <div class="col-md-10 main-content">
-        <!-- POST CONTENT -->
-        <div class="post-content">
+        <a href="/posts/@Model.GetPostId()">View original post</a>
+
+        <!-- CONTENT OF COMMENT -->
+        <div class="comment-content">
           <div class="page-header">
-            <h3>@Model.GetTitle()</h3>
             <p>@Model.GetAuthor() - @Model.GetTime()</p>
           </div>
           <p>
             @Model.GetMainText()
           </p>
         </div>
-        <!-- END POST CONTENT -->
+        <!-- END CONTENT OF COMMENT -->
 
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
         <a class="show-form" id="top">Reply</a>
         <div class="comment-form" id="top-form">
           <a class="hide-form">Hide</a>
-          <form class="form-group" action="/posts/@Model.GetId()" method="post">
+          <form class="form-group" action="/comments/@Model.GetId()" method="post">
             <label>Author:</label>
             <input class="form-control" type="text" name="comment-author" value="">
             <label>Main Text:</label>
             <input class="form-control" type="text" name="comment-main-text" value="">
-            <input type="hidden" name="post-id" value="@Model.GetId()">
+            <input type="hidden" name="comment-id" value="@Model.GetId()">
+            <input type="hidden" name="post-id" value="@Model.GetPostId()">
             <button type="submit" name="button" class="btn btn-primary">Submit</button>
           </form>
         </div>
         <!-- END FORM FOR NEW TOP LEVEL COMMENT -->
 
-        @foreach(var comment in Model.GetAllDirectChildren())
+        @foreach(var comment in Model.GetChildren())
         {
           <!-- WRAPPER AROUND COMMENT + ITS CHILDREN -->
           <div class="comment-wrapper">
@@ -65,13 +67,13 @@
             <a class="show-form" id="child-@comment.GetId()">Reply</a>
             <div class="comment-form" id="child-@comment.GetId()-form">
               <a class="hide-form">Hide</a>
-              <form action="/posts/@Model.GetId()/reply" method="post">
+              <form class="form-group" action="/comments/@Model.GetId()" method="post">
                 <label>Author:</label>
-                <input class="form-control" type="text" name="reply-author" value="">
+                <input class="form-control" type="text" name="comment-author" value="">
                 <label>Main Text:</label>
-                <input class="form-control" type="text" name="reply-main-text" value="">
-                <input type="hidden" name="parent-id" value="@comment.GetId()">
-                <input type="hidden" name="post-id" value="@Model.GetId()">
+                <input class="form-control" type="text" name="comment-main-text" value="">
+                <input type="hidden" name="post-id" value="@Model.GetPostId()">
+                <input type="hidden" name="comment-id" value="@comment.GetId()">
                 <button type="submit" name="button" class="btn btn-primary">Submit</button>
               </form>
             </div>
@@ -94,13 +96,13 @@
                   <a class="show-form" id="grandchild-@childComment.GetId()">Reply</a>
                   <div class="comment-form" id="grandchild-@childComment.GetId()-form">
                     <a class="hide-form">Hide</a>
-                    <form action="/posts/@Model.GetId()/reply" method="post">
+                    <form class="form-group" action="/comments/@Model.GetId()" method="post">
                       <label>Author:</label>
-                      <input class="form-control" type="text" name="reply-author" value="">
+                      <input class="form-control" type="text" name="comment-author" value="">
                       <label>Main Text:</label>
-                      <input class="form-control" type="text" name="reply-main-text" value="">
-                      <input type="hidden" name="parent-id" value="@childComment.GetId()">
-                      <input type="hidden" name="post-id" value="@Model.GetId()">
+                      <input class="form-control" type="text" name="comment-main-text" value="">
+                      <input type="hidden" name="comment-id" value="@childComment.GetId()">
+                      <input type="hidden" name="post-id" value="@Model.GetPostId()">
                       <button type="submit" name="button" class="btn btn-primary">Submit</button>
                     </form>
                   </div>
@@ -124,7 +126,7 @@
                           }
                           else
                           {
-                            <a href="/comments/@grandchildComment.GetId()">Reply</a>
+                            <a href="/comments/@grandchildComment.GetId()">No comments</a>
                           }
                         </div>
                       </div>
