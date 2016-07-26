@@ -14,12 +14,18 @@ namespace MessageBoard
         return View["index.cshtml", allOriginalPosts];
       };
 
-      Get["/new"] = _ => View["new_page.cshtml"];
+      Get["/new"] = _ =>
+      {
+        List<Category> categories = Category.GetAll();
+        return View["new_post.cshtml", categories];
+      };
 
       Post["/new"] = _ =>
       {
         OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, 1);
         newOriginalPost.Save();
+        Category foundCategory = Category.Find(Request.Form["category"]);
+        newOriginalPost.AddCategory(foundCategory);
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         return View["index.cshtml", allOriginalPosts];
       };
