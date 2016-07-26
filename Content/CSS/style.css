@@ -1,5 +1,23 @@
 body {
-  background-color: rgb(170, 220, 255);
+  background-color: #c2f0f0;
+
+}
+
+h1, h2, h3 {
+  color: #3454D1;
+}
+
+.navbar h1 {
+  color: white;
+}
+
+.navbar {
+  background-color: rgba(52, 84, 209, 0.8);
+  border: 0px;
+}
+
+.page-top-header {
+  background-color: rgb(45, 89, 134);
 }
 
 ul {
@@ -14,10 +32,6 @@ ul {
   font-size: 1.7em;
 }
 
-.sidebar, .main-content, .post-listing {
-  border: 1px solid red;
-}
-
 .comment-form {
   display: none;
 }
@@ -28,4 +42,57 @@ ul {
   padding: 10px;
   margin-bottom: 20px;
   border-radius: 5px;
+}
+
+.post-listing {
+  padding: 15px;
+  font-size: 2em;
+  background-color: rgba(255, 255, 255, .3);
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.post-listing li {
+  margin-left: 10px;
+  display: inline-block;
+}
+
+.post-listing button {
+  display: inline-block;
+}
+
+.post-content {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, .3);
+  padding: 10px;
+  margin-bottom: 30px;
+  border-radius: 5px;
+}
+
+.page-header {
+  margin: 15px 0 15px;
+  color: #3454D1;
+}
+
+.main-content {
+  background-color: rgba(255, 255, 255, .3);
+  padding-top: 20px;
+  border-radius: 5px;
+}
+
+.sidebar {
+  background-color: rgba(255, 255, 255, .3);
+  padding-top: 20px;
+  padding-right: 5px;
+  padding-left: 5px;
+  border-radius: 5px;
+}
+
+.sidebar a:hover {
+  text-decoration: none;
+}
+
+.sidebar .btn {
+  margin-bottom: 20px;
 }
