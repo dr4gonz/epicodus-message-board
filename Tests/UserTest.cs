@@ -9,7 +9,6 @@ namespace MessageBoard
   public class UserTest : IDisposable
   {
     DateTime testDate = new DateTime(2016, 7, 22);
-
     public UserTest()
     {
       DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";

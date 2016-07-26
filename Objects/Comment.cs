@@ -14,8 +14,9 @@ namespace MessageBoard
     private int _parentId;
     private int _rating;
     private DateTime? _time;
+    private int _userId;
 
-    public Comment(string author, string mainText, int rating, int postId, DateTime? time, int id = 0)
+    public Comment(string author, string mainText, int rating, int postId, DateTime? time, int userId, int id = 0)
     {
       _id = id;
       _author = author;
@@ -24,6 +25,7 @@ namespace MessageBoard
       _parentId = 0;
       _postId = postId;
       _time = time;
+      _userId = userId;
     }
 
     public int GetId()
@@ -53,6 +55,10 @@ namespace MessageBoard
     public DateTime? GetTime()
     {
       return _time;
+    }
+    public int GetUserId()
+    {
+      return _userId;
     }
     public void SetParentId(int newParentId)
     {
@@ -91,8 +97,9 @@ namespace MessageBoard
         int newCommentRating = rdr.GetInt32(3);
         int newCommentPostId = rdr.GetInt32(4);
         DateTime newCommentDateTime = rdr.GetDateTime(6);
+        int newUserId = rdr.GetInt32(7);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newUserId, newCommentId);
         allComments.Add(newComment);
       }
 
@@ -117,7 +124,8 @@ namespace MessageBoard
         bool ratingEquality = (this._rating == newComment.GetRating());
         bool postIdEquality = (this._postId == newComment.GetPostId());
         bool dateTimeEquality = (this._time == newComment.GetTime());
-        return (idEquality && authorEquality && mainTextEquality && ratingEquality && postIdEquality && dateTimeEquality);
+        bool userIdEquality = (this._userId == newComment.GetUserId());
+        return (idEquality && authorEquality && mainTextEquality && ratingEquality && postIdEquality && dateTimeEquality && userIdEquality);
       }
     }
 
@@ -158,8 +166,9 @@ namespace MessageBoard
         int newCommentPostId = rdr.GetInt32(4);
         int newCommentParentId = rdr.GetInt32(5);
         DateTime newCommentDateTime = rdr.GetDateTime(6);
+        int newUserId = rdr.GetInt32(7);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newUserId, newCommentId);
         allChildren.Add(newComment);
       }
 
@@ -175,7 +184,7 @@ namespace MessageBoard
      SqlDataReader rdr = null;
      conn.Open();
 
-     SqlCommand cmd = new SqlCommand("INSERT INTO comments (author, main_text, rating, post_id, parent_id, time) OUTPUT INSERTED.id VALUES(@Author, @MainText, @Rating, @PostId, @ParentId, @Time);", conn);
+     SqlCommand cmd = new SqlCommand("INSERT INTO comments (author, main_text, rating, post_id, parent_id, time, user_id) OUTPUT INSERTED.id VALUES(@Author, @MainText, @Rating, @PostId, @ParentId, @Time, @UserId);", conn);
 
      SqlParameter commentAuthorParameter = new SqlParameter("@Author", this.GetAuthor());
      cmd.Parameters.Add(commentAuthorParameter);
@@ -194,6 +203,9 @@ namespace MessageBoard
 
      SqlParameter timeParameter = new SqlParameter("@Time", this.GetTime());
      cmd.Parameters.Add(timeParameter);
+
+     SqlParameter userIdParameter = new SqlParameter("UserId", this.GetUserId());
+     cmd.Parameters.Add(userIdParameter);
 
      rdr = cmd.ExecuteReader();
 
@@ -224,6 +236,7 @@ namespace MessageBoard
      int foundCommentRating = 0;
      int foundPostId = 0;
      DateTime? foundTime = null;
+     int foundUserId = 0;
 
      while(rdr.Read())
      {
@@ -233,8 +246,9 @@ namespace MessageBoard
          foundCommentRating = rdr.GetInt32(3);
          foundPostId = rdr.GetInt32(4);
          foundTime = rdr.GetDateTime(6);
+         foundUserId = rdr.GetInt32(7);
      }
-     Comment newComment = new Comment(foundCommentAuthor, foundCommentMainText, foundCommentRating, foundPostId, foundTime, foundCommentId);
+     Comment newComment = new Comment(foundCommentAuthor, foundCommentMainText, foundCommentRating, foundPostId, foundTime, foundUserId, foundCommentId);
 
      if(rdr != null) rdr.Close();
      if(conn != null) conn.Close();
