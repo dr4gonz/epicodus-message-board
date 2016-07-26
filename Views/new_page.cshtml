@@ -12,38 +12,12 @@
     <title>Message Board</title>
   </head>
   <body>
-
     <div class="container">
       <div class="page-header">
         <h1>HEADER</h1>
       </div>
       <div class="col-md-10 main-content">
-        <h1>MAIN CONTENT</h1>
-        @if(Model.Count == 0)
-        {
-          <h2>No Posts</h2>
-        }
-        else
-        {
-          <ul class="list-group">
-            @foreach(var post in Model)
-            {
-              <div class="post-listing">
-                <button id="upvote" type="button" name="upvote" class="btn btn-primary">+</button>
-                <button id="downvote" type="button" name="downvote" class="btn btn-primary">-</button>
-                <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
-              </div>
-            }
-          </ul>
-        }
-
-      </div>
-      <div class="col-md-2 sidebar">
-        <h3>SIDEBAR</h3>
-        <ul>
-          <li class="sidebar-listitem"><a href="/new">New Post</a></li>
-        </ul>
-        <form class="form-group" action="/" method="post">
+        <form class="form-group" action="/new" method="post">
           <label>Author:</label>
           <input class="form-control" type="text" name="author" value="" required>
           <label>Title:</label>
@@ -55,8 +29,12 @@
         <form action="/" method="post">
           <input type="hidden" name="_method" value="DELETE">
           <button class="btn btn-danger" type="submit" name="button">Delete all Posts</button>
-        </form>
-        <a href="/register">Register</a>
+        </form>      </div>
+      <div class="col-md-2 sidebar">
+        <h3>SIDEBAR</h3>
+        <ul>
+          <li class="sidebar-listitem"><a href="/new">New Post</a></li>
+        </ul>
       </div>
     </div>
   </body>

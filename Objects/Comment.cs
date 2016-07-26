@@ -96,10 +96,12 @@ namespace MessageBoard
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
         int newCommentPostId = rdr.GetInt32(4);
+        int newCommentParentId = rdr.GetInt32(5);
         DateTime newCommentDateTime = rdr.GetDateTime(6);
         int newUserId = rdr.GetInt32(7);
 
         Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newUserId, newCommentId);
+        newComment.SetParentId(newCommentParentId);
         allComments.Add(newComment);
       }
 
@@ -169,6 +171,7 @@ namespace MessageBoard
         int newUserId = rdr.GetInt32(7);
 
         Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newUserId, newCommentId);
+        newComment.SetParentId(newCommentParentId);
         allChildren.Add(newComment);
       }
 
@@ -235,6 +238,7 @@ namespace MessageBoard
      string foundCommentMainText = null;
      int foundCommentRating = 0;
      int foundPostId = 0;
+     int foundParentId = 0;
      DateTime? foundTime = null;
      int foundUserId = 0;
 
@@ -245,10 +249,13 @@ namespace MessageBoard
          foundCommentMainText = rdr.GetString(2);
          foundCommentRating = rdr.GetInt32(3);
          foundPostId = rdr.GetInt32(4);
+         foundParentId = rdr.GetInt32(5);
          foundTime = rdr.GetDateTime(6);
          foundUserId = rdr.GetInt32(7);
      }
+
      Comment newComment = new Comment(foundCommentAuthor, foundCommentMainText, foundCommentRating, foundPostId, foundTime, foundUserId, foundCommentId);
+     newComment.SetParentId(foundParentId);
 
      if(rdr != null) rdr.Close();
      if(conn != null) conn.Close();

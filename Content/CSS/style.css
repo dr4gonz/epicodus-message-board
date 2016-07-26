@@ -1,4 +1,31 @@
-body
-{
-  background-color: lightblue;
+body {
+  background-color: rgb(170, 220, 255);
+}
+
+ul {
+  list-style-type: none;
+}
+
+.sidebar {
+  height: 100%;
+}
+
+.sidebar-listitem {
+  font-size: 1.7em;
+}
+
+.sidebar, .main-content, .post-listing {
+  border: 1px solid red;
+}
+
+.comment-form {
+  display: none;
+}
+
+.comment-wrapper {
+  background-color: rgba(255, 255, 255, .3);
+  margin-left: 30px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
 }

@@ -16,7 +16,10 @@ namespace MessageBoard
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         return View["index.cshtml", allOriginalPosts];
       };
-      Post["/"] = _ =>
+
+      Get["/new"] = _ => View["new_page.cshtml"];
+
+      Post["/new"] = _ =>
       {
         OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, 1);
         newOriginalPost.Save();
@@ -55,6 +58,22 @@ namespace MessageBoard
         Comment.DeleteAll();
         return View["post.cshtml", selectedOriginalPost];
       };
+
+      Get["/comments/{id}"] = parameters =>
+      {
+        Comment comment = Comment.Find(parameters.id);
+        return View["comment.cshtml", comment];
+      };
+      Post["/comments/{id}"] = parameters =>
+      {
+        Comment comment = Comment.Find(parameters.id);
+        int postId = comment.GetPostId();
+        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, postId, DateTime.Now, 3);
+        newComment.SetParentId(Request.Form["comment-id"]);
+        newComment.Save();
+        return View["comment.cshtml", comment];
+      };
+
       Get["/register"] = _ => View["register.cshtml"];
 
       Post["/register/success"] = _ =>

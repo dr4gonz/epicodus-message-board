@@ -50,6 +50,11 @@ namespace MessageBoard
       return _rating;
     }
 
+    public DateTime? GetTime()
+    {
+      return _time;
+    }
+
     public int GetUserId()
     {
       return _userId;
@@ -312,10 +317,12 @@ namespace MessageBoard
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
         int newCommentPostId = rdr.GetInt32(4);
+        int newCommentParentId = rdr.GetInt32(5);
         DateTime newCommentDateTime = rdr.GetDateTime(6);
         int newUserId = rdr.GetInt32(7);
 
         Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newUserId, newCommentId);
+        newComment.SetParentId(newCommentParentId);
         allChildren.Add(newComment);
       }
 
@@ -360,10 +367,12 @@ namespace MessageBoard
         string newCommentMainText = rdr.GetString(2);
         int newCommentRating = rdr.GetInt32(3);
         int newCommentPostId = rdr.GetInt32(4);
+        int newCommentParentId = rdr.GetInt32(5);
         DateTime newCommentDateTime = rdr.GetDateTime(6);
         int newUserId = rdr.GetInt32(7);
 
         Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newUserId, newCommentId);
+        newComment.SetParentId(newCommentParentId);
         children.Add(newComment);
       }
 
