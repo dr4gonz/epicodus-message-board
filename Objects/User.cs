@@ -171,12 +171,24 @@ namespace MessageBoard
         foundName = rdr.GetString(1);
         foundPassword = rdr.GetString(2);
       }
-      User foundUser = new User(foundName, foundPassword, foundId);
+      if (foundName == userName && foundPassword == password)
+      {
+        User foundUser = new User(foundName, foundPassword, foundId);
 
-      if (rdr != null) rdr.Close();
-      if (conn != null) conn.Close();
+        if (rdr != null) rdr.Close();
+        if (conn != null) conn.Close();
 
-      return foundUser;
+        return foundUser;
+      }
+      else
+      {
+        User foundUser = null;
+
+        if (rdr != null) rdr.Close();
+        if (conn != null) conn.Close();
+
+        return foundUser;
+      }
     }
 
     public List<Comment> GetComments()

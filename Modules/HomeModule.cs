@@ -6,15 +6,19 @@ namespace MessageBoard
 {
   public class HomeModule : NancyModule
   {
-    private List<string> userNamePassword = new List<string> {"empty", "empty"};
-    private string userName = userNamePassword[0];
-    private string password = userNamePassword[1];
+    private string userName = "";
+    private string password = "";
+
     public HomeModule()
     {
       Get["/"] = _ =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
-        return View["index.cshtml", allOriginalPosts];
+        model.Add("posts", allOriginalPosts);
+        return View["index.cshtml", model];
       };
 
       Get["/new"] = _ => View["new_page.cshtml"];
