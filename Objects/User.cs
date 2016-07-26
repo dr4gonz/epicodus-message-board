@@ -146,6 +146,39 @@ namespace MessageBoard
       return foundUser;
     }
 
+    public static User ValidateUserLogin(string userName, string password)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE (user_name = @UserName AND password = @Password);", conn);
+
+      SqlParameter userNameParameter = new SqlParameter("@UserName", userName);
+      cmd.Parameters.Add(userNameParameter);
+
+      SqlParameter passwordParameter = new SqlParameter("@Password", password);
+      cmd.Parameters.Add(passwordParameter);
+
+      int foundId = 0;
+      string foundName = null;
+      string foundPassword = null;
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        foundId = rdr.GetInt32(0);
+        foundName = rdr.GetString(1);
+        foundPassword = rdr.GetString(2);
+      }
+      User foundUser = new User(foundName, foundPassword, foundId);
+
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+
+      return foundUser;
+    }
+
     public List<Comment> GetComments()
     {
       SqlConnection conn = DB.Connection();

@@ -12,6 +12,7 @@
     <title>Message Board</title>
   </head>
   <body>
+
     <div class="container">
       <div class="page-header">
         <h1>HEADER</h1>
@@ -42,6 +43,20 @@
         <ul>
           <li class="sidebar-listitem"><a href="/new">New Post</a></li>
         </ul>
+        <form class="form-group" action="/" method="post">
+          <label>Author:</label>
+          <input class="form-control" type="text" name="author" value="" required>
+          <label>Title:</label>
+          <input class="form-control" type="text" name="title" value="" required>
+          <label>Main Text:</label>
+          <input class="form-control" type="text" name="main-text" value="" required>
+          <button class="btn btn-primary" type="submit" name="button">Submit</button>
+        </form>
+        <form action="/" method="post">
+          <input type="hidden" name="_method" value="DELETE">
+          <button class="btn btn-danger" type="submit" name="button">Delete all Posts</button>
+        </form>
+        <a href="/register">Register</a>
       </div>
     </div>
   </body>

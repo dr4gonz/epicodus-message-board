@@ -55,6 +55,7 @@ namespace MessageBoard
         Comment.DeleteAll();
         return View["post.cshtml", selectedOriginalPost];
       };
+
       Get["/comments/{id}"] = parameters =>
       {
         Comment comment = Comment.Find(parameters.id);
@@ -70,6 +71,21 @@ namespace MessageBoard
         return View["comment.cshtml", comment];
       };
 
+      Get["/register"] = _ => View["register.cshtml"];
+
+      Post["/register/success"] = _ =>
+      {
+        User newUser = new User(Request.Form["name"], Request.Form["password1"]);
+        newUser.Save();
+        return View["register_success.cshtml", newUser];
+      };
+      // Post["/login"] = _ =>
+      // {
+      //   namePassword[0] = Request.Form["user-name"];
+      //   namePassword[1] = Request.Form["password"];
+      //   User.ValidateUserLogin()
+      //
+      // }
     }
   }
 }

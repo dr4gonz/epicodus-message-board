@@ -103,5 +103,17 @@ namespace MessageBoard
       //Assert
       Assert.Equal(expectedResult, result);
     }
+
+    [Fact]
+    public void User_ValidateUser_ValidatesUserAgainstDatabase()
+    {
+      //Arrange
+      User testUser = new User("Homer", "230sfd");
+      testUser.Save();
+      //Act
+      User result = User.ValidateUserLogin("Homer", "230sfd");
+      //Assert
+      Assert.Equal(testUser, result);
+    }
   }
 }
