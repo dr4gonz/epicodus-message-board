@@ -52,6 +52,14 @@ namespace MessageBoard
         Comment.DeleteAll();
         return View["post.cshtml", selectedOriginalPost];
       };
+      Get["/register"] = _ => View["register.cshtml"];
+
+      Post["/register/success"] = _ =>
+      {
+        User newUser = new User(Request.Form["name"], Request.Form["password1"]);
+        newUser.Save();
+        return View["register_success.cshtml", newUser];
+      };
     }
   }
 }
