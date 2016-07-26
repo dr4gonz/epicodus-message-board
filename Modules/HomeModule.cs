@@ -31,12 +31,16 @@ namespace MessageBoard
 
       Post["/new"] = _ =>
       {
-        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, 1);
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        OriginalPost newOriginalPost = new OriginalPost(currentUser.GetName(), Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, currentUser.GetId());
         newOriginalPost.Save();
         Category foundCategory = Category.Find(Request.Form["category"]);
         newOriginalPost.AddCategory(foundCategory);
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
-        return View["index.cshtml", allOriginalPosts];
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        return View["index.cshtml", model];
       };
       Delete["/"] = _ =>
       {

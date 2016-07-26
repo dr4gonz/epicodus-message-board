@@ -18,8 +18,8 @@
       </div>
       <div class="col-md-10 main-content">
         <form class="form-group" action="/new" method="post">
-          <label>Author:</label>
-          <input class="form-control" type="text" name="author" value="" required>
+
+          <input class="form-control" type="hidden" name="author" value='@Model["user"].GetName()' required>
           <label>Title:</label>
           <input class="form-control" type="text" name="title" value="" required>
           <label>Main Text:</label>
