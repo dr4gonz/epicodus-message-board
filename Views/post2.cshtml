@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/Content/CSS/style.css" type="text/css">
+    <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="/Content/JS/script.js" type="text/javascript"></script>
+    <title>Message Board</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>HEADER</h1>
+      </div>
+      <!-- MAIN CONTENT div -->
+      <div class="col-md-10 main-content">
+        <!-- POST CONTENT DIV -->
+        <div class="post-content">
+          <div class="page-header">
+            <h3>@Model.GetTitle()</h3>
+            <p>@Model.GetAuthor() - @Model.GetTime()</p>
+          </div>
+          <p>
+            @Model.GetMainText()
+          </p>
+        </div>
+        <!-- END POST CONTENT DIV -->
+
+        <!-- FORM FOR NEW TOP LEVEL COMMENT -->
+        <a class="show-comment-form-top">Reply</a>
+        <div class="comment-form-top">
+          <form class="form-group" action="/posts/@Model.GetId()" method="post">
+            <label>Author:</label>
+            <input class="form-control" type="text" name="comment-author" value="">
+            <label>Main Text:</label>
+            <input class="form-control" type="text" name="comment-main-text" value="">
+            <input type="hidden" name="post-id" value="@Model.GetId()">
+            <button type="submit" name="button" class="btn btn-primary">Submit</button>
+          </form>
+          <a class="hide-comment-form-top">Hide</a>
+        </div>
+        <!-- END FORM FOR NEW TOP LEVEL COMMENT -->
+
+        @foreach(var comment in Model.GetAllDirectChildren())
+        {
+          <!-- WRAPPER AROUND COMMENT + ITS CHILDREN -->
+          <div class="comment-wrapper">
+            <!-- CONTENT OF COMMENT -->
+            <div class="comment-content">
+              <div class="page-header">
+                <p>@comment.GetAuthor() - @comment.GetTime()</p>
+              </div>
+              <p>
+                @comment.GetMainText()
+              </p>
+            </div>
+            <!-- END CONTENT OF COMMENT -->
+
+            <!-- FORM FOR REPLYING TO TOP LEVEL COMMENT -->
+            <a class="show-comment-form-child" id="child-@comment.GetId()">Reply</a>
+            <div class="comment-form-child" id="child-@comment.GetId()-form">
+              <form action="/posts/@Model.GetId()/reply" method="post">
+                <label>Author:</label>
+                <input class="form-control" type="text" name="reply-author" value="">
+                <label>Main Text:</label>
+                <input class="form-control" type="text" name="reply-main-text" value="">
+                <input type="hidden" name="parent-id" value="@comment.GetId()">
+                <input type="hidden" name="post-id" value="@Model.GetId()">
+                <button type="submit" name="button" class="btn btn-primary">Submit</button>
+              </form>
+              <a class="hide-comment-form-child">Hide</a>
+            </div>
+            <!-- END FORM FOR REPLYING TO TOP LEVEL COMMENT -->
+
+            <!-- ALL COMMENT CHILDREN -->
+            <div class="comment-children">
+              @foreach(var childComment in comment.GetChildren())
+              {
+                <!-- WRAPPER AROUND INDIVIDUAL CHILD COMMENT -->
+                <div class="comment-wrapper">
+                  <div class="comment-content">
+                    <div class="page-header">
+                      <p>@childComment.GetAuthor() - @childComment.GetTime()</p>
+                      <p>
+                        PARENT: @childComment.GetParentId()
+                      </p>
+                    </div>
+                    <p>
+                      @childComment.GetMainText()
+                    </p>
+                  </div>
+                  <div class="comment-form">
+
+                  </div>
+
+                  <!-- CHILDREN OF CHILD COMMENT -->
+                  <div class="grandchildren">
+                    @foreach(var grandchildComment in childComment.GetChildren())
+                    {
+                      <div class="comment-wrapper">
+                        <div class="comment-content">
+                          <div class="page-header">
+                            <p>@grandchildComment.GetAuthor() - @grandchildComment.GetTime()</p>
+                            <p>
+                              PARENT: @grandchildComment.GetParentId()
+                            </p>
+                          </div>
+                          <p>
+                            @grandchildComment.GetMainText()
+                          </p>
+                        </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+
+                  <!-- END CHILDREN OF CHILD COMMENT -->
+
+                </div>
+                <!-- END WRAPPER AROUND INDIVIDUAL CHILD COMMENT -->
+              }
+            </div>
+            <!-- END COMMENT CHILDREN -->
+
+          </div>
+          <!-- END WRAPPER AROUND COMMENT + ITS CHILDREN -->
+        }
+
+      </div>
+      <!-- END MAIN CONTENT DIV -->
+
+      <div class="col-md-2 sidebar">
+        <h3>SIDEBAR</h3>
+        <ul>
+          <li class="sidebar-listitem"><a href="/new">New Post</a></li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

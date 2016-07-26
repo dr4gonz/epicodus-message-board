@@ -32,7 +32,7 @@ namespace MessageBoard
       Get["/posts/{id}"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        return View["post.cshtml", selectedOriginalPost];
+        return View["post2.cshtml", selectedOriginalPost];
       };
       Post["/posts/{id}"] = parameters =>
       {
