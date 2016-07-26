@@ -8,7 +8,7 @@ namespace MessageBoard
   {
     private string userName = "";
     private string password = "";
-
+    private bool validate = true;
     public HomeModule()
     {
       Get["/"] = _ =>
@@ -18,6 +18,7 @@ namespace MessageBoard
         model.Add("user", currentUser);
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
         return View["index.cshtml", model];
       };
 
@@ -88,13 +89,35 @@ namespace MessageBoard
       };
       Post["/login"] = _ =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
         userName = Request.Form["user-name"];
         password = Request.Form["password"];
         User currentUser = User.ValidateUserLogin(userName, password);
+        if (currentUser == null)
+        {
+          model.Remove("validate");
+          validate = false;
+          model.Add("validate", validate);
+        }
+        else
+        {
+          model.Add("validate", validate);
+        }
         List<OriginalPost> allPosts = OriginalPost.GetAll();
-        Dictionary<string, object> model = new Dictionary<string, object>{};
         model.Add("user", currentUser);
         model.Add("posts", allPosts);
+        return View["index.cshtml", model];
+      };
+      Post["/logout"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        userName = "";
+        password = "";
+        User currentUser = null;
+        List<OriginalPost> allPosts = OriginalPost.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allPosts);
+        model.Add("validate", validate);
         return View["index.cshtml", model];
       };
     }
