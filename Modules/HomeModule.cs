@@ -31,24 +31,32 @@ namespace MessageBoard
 
       Post["/new"] = _ =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, 1);
         newOriginalPost.Save();
         Category foundCategory = Category.Find(Request.Form["category"]);
         newOriginalPost.AddCategory(foundCategory);
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
-        return View["index.cshtml", allOriginalPosts];
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        return View["index.cshtml", model];
       };
+
       Delete["/"] = _ =>
       {
         OriginalPost.DeleteAll();
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         return View["index.cshtml", allOriginalPosts];
       };
+
       Get["/posts/{id}"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
         return View["post.cshtml", selectedOriginalPost];
       };
+
       Post["/posts/{id}"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
@@ -56,6 +64,7 @@ namespace MessageBoard
         newComment.Save();
         return View["post.cshtml", selectedOriginalPost];
       };
+
       Post["/posts/{id}/reply"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
@@ -64,6 +73,7 @@ namespace MessageBoard
         newComment.Save();
         return View["post.cshtml", selectedOriginalPost];
       };
+
       Delete["/posts/{id}/comment"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
@@ -76,6 +86,7 @@ namespace MessageBoard
         Comment comment = Comment.Find(parameters.id);
         return View["comment.cshtml", comment];
       };
+
       Post["/comments/{id}"] = parameters =>
       {
         Comment comment = Comment.Find(parameters.id);
@@ -90,6 +101,7 @@ namespace MessageBoard
 
         return View["register.cshtml", registrationBool];
       };
+
       Post["/register"] = _ =>
       {
         List<User> allUsers = User.GetAll();
@@ -106,6 +118,7 @@ namespace MessageBoard
         newUser.Save();
         return View["register_success.cshtml", newUser];
       };
+
       Post["/login"] = _ =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
@@ -127,6 +140,7 @@ namespace MessageBoard
         model.Add("posts", allPosts);
         return View["index.cshtml", model];
       };
+
       Post["/logout"] = _ =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
@@ -139,6 +153,7 @@ namespace MessageBoard
         model.Add("validate", validate);
         return View["index.cshtml", model];
       };
+      
     }
   }
 }
