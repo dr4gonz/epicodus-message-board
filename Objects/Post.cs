@@ -12,8 +12,9 @@ namespace MessageBoard
     private string _mainText;
     private DateTime? _time;
     private int _rating;
+    private int _userId;
 
-    public OriginalPost(string author, string title, string mainText, int rating, DateTime? time, int id=0)
+    public OriginalPost(string author, string title, string mainText, int rating, DateTime? time, int userId, int id=0)
     {
       _id = id;
       _author = author;
@@ -21,6 +22,7 @@ namespace MessageBoard
       _mainText = mainText;
       _time = time;
       _rating = rating;
+      _userId = userId;
     }
 
     public int GetId()
@@ -53,6 +55,11 @@ namespace MessageBoard
       return _time;
     }
 
+    public int GetUserId()
+    {
+      return _userId;
+    }
+
     public override bool Equals(System.Object obj)
     {
       if(!(obj is OriginalPost)) return false;
@@ -65,7 +72,8 @@ namespace MessageBoard
         bool mainTextEquality = _mainText == otherOriginalPost._mainText;
         bool timeEquality = _time == otherOriginalPost._time;
         bool ratingEquality = _rating == otherOriginalPost._rating;
-        return(idEquality && authorEquality && titleEquality && mainTextEquality && timeEquality && ratingEquality);
+        bool userIdEquality = _userId == otherOriginalPost._userId;
+        return(idEquality && authorEquality && titleEquality && mainTextEquality && timeEquality && ratingEquality && userIdEquality);
 
       }
     }
@@ -95,7 +103,8 @@ namespace MessageBoard
         string mainText = rdr.GetString(3);
         int rating = rdr.GetInt32(4);
         DateTime time = rdr.GetDateTime(5);
-        OriginalPost post = new OriginalPost(author, title, mainText, rating, time, id);
+        int userId = rdr.GetInt32(6);
+        OriginalPost post = new OriginalPost(author, title, mainText, rating, time, userId,  id);
         allOriginalPosts.Add(post);
       }
       if (rdr != null) rdr.Close();
@@ -108,18 +117,20 @@ namespace MessageBoard
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text, rating, time) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText, @Rating, @Date);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO posts (author, title, main_text, rating, time, user_id) OUTPUT INSERTED.id VALUES (@Author, @Title, @MainText, @Rating, @Date, @UserId);", conn);
 
       SqlParameter authorParameter = new SqlParameter("@Author", _author);
       SqlParameter titleParameter = new SqlParameter("@Title", _title);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", _mainText);
       SqlParameter ratingParameter = new SqlParameter("@Rating", _rating);
       SqlParameter dateParameter = new SqlParameter("@Date", _time);
+      SqlParameter userIdParameter = new SqlParameter("@UserId", _userId);
       cmd.Parameters.Add(authorParameter);
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
       cmd.Parameters.Add(ratingParameter);
       cmd.Parameters.Add(dateParameter);
+      cmd.Parameters.Add(userIdParameter);
 
       rdr = cmd.ExecuteReader();
 
@@ -148,6 +159,7 @@ namespace MessageBoard
       string foundMainText = null;
       int foundRating = 0;
       DateTime? foundTime = null;
+      int foundUserId = 0;
 
       rdr = cmd.ExecuteReader();
 
@@ -159,8 +171,9 @@ namespace MessageBoard
         foundMainText = rdr.GetString(3);
         foundTime = rdr.GetDateTime(5);
         foundRating = rdr.GetInt32(4);
+        foundUserId = rdr.GetInt32(6);
       }
-      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundRating, foundTime, foundId);
+      OriginalPost foundOriginalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundRating, foundTime, foundUserId, foundId);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
@@ -306,8 +319,9 @@ namespace MessageBoard
         int newCommentPostId = rdr.GetInt32(4);
         int newCommentParentId = rdr.GetInt32(5);
         DateTime newCommentDateTime = rdr.GetDateTime(6);
+        int newUserId = rdr.GetInt32(7);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newUserId, newCommentId);
         newComment.SetParentId(newCommentParentId);
         allChildren.Add(newComment);
       }
@@ -355,8 +369,9 @@ namespace MessageBoard
         int newCommentPostId = rdr.GetInt32(4);
         int newCommentParentId = rdr.GetInt32(5);
         DateTime newCommentDateTime = rdr.GetDateTime(6);
+        int newUserId = rdr.GetInt32(7);
 
-        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newCommentId);
+        Comment newComment = new Comment(newCommentAuthor, newCommentMainText, newCommentRating, newCommentPostId, newCommentDateTime, newUserId, newCommentId);
         newComment.SetParentId(newCommentParentId);
         children.Add(newComment);
       }
@@ -401,7 +416,8 @@ namespace MessageBoard
         string mainText = rdr.GetString(3);
         int rating = rdr.GetInt32(4);
         DateTime time = rdr.GetDateTime(5);
-        OriginalPost post = new OriginalPost(author, title, mainText, rating, time, id);
+        int userId = rdr.GetInt32(6);
+        OriginalPost post = new OriginalPost(author, title, mainText, rating, time, userId, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();

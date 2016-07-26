@@ -152,7 +152,8 @@ namespace MessageBoard
         string mainText = rdr.GetString(3);
         int rating = rdr.GetInt32(4);
         DateTime time = rdr.GetDateTime(5);
-        OriginalPost post = new OriginalPost(author, title, mainText, rating, time, id);
+        int userId = rdr.GetInt32(6);
+        OriginalPost post = new OriginalPost(author, title, mainText, rating, time, userId, id);
         allPosts.Add(post);
       }
       if (rdr != null) rdr.Close();

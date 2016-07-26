@@ -9,7 +9,6 @@ namespace MessageBoard
   public class CategoryTest : IDisposable
   {
     DateTime testDate = new DateTime(2016, 7, 22);
-
     public CategoryTest()
     {
       DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
@@ -70,9 +69,9 @@ namespace MessageBoard
       //Arrange
       Category testCategory = new Category("Fishing");
       testCategory.Save();
-      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, testDate);
+      OriginalPost firstPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, testDate, 3);
       firstPost.Save();
-      OriginalPost secondPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, testDate);
+      OriginalPost secondPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, testDate, 3);
       secondPost.Save();
       firstPost.AddCategory(testCategory);
       List<OriginalPost> expectedResult = new List<OriginalPost>{firstPost};

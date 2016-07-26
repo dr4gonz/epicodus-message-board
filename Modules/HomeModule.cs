@@ -18,7 +18,7 @@ namespace MessageBoard
 
       Post["/new"] = _ =>
       {
-        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now);
+        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, 1);
         newOriginalPost.Save();
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         return View["index.cshtml", allOriginalPosts];
@@ -37,14 +37,14 @@ namespace MessageBoard
       Post["/posts/{id}"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id, DateTime.Now);
+        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id, DateTime.Now, 3);
         newComment.Save();
         return View["post.cshtml", selectedOriginalPost];
       };
       Post["/posts/{id}/reply"] = parameters =>
       {
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id, DateTime.Now);
+        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id, DateTime.Now, 3);
         newComment.SetParentId(Request.Form["parent-id"]);
         newComment.Save();
         return View["post.cshtml", selectedOriginalPost];
@@ -64,7 +64,7 @@ namespace MessageBoard
       {
         Comment comment = Comment.Find(parameters.id);
         int postId = comment.GetPostId();
-        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, postId, DateTime.Now);
+        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, postId, DateTime.Now, 3);
         newComment.SetParentId(Request.Form["comment-id"]);
         newComment.Save();
         return View["comment.cshtml", comment];
