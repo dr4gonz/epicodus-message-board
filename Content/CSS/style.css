@@ -1,4 +1,39 @@
-body
-{
-  background-color: lightblue;
+body {
+  background-color: rgb(170, 220, 255);
+}
+
+ul {
+  list-style-type: none;
+}
+
+.sidebar {
+  height: 100%;
+}
+
+.sidebar-listitem {
+  font-size: 1.7em;
+}
+
+.sidebar, .main-content, .page-header, .post-listing {
+  border: 1px solid red;
+}
+
+.comment-form-top {
+  display: none;
+}
+
+.child-reply {
+  display: none;
+}
+
+.comment-child-reply {
+  display: none;
+}
+
+.comment-child {
+  background-color: rgba(255, 255, 255, .3);
+  margin-left: 30px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
 }

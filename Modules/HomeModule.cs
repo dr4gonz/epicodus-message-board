@@ -13,7 +13,10 @@ namespace MessageBoard
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         return View["index.cshtml", allOriginalPosts];
       };
-      Post["/"] = _ =>
+
+      Get["/new"] = _ => View["new_page.cshtml"];
+
+      Post["/new"] = _ =>
       {
         OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now);
         newOriginalPost.Save();

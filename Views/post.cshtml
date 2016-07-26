@@ -9,11 +9,15 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="/Content/JS/script.js" type="text/javascript"></script>
-    <title>@Model.GetTitle()</title>
+    <title>Message Board</title>
   </head>
   <body>
     <div class="container">
-      <div class="col-md-12">
+      <div class="page-header">
+        <h1>HEADER</h1>
+      </div>
+      <div class="col-md-10 main-content">
+
         <h2>@Model.GetTitle()</h2>
         <h3>@Model.GetAuthor()</h3>
         <h5>@Model.GetRating()</h5>
@@ -25,38 +29,68 @@
         <ul class="list-group">
           @foreach (var comment in Model.GetAllDirectChildren())
           {
-            <div><li class="list-group-item">@comment.GetRating() - @comment.GetMainText()</li></div><br>
-            <h5>@comment.GetAuthor()</h5>
-            <form action="/posts/@Model.GetId()/reply" method="post">
-              <label>Author:</label>
-              <input class="form-control" type="text" name="reply-author" value="">
-              <label>Main Text:</label>
-              <input class="form-control" type="text" name="reply-main-text" value="">
-              <input type="hidden" name="parent-id" value="@comment.GetId()">
-              <input type="hidden" name="post-id" value="@Model.GetId()">
-              <button type="submit" name="button">Submit</button>
-            </form>
-            @foreach(var child in comment.GetChildren())
-            {
-              <div><li class="list-group-item">@child.GetRating() - @child.GetMainText()</li></div><br>
-              <h5>@child.GetAuthor()</h5>
-            }
+            <div class="comment-child child-@comment.GetId()">
+              <div><li>@comment.GetRating() - @comment.GetMainText()</li></div><br>
+              <h5>@comment.GetAuthor()</h5>
+              <a class="reply-comment" id="reply-@comment.GetId()">Reply</a>
+              <div class="child-reply" id="reply-@comment.GetId()-form">
+                <form action="/posts/@Model.GetId()/reply" method="post">
+                  <label>Author:</label>
+                  <input class="form-control" type="text" name="reply-author" value="">
+                  <label>Main Text:</label>
+                  <input class="form-control" type="text" name="reply-main-text" value="">
+                  <input type="hidden" name="parent-id" value="@comment.GetId()">
+                  <input type="hidden" name="post-id" value="@Model.GetId()">
+                  <button type="submit" name="button" class="btn btn-primary">Submit</button>
+                </form>
+                <a class=""></a>
+              </div>
+              @foreach(var child in comment.GetChildren())
+              {
+                <div class="comment-child">
+                  <div><li>@child.GetRating() - @child.GetMainText()</li></div><br>
+                  <h5>@child.GetAuthor()</h5>
+
+                  <a class="reply-comment-child" id="reply-@child.GetId()">Reply</a>
+                  <div class="comment-child-reply" id="reply-@child.GetId()-child-form">
+                    <form action="/posts/@Model.GetId()/reply" method="post">
+                      <label>Author:</label>
+                      <input class="form-control" type="text" name="reply-author" value="">
+                      <label>Main Text:</label>
+                      <input class="form-control" type="text" name="reply-main-text" value="">
+                      <input type="hidden" name="parent-id" value="@comment.GetId()">
+                      <input type="hidden" name="post-id" value="@Model.GetId()">
+                      <button type="submit" name="button" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              }
+          </div>
           }
         </ul>
-        <h2>Add A Comment:</h2>
-        <form class="form-group" action="/posts/@Model.GetId()" method="post">
-          <label>Author:</label>
-          <input class="form-control" type="text" name="comment-author" value="">
-          <label>Main Text:</label>
-          <input class="form-control" type="text" name="comment-main-text" value="">
-          <input type="hidden" name="post-id" value="@Model.GetId()">
-          <button type="submit" name="button">Submit</button>
-        </form>
+        <a class="reply-toplevel">Reply</a>
+        <div class="comment-form-top">
+          <h4>Add A Comment:</h4>
+          <form class="form-group" action="/posts/@Model.GetId()" method="post">
+            <label>Author:</label>
+            <input class="form-control" type="text" name="comment-author" value="">
+            <label>Main Text:</label>
+            <input class="form-control" type="text" name="comment-main-text" value="">
+            <input type="hidden" name="post-id" value="@Model.GetId()">
+            <button type="submit" name="button" class="btn btn-primary">Submit</button>
+          </form>
+          <a class="reply-toplevel-hide">Hide</a>
+        </div>
         <form action="/posts/@Model.GetId()/comment" method="post">
           <input type="hidden" name="_method" value="DELETE">
-          <button type="submit" name="button">Delete all Comments</button>
+          <button type="submit" name="button" class="btn btn-primary">Delete all Comments</button>
         </form>
-        <a href="/">Home</a>
+      </div>
+      <div class="col-md-2 sidebar">
+        <h3>SIDEBAR</h3>
+        <ul>
+          <li class="sidebar-listitem"><a href="/new">New Post</a></li>
+        </ul>
       </div>
     </div>
   </body>
