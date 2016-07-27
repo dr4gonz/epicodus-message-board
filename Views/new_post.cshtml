@@ -25,6 +25,7 @@
           <input class="form-control" type="text" name="main-text" value="" required>
           <label>Category:</label>
           <select name="category">
+            <option>None</option>
             @foreach (var category in Model["categories"])
             {
               <option value=@category.GetId()>@category.GetName()</option>
