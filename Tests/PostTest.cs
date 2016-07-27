@@ -228,7 +228,7 @@ namespace MessageBoard
     }
 
     [Fact]
-    public void Comment_Upvote_Adds1ToCommentRating()
+    public void Post_Upvote_Adds1ToPostRating()
     {
       OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, testDate, 1);
       newOriginalPost.Save();
@@ -241,7 +241,7 @@ namespace MessageBoard
     }
 
     [Fact]
-    public void Comment_Downvote_Subtracts1ToCommentRating()
+    public void Post_Downvote_Subtracts1ToPostRating()
     {
       OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 1, testDate, 1);
       newOriginalPost.Save();
@@ -253,5 +253,22 @@ namespace MessageBoard
       Assert.Equal(expectedResult, result);
     }
 
+    [Fact]
+    public void Post_Vote_SavesVoteInDatabase()
+    {
+      OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, testDate, 1);
+      newOriginalPost.Save();
+      User firstUser = new User("Bob", "password");
+      firstUser.Save();
+      User secondUser = new User("John", "password");
+      secondUser.Save();
+      int expectedResult = 2;
+      //Act
+      newOriginalPost.Vote(firstUser.GetId(), 1);
+      newOriginalPost.Vote(secondUser.GetId(), 1);
+      int result = newOriginalPost.GetRating();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
   }
 }

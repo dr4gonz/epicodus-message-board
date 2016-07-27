@@ -260,5 +260,6 @@ namespace MessageBoard
       if (conn != null) conn.Close();
       return userPosts;
     }
+
   }
 }

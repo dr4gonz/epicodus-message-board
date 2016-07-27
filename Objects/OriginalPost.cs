@@ -449,6 +449,27 @@ namespace MessageBoard
       this.Update(this.GetRating() - 1);
     }
 
+    public void Vote(int userId, int voteValue)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND post_id = @PostId; INSERT INTO voting (voter_id, post_id, vote) VALUES (@Voter, @PostId, @Vote); UPDATE posts SET rating=(SELECT SUM(vote) FROM voting WHERE post_id = @PostId) OUTPUT INSERTED.rating WHERE posts.id=@PostId;", conn);
+      SqlParameter userIdParameter = new SqlParameter("@Voter", userId);
+      SqlParameter postIdParameter = new SqlParameter("@PostId", _id);
+      SqlParameter voteParameter = new SqlParameter("@Vote", voteValue);
+      cmd.Parameters.Add(userIdParameter);
+      cmd.Parameters.Add(postIdParameter);
+      cmd.Parameters.Add(voteParameter);
 
+      rdr = cmd.ExecuteReader();
+      while(rdr.Read())
+      {
+        _rating = rdr.GetInt32(0);
+      }
+
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+    }
   }
 }
