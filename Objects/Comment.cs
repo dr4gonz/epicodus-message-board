@@ -288,6 +288,36 @@ namespace MessageBoard
       if(conn != null) conn.Close();
     }
 
+   public void Update(string newAuthor, string newMainText)
+    {
+      SqlConnection conn = DB.Connection();
+      SqlDataReader rdr = null;
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE comments SET author = @NewAuthor, main_text = @NewMainText OUTPUT INSERTED.author, INSERTED.main_text WHERE id = @CommentId;", conn);
+
+      SqlParameter newMainTextParameter = new SqlParameter("@NewMainText", newMainText);
+      cmd.Parameters.Add(newMainTextParameter);
+
+      SqlParameter newAuthorParameter = new SqlParameter("@NewAuthor", newAuthor);
+      cmd.Parameters.Add(newAuthorParameter);
+
+      SqlParameter commentIdParameter = new SqlParameter("@CommentId", this.GetId());
+      cmd.Parameters.Add(commentIdParameter);
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._author = rdr.GetString(0);
+        this._mainText = rdr.GetString(1);
+
+      }
+
+      if(rdr != null) rdr.Close();
+      if(conn != null) conn.Close();
+    }
+
     public void Delete()
     {
       SqlConnection conn = DB.Connection();
@@ -305,7 +335,7 @@ namespace MessageBoard
 
     public void Remove()
     {
-      this.Update("[Removed]");
+      this.Update("[Removed]", "[Removed]");
     }
     public void Upvote(int userId)
     {

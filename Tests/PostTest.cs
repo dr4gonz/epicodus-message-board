@@ -12,8 +12,8 @@ namespace MessageBoard
 
     public OriginalPostTest()
     {
-      DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
-      // DBConfiguration.ConnectionString = "Data Source=DESKTOP-7OLC9FT\\SQLEXPRESS;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+      // DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+      DBConfiguration.ConnectionString = "Data Source=DESKTOP-7OLC9FT\\SQLEXPRESS;Initial Catalog=message_board_test;Integrated Security=SSPI;";
     }
     public void Dispose()
     {
@@ -97,9 +97,9 @@ namespace MessageBoard
       OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, testDate, 1);
       testOriginalPost.Save();
       //Act
-      OriginalPost.UpdateById("Bob", "Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId());
+      OriginalPost.UpdateById("Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId());
       string expectedResult = "Fishing at the lake";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }
@@ -113,7 +113,7 @@ namespace MessageBoard
       //Act
       testOriginalPost.Update("Fishing at the lake", "I like to fish at the lake");
       string expectedResult = "Fishing at the lake";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }
@@ -127,7 +127,7 @@ namespace MessageBoard
       //Act
       testOriginalPost.Remove();
       string expectedResult = "[removed]";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }
