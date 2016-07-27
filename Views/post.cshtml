@@ -31,7 +31,11 @@
           <p>
             @Model["post"].GetMainText()
           </p>
-          <h6><a href='/posts/@Model["post"].GetId()/edit'>Edit</a></h6>
+          @if(Model["post"].GetUserId() == Model["user"].GetId())
+          {
+            <h6><a href='/posts/@Model["post"].GetId()/edit'>Edit</a></h6>
+            <h6><a href='/posts/@Model["post"].GetId()/remove'>Remove</a></h6>
+          }
         </div>
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
         <a class="show-form" id="top">Reply</a>

@@ -199,19 +199,17 @@ namespace MessageBoard
       DeleteById(_id);
     }
 
-    public static OriginalPost UpdateById(string newAuthor, string newTitle, string newMainText, int id)
+    public static void UpdateById(string newTitle, string newMainText, int id)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, title = @Title, main_text = @MainText OUTPUT INSERTED.rating, INSERTED.time WHERE id = @OriginalPostId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE posts SET title = @Title, main_text = @MainText OUTPUT INSERTED.rating, INSERTED.time WHERE id = @OriginalPostId;", conn);
       SqlDataReader rdr = null;
 
       SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
       SqlParameter titleParameter = new SqlParameter("@Title", newTitle);
-      SqlParameter authorParameter = new SqlParameter("@Author", newAuthor);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", newMainText);
 
-      cmd.Parameters.Add(authorParameter);
       cmd.Parameters.Add(postIdParameter);
       cmd.Parameters.Add(titleParameter);
       cmd.Parameters.Add(mainTextParameter);
@@ -226,30 +224,22 @@ namespace MessageBoard
         time = rdr.GetDateTime(1);
       }
 
-      OriginalPost post = new OriginalPost(newAuthor, newTitle, newMainText, rating, time, id);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
 
-      return post;
-    }
-
-    public void Update(string newAuthor, string newTitle, string newMainText)
-    {
-      UpdateById(newAuthor, newTitle, newMainText, _id);
-      _author = newAuthor;
-      _title = newTitle;
-      _mainText = newMainText;
     }
 
     public void Update(string newTitle, string newMainText)
     {
-      this.Update(_author, newTitle, newMainText);
+      UpdateById(newTitle, newMainText, _id);
+      _title = newTitle;
+      _mainText = newMainText;
     }
 
     public static void RemoveById(int id)
     {
-      UpdateById("[removed]", "[removed]", "[removed]", id);
+      UpdateById("[removed]", "[removed]", id);
     }
 
     public void Remove()

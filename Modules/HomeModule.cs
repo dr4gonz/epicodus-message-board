@@ -93,7 +93,17 @@ namespace MessageBoard
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        selectedOriginalPost.Update(Request.Form["author"], Request.Form["title"], Request.Form["main-text"]);
+        selectedOriginalPost.Update(Request.Form["title"], Request.Form["main-text"]);
+        model.Add("user", currentUser);
+        model.Add("post", selectedOriginalPost);
+        return View["post.cshtml", model];
+      };
+      Get["/posts/{id}/remove"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        selectedOriginalPost.Remove();
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
