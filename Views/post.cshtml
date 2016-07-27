@@ -31,7 +31,7 @@
           <p>
             @Model["post"].GetMainText()
           </p>
-<<<<<<< HEAD
+
           <p><em>Categories:
 
             @foreach(var category in @Model["post"].GetCategories())
@@ -40,7 +40,7 @@
             }
 
           </em></p>
-=======
+
           @if(Model["post"].GetUserId() == Model["user"].GetId())
           {
             <h6><a class="show-form" id="edit">Edit</a></h6>
@@ -57,7 +57,7 @@
             </div>
             <h6><a href='/posts/@Model["post"].GetId()/remove'>Remove</a></h6>
           }
->>>>>>> editposts
+
         </div>
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
         <a class="show-form" id="top">Reply</a>
@@ -152,8 +152,8 @@
                   <a class="show-form" id="grandchild-@childComment.GetId()">Reply</a>
                   <div class="comment-form" id="grandchild-@childComment.GetId()-form">
                     <a class="hide-form">Hide</a>
-                    <form action='/posts/@Model[""].GetId()/reply' method="post">
-                      <input class="form-control" type="text" name="reply-author" value='@Model["user"].GetName()'>
+                    <form action='/posts/@Model["post"].GetId()/reply' method="post">
+                      <input class="form-control" type="hidden" name="reply-author" value='@Model["user"].GetName()'>
                       <label>Main Text:</label>
                       <input class="form-control" type="text" name="reply-main-text" value="">
                       <input type="hidden" name="parent-id" value="@childComment.GetId()">
