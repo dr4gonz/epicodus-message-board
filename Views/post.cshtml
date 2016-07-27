@@ -34,6 +34,33 @@
           <p>
             @Model["post"].GetMainText()
           </p>
+<<<<<<< HEAD
+          <p><em>Categories:
+
+            @foreach(var category in @Model["post"].GetCategories())
+            {
+              <span class="category"><a href="/categories/@category.GetId()">@category.GetName()</a></span>
+            }
+
+          </em></p>
+=======
+          @if(Model["post"].GetUserId() == Model["user"].GetId())
+          {
+            <h6><a class="show-form" id="edit">Edit</a></h6>
+            <div class="comment-form" id="edit-form">
+              <a class="hide-form">Hide</a>
+              <form class="form-group" action='/posts/@Model["post"].GetId()' method="post">
+                <input type="hidden" name="_method" value="PATCH">
+                <input class="form-control" type="hidden" name="author" value='@Model["user"].GetName()'>
+                <input class="form-control" type="hidden" name="title" value='@Model["post"].GetTitle()'>
+                <label>Main Text:</label>
+                <input class="form-control" type="text" name="main-text" value='@Model["post"].GetMainText()' required>
+                <button class="btn btn-primary" type="submit" name="button">Submit</button>
+              </form>
+            </div>
+            <h6><a href='/posts/@Model["post"].GetId()/remove'>Remove</a></h6>
+          }
+>>>>>>> editposts
         </div>
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
         <a class="show-form" id="top">Reply</a>
@@ -63,6 +90,21 @@
               <p>
                 @comment.GetMainText()
               </p>
+              @if(comment.GetUserId() == Model["user"].GetId())
+              {
+                <h6><a class="show-form" id="comment-edit">Edit</a></h6>
+                <div class="comment-form" id="comment-edit-form">
+                  <a class="hide-form">Hide</a>
+                  <form class="form-group" action='/posts/@Model["post"].GetId()/@comment.GetId()' method="post">
+                    <input type="hidden" name="_method" value="PATCH">
+                    <label>Main Text:</label>
+                    <input class="form-control" type="text" name="comment-main-text" value='@comment.GetMainText()' required>
+                    <input type="hidden" name="comment-id" value="@comment.GetId()">
+                    <button class="btn btn-primary" type="submit" name="button">Submit</button>
+                  </form>
+                </div>
+                <h6><a href='/posts/@Model["post"].GetId()/@comment.GetId()/remove-comment'>Remove</a></h6>
+              }
             </div>
             <!-- END CONTENT OF COMMENT -->
 
@@ -94,11 +136,26 @@
                     <p>
                       @childComment.GetMainText()
                     </p>
+                    @if(childComment.GetUserId() == Model["user"].GetId())
+                    {
+                      <h6><a class="show-form" id="comment-edit">Edit</a></h6>
+                      <div class="comment-form" id="comment-edit-form">
+                        <a class="hide-form">Hide</a>
+                        <form class="form-group" action='/posts/@Model["post"].GetId()/@childComment.GetId()' method="post">
+                          <input type="hidden" name="_method" value="PATCH">
+                          <label>Main Text:</label>
+                          <input class="form-control" type="text" name="comment-main-text" value='@childComment.GetMainText()' required>
+                          <input type="hidden" name="comment-id" value="@childComment.GetId()">
+                          <button class="btn btn-primary" type="submit" name="button">Submit</button>
+                        </form>
+                      </div>
+                      <h6><a href='/posts/@Model["post"].GetId()/@childComment.GetId()/remove-comment'>Remove</a></h6>
+                    }
                   </div>
                   <a class="show-form" id="grandchild-@childComment.GetId()">Reply</a>
                   <div class="comment-form" id="grandchild-@childComment.GetId()-form">
                     <a class="hide-form">Hide</a>
-                    <form action='/posts/@Model["post"].GetId()/reply' method="post">
+                    <form action='/posts/@Model[""].GetId()/reply' method="post">
                       <input class="form-control" type="text" name="reply-author" value='@Model["user"].GetName()'>
                       <label>Main Text:</label>
                       <input class="form-control" type="text" name="reply-main-text" value="">
@@ -120,10 +177,25 @@
                           <p>
                             @grandchildComment.GetMainText()
                           </p>
+                          @if(grandchildComment.GetUserId() == Model["user"].GetId())
+                          {
+                            <h6><a class="show-form" id="comment-edit">Edit</a></h6>
+                            <div class="comment-form" id="comment-edit-form">
+                              <a class="hide-form">Hide</a>
+                              <form class="form-group" action='/posts/@Model["post"].GetId()/@grandchildComment.GetId()' method="post">
+                                <input type="hidden" name="_method" value="PATCH">
+                                <label>Main Text:</label>
+                                <input class="form-control" type="text" name="comment-main-text" value='@grandchildComment.GetMainText()' required>
+                                <input type="hidden" name="comment-id" value="@grandchildComment.GetId()">
+                                <button class="btn btn-primary" type="submit" name="button">Submit</button>
+                              </form>
+                            </div>
+                            <h6><a href='/posts/@Model["post"].GetId()/@grandchildComment.GetId()/remove-comment'>Remove</a></h6>
+                          }
                           @{int numberOfChildren = grandchildComment.GetChildren().Count;}
                           @if(numberOfChildren > 0)
                           {
-                            <a href="/comments/@grandchildComment.GetId()">View numberOfChildren comments</a>
+                            <a href="/comments/@grandchildComment.GetId()">View @numberOfChildren comments</a>
                           }
                           else
                           {
@@ -147,6 +219,7 @@
           <h3>SIDEBAR</h3>
           <ul>
             <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
+            <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
             <li class="sidebar-listitem">
               <form action="/" method="post">
                 <input type="hidden" name="_method" value="DELETE">
@@ -155,10 +228,24 @@
             </li class="sidebar-listitem">
             <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
           </ul>
+
+          <h5>Search Posts</h5>
+          <form class="form-group" action="/posts/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <button class="btn btn-primary" type="submit" name="button">Search</button>
+          </form>
+          <h5>Search Categories</h5>
+          <form class="form-group" action="/categories/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <button class="btn btn-primary" type="submit" name="button">Search</button>
+          </form>
+
+        
+
         </div>
       </div>
-
     </div>
+    <h4><a href="/">Home</a></h4>
   </div>
 </div>
 </body>

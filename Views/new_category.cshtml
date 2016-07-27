@@ -12,41 +12,29 @@
     <title>Message Board</title>
   </head>
   <body>
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="logo" href="/"><h1>epicodex</h1></a>
-        </div>
-        <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
-      </div><!-- /.container-fluid -->
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <h1>HEADER</h1>
+      </div>
     </nav>
     <div class="container">
+      <div class="page-header">
+        <h1>HEADER</h1>
+      </div>
       <div class="col-md-10 main-content">
-        <form class="form-group" action="/new" method="post">
+        <form class="form-group" action="/new_category" method="post">
           <input class="form-control" type="hidden" name="author" value='@Model["user"].GetName()' required>
-          <label>Title:</label>
-          <input class="form-control" type="text" name="title" value="" required>
-          <label>Main Text:</label>
-          <input class="form-control" type="text" name="main-text" value="" required>
-          <label>Category:</label>
-          <select name="category">
-            <option>None</option>
-            @foreach (var category in Model["categories"])
-            {
-              <option value=@category.GetId()>@category.GetName()</option>
-            }
-          </select>
+          <label>Name:</label>
+          <input class="form-control" type="text" name="name" value="" required>
+
           <button class="btn btn-primary" type="submit" name="button">Submit</button>
         </form>
-        <form action="/" method="post">
-          <input type="hidden" name="_method" value="DELETE">
-          <button class="btn btn-danger" type="submit" name="button">Delete all Posts</button>
-        </form>      </div>
+        </div>
         <div class="col-md-2">
           <div class="sidebar">
             <h3>SIDEBAR</h3>
             <ul>
-              <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
+              <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
               <li class="sidebar-listitem">
                 <form action="/" method="post">
                   <input type="hidden" name="_method" value="DELETE">
@@ -57,6 +45,7 @@
             </ul>
           </div>
         </div>
+
     </div>
   </body>
 </html>

@@ -97,9 +97,9 @@ namespace MessageBoard
       OriginalPost testOriginalPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, testDate, 1);
       testOriginalPost.Save();
       //Act
-      OriginalPost.UpdateById("Bob", "Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId());
+      OriginalPost.UpdateById("Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId());
       string expectedResult = "Fishing at the lake";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }
@@ -113,7 +113,7 @@ namespace MessageBoard
       //Act
       testOriginalPost.Update("Fishing at the lake", "I like to fish at the lake");
       string expectedResult = "Fishing at the lake";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }
@@ -127,7 +127,7 @@ namespace MessageBoard
       //Act
       testOriginalPost.Remove();
       string expectedResult = "[removed]";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }
@@ -294,6 +294,27 @@ namespace MessageBoard
       newOriginalPost.Vote(secondUser.GetId(), 1);
       int result = newOriginalPost.GetRating();
       //Assert
+      Assert.Equal(expectedResult, result);
+    }
+
+    [Fact]
+    public void Post_GetCategories_GetsCategoriesforPost()
+    {
+      //Arrange
+      OriginalPost testPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, testDate, 3);
+      testPost.Save();
+      Category firstCategory = new Category("Fishing");
+      firstCategory.Save();
+      Category secondCategory = new Category("Sports");
+      secondCategory.Save();
+      testPost.AddCategory(firstCategory);
+      testPost.AddCategory(secondCategory);
+      List<Category> expectedResult = new List<Category>{firstCategory, secondCategory};
+      //Act
+      List<Category> result = testPost.GetCategories();
+      //Assert
+      Console.WriteLine("expected Result =" + expectedResult[0].GetName() + "," + expectedResult[1].GetName());
+      Console.WriteLine("Result =" + result[0].GetName() + "," + result[1].GetName());
       Assert.Equal(expectedResult, result);
     }
   }
