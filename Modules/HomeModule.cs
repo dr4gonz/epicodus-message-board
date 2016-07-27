@@ -241,6 +241,29 @@ namespace MessageBoard
         return View["category_results.cshtml", model];
       };
 
+      Get["/new_category"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
+        return View["new_category.cshtml", model];
+      };
+
+      Post["/new_category"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Category newCategory = new Category(Request.Form["name"]);
+        newCategory.Save();
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("categories", allCategories);
+        model.Add("validate", validate);
+        return View["index.cshtml", model];
+      };
+
     }
   }
 }
