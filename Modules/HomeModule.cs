@@ -153,7 +153,7 @@ namespace MessageBoard
         model.Add("validate", validate);
         return View["index.cshtml", model];
       };
-      
+
     }
   }
 }
