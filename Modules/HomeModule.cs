@@ -44,14 +44,24 @@ namespace MessageBoard
         User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, currentUser.GetId());
         newOriginalPost.Save();
-        string categoryString = Request.Form["category"];
-        if (categoryString != "None")
+        List<Category> allCategories = Category.GetAll();
+        // string categoryString = Request.Form["category"];
+        // if (categoryString != "None")
+        // {
+        //   Category foundCategory = Category.Find(Request.Form["category"]);
+        //   newOriginalPost.AddCategory(foundCategory);
+        // }
+        foreach(var category in allCategories)
         {
-          Category foundCategory = Category.Find(Request.Form["category"]);
+          string inputString = "category-" + category.GetId();
+          if (inputString.Checked)
+          {
+          int newInt = Request.Form[inputString];
+          Category foundCategory = Category.Find(newInt);
           newOriginalPost.AddCategory(foundCategory);
+          }
         }
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
-        List<Category> allCategories = Category.GetAll();
         model.Add("user", currentUser);
         model.Add("posts", allOriginalPosts);
         model.Add("categories", allCategories);
