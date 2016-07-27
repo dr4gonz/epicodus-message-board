@@ -23,10 +23,10 @@
         <h1>HEADER</h1>
       </div> -->
       <div class="col-md-10 main-content">
-        <h1>MAIN CONTENT</h1>
+        <h1>CATEGORY: @Model["category"].GetName()</h1>
         @if(Model["posts"].Count == 0)
         {
-          <h2>No Posts</h2>
+          <h2>No Posts in Category</h2>
         }
         else
         {
@@ -41,7 +41,6 @@
             }
           </ul>
         }
-
       </div>
       <div class="col-md-2">
         <div class="sidebar">

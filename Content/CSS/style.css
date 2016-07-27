@@ -9,11 +9,14 @@ h1, h2, h3 {
 
 .navbar h1 {
   color: white;
+  font-weight: bold;
 }
 
 .navbar {
-  background-color: rgba(52, 84, 209, 0.8);
-  border: 0px;
+  background-color: #3FA7D6;
+  border-bottom: 5px solid #1D70A2;
+  border-top: 0px;
+  border-radius: 0px;
 }
 
 .page-top-header {
@@ -30,6 +33,21 @@ ul {
 
 .sidebar-listitem {
   font-size: 1.7em;
+}
+
+.sidebar ul{
+  padding-left: 0px;
+}
+
+.header-wrap {
+  background-color: #F79D84;
+  width: 100%;
+  padding: 15px;
+}
+
+.header-wrap h1 {
+  margin: 0px;
+  color: white;
 }
 
 .comment-form {

@@ -370,6 +370,41 @@ namespace MessageBoard
       conn.Close();
     }
 
+    public List<Category> GetCategories(string orderBy = "default")
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = null;
+      switch(orderBy)
+      {
+        case "newest":
+          cmd = new SqlCommand("SELECT * FROM categories JOIN posts_categories ON categories.id=posts_categories.category_id JOIN posts ON posts.id=posts_categories.post_id WHERE post_id = @PostId ORDER BY date ASC;", conn);
+          break;
+        case "oldest":
+          cmd = new SqlCommand("SELECT * FROM categories JOIN posts_categories ON categories.id=posts_categories.category_id JOIN posts ON posts.id=posts_categories.post_id WHERE post_id = @PostId ORDER BY date DESC;", conn);
+          break;
+        default:
+          cmd = new SqlCommand("SELECT * FROM categories JOIN posts_categories ON categories.id=posts_categories.category_id JOIN posts ON posts.id=posts_categories.post_id WHERE post_id = @PostId ORDER BY categories.id;", conn);
+          break;
+      }
+
+      SqlParameter postParameter = new SqlParameter("@PostId", this.GetId());
+      cmd.Parameters.Add(postParameter);
+      rdr = cmd.ExecuteReader();
+      List<Category> allCategories = new List<Category>{};
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        Category category = new Category(name, id);
+        allCategories.Add(category);
+      }
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+      return allCategories;
+    }
+
     public static List<OriginalPost> SearchByKeyword(string keyword)
     {
       SqlConnection conn = DB.Connection();

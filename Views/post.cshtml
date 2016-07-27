@@ -120,7 +120,7 @@
                           @{int numberOfChildren = grandchildComment.GetChildren().Count;}
                           @if(numberOfChildren > 0)
                           {
-                            <a href="/comments/@grandchildComment.GetId()">View numberOfChildren comments</a>
+                            <a href="/comments/@grandchildComment.GetId()">View @numberOfChildren comments</a>
                           }
                           else
                           {
@@ -152,6 +152,27 @@
             </li class="sidebar-listitem">
             <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
           </ul>
+
+          <h5>Search Posts</h5>
+          <form class="form-group" action="/posts/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <button class="btn btn-primary" type="submit" name="button">Search</button>
+          </form>
+          <h5>Search Categories</h5>
+          <form class="form-group" action="/categories/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <button class="btn btn-primary" type="submit" name="button">Search</button>
+          </form>
+
+          <h5>Categories</h5>
+
+          <ul>
+          @foreach(var category in Model["categories"])
+          {
+            <li class="sidebar-listitem"><a href="/categories/@category.GetId()">@category.GetName()</a></li>
+          }
+          </ul>
+
         </div>
       </div>
 

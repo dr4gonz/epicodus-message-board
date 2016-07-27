@@ -296,5 +296,26 @@ namespace MessageBoard
       //Assert
       Assert.Equal(expectedResult, result);
     }
+
+    [Fact]
+    public void Post_GetCategories_GetsCategoriesforPost()
+    {
+      //Arrange
+      OriginalPost testPost = new OriginalPost("Bob", "Fishing", "I like to fish", 0, testDate, 3);
+      testPost.Save();
+      Category firstCategory = new Category("Fishing");
+      firstCategory.Save();
+      Category secondCategory = new Category("Sports");
+      secondCategory.Save();
+      testPost.AddCategory(firstCategory);
+      testPost.AddCategory(secondCategory);
+      List<Category> expectedResult = new List<Category>{firstCategory, secondCategory};
+      //Act
+      List<Category> result = testPost.GetCategories();
+      //Assert
+      Console.WriteLine("expected Result =" + expectedResult[0].GetName() + "," + expectedResult[1].GetName());
+      Console.WriteLine("Result =" + result[0].GetName() + "," + result[1].GetName());
+      Assert.Equal(expectedResult, result);
+    }
   }
 }
