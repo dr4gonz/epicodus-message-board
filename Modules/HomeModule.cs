@@ -166,6 +166,48 @@ namespace MessageBoard
         model.Add("comment", comment);
         return View["comment.cshtml", model];
       };
+      Patch["/comments/{id}"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Comment selectedComment = Comment.Find(parameters.id);
+        selectedComment.Update(Request.Form["update-main-text"]);
+        model.Add("user", currentUser);
+        model.Add("comment", selectedComment);
+        return View["comment.cshtml", model];
+      };
+      Get["/comments/{id}/remove-comment"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Comment selectedComment = Comment.Find(parameters.id);
+        selectedComment.Remove();
+        model.Add("user", currentUser);
+        model.Add("comment", selectedComment);
+        return View["comment.cshtml", model];
+      };
+      Patch["/comments/{origCommentId}/{commentId}"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Comment originalComment = Comment.Find(parameters.origCommentId);
+        Comment selectedComment = Comment.Find(parameters.commentId);
+        selectedComment.Update(Request.Form["update-main-text"]);
+        model.Add("user", currentUser);
+        model.Add("comment", originalComment);
+        return View["comment.cshtml", model];
+      };
+      Get["/comments/{origCommentId}/{commentId}/remove-comment"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Comment originalComment = Comment.Find(parameters.origCommentId);
+        Comment selectedComment = Comment.Find(parameters.commentId);
+        selectedComment.Remove();
+        model.Add("user", currentUser);
+        model.Add("comment", originalComment);
+        return View["comment.cshtml", model];
+      };
 
       Get["/register"] = _ => {
 
