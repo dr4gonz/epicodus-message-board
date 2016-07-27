@@ -40,7 +40,7 @@ namespace MessageBoard
       {
         Dictionary<string, object> model = new Dictionary<string, object> {};
         User currentUser = User.ValidateUserLogin(userName, password);
-        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, 1);
+        OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, currentUser.GetId());
         newOriginalPost.Save();
         Category foundCategory = Category.Find(Request.Form["category"]);
         newOriginalPost.AddCategory(foundCategory);
