@@ -1,6 +1,9 @@
 using Nancy;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace MessageBoard
 {
@@ -114,7 +117,8 @@ namespace MessageBoard
             return View["register.cshtml", registrationBool];
           }
         }
-        User newUser = new User(newUserName, Request.Form["password1"]);
+        string newUserPassword = User.HashPassword(Request.Form["password1"]);
+        User newUser = new User(newUserName, newUserPassword);
         newUser.Save();
         return View["register_success.cshtml", newUser];
       };
@@ -153,7 +157,7 @@ namespace MessageBoard
         model.Add("validate", validate);
         return View["index.cshtml", model];
       };
-      
+
     }
   }
 }

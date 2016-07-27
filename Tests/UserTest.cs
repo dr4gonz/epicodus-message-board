@@ -11,7 +11,8 @@ namespace MessageBoard
     DateTime testDate = new DateTime(2016, 7, 22);
     public UserTest()
     {
-      DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+      // DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+      DBConfiguration.ConnectionString = "Data Source=DESKTOP-7OLC9FT\\SQLEXPRESS;Initial Catalog=message_board_test;Integrated Security=SSPI;";
     }
     public void Dispose()
     {
@@ -64,6 +65,17 @@ namespace MessageBoard
       Assert.Equal(testUser, foundUser);
     }
     [Fact]
+    public void User_Find_FindsUserInDatabaseByName()
+    {
+      //Arrange
+      User testUser = new User("Homer J. Simpson", "230sfd");
+      testUser.Save();
+      //Act
+      User foundUser = User.Find(testUser.GetName());
+      //Assert
+      Assert.Equal(testUser, foundUser);
+    }
+    [Fact]
     public void User_Delete_DeletesUserFromDatabase()
     {
       //Arrange
@@ -108,7 +120,10 @@ namespace MessageBoard
     public void User_ValidateUser_ValidatesUserAgainstDatabase()
     {
       //Arrange
-      User testUser = new User("Homer", "230sfd");
+      PasswordHash hash = new PasswordHash("230sfd");
+      byte[] hashBytes = hash.ToArray();
+      string savedPasswordHash = Convert.ToBase64String(hashBytes);
+      User testUser = new User("Homer", savedPasswordHash);
       testUser.Save();
       //Act
       User result = User.ValidateUserLogin("Homer", "230sfd");

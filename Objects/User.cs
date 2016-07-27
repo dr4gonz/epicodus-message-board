@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace MessageBoard
 {
@@ -29,6 +32,13 @@ namespace MessageBoard
     public string GetPassword()
     {
       return _password;
+    }
+    public static string HashPassword(string password)
+    {
+      PasswordHash hash = new PasswordHash(password);
+      byte[] hashBytes = hash.ToArray();
+      string savedPasswordHash = Convert.ToBase64String(hashBytes);
+      return savedPasswordHash;
     }
 
     public override bool Equals(System.Object obj)
@@ -146,18 +156,15 @@ namespace MessageBoard
       return foundUser;
     }
 
-    public static User ValidateUserLogin(string userName, string password)
+    public static User Find(string name)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE (user_name = @UserName AND password = @Password);", conn);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE user_name = @UserName;", conn);
 
-      SqlParameter userNameParameter = new SqlParameter("@UserName", userName);
+      SqlParameter userNameParameter = new SqlParameter("@UserName", name);
       cmd.Parameters.Add(userNameParameter);
-
-      SqlParameter passwordParameter = new SqlParameter("@Password", password);
-      cmd.Parameters.Add(passwordParameter);
 
       int foundId = 0;
       string foundName = null;
@@ -171,23 +178,69 @@ namespace MessageBoard
         foundName = rdr.GetString(1);
         foundPassword = rdr.GetString(2);
       }
-      if (foundName == userName && foundPassword == password)
+      User foundUser = new User(foundName, foundPassword, foundId);
+
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
+
+      return foundUser;
+    }
+
+    public static User ValidateUserLogin(string userName, string password)
+    {
+      if (userName == "" && password == "")
       {
-        User foundUser = new User(foundName, foundPassword, foundId);
-
-        if (rdr != null) rdr.Close();
-        if (conn != null) conn.Close();
-
+        User foundUser = null;
         return foundUser;
       }
       else
       {
-        User foundUser = null;
+        SqlConnection conn = DB.Connection();
+        conn.Open();
+        SqlDataReader rdr = null;
 
-        if (rdr != null) rdr.Close();
-        if (conn != null) conn.Close();
+        SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE user_name = @UserName;", conn);
 
-        return foundUser;
+        SqlParameter userNameParameter = new SqlParameter("@UserName", userName);
+        cmd.Parameters.Add(userNameParameter);
+
+        int foundId = 0;
+        string foundName = null;
+        string foundPassword = null;
+
+        rdr = cmd.ExecuteReader();
+
+        while(rdr.Read())
+        {
+          foundId = rdr.GetInt32(0);
+          foundName = rdr.GetString(1);
+          foundPassword = rdr.GetString(2);
+        }
+        string foundPasswordHash = foundPassword;
+        byte[] hashBytes = Convert.FromBase64String(foundPasswordHash);
+        PasswordHash hash = new PasswordHash(hashBytes);
+        if(!hash.Verify(password))
+        {
+          throw new System.UnauthorizedAccessException();
+        }
+        else if (foundName == userName && hash.Verify(password))
+        {
+          User foundUser = new User(foundName, foundPassword, foundId);
+
+          if (rdr != null) rdr.Close();
+          if (conn != null) conn.Close();
+
+          return foundUser;
+        }
+        else
+        {
+          User foundUser = null;
+
+          if (rdr != null) rdr.Close();
+          if (conn != null) conn.Close();
+
+          return foundUser;
+        }
       }
     }
 
