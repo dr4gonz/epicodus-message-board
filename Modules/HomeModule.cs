@@ -79,7 +79,7 @@ namespace MessageBoard
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
-      
+
       Patch["/posts/{id}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
@@ -109,6 +109,28 @@ namespace MessageBoard
         Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id, DateTime.Now, currentUser.GetId());
         newComment.SetParentId(Request.Form["parent-id"]);
         newComment.Save();
+        model.Add("user", currentUser);
+        model.Add("post", selectedOriginalPost);
+        return View["post.cshtml", model];
+      };
+      Patch["/posts/{postId}/{commentId}"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
+        Comment selectedComment = Comment.Find(parameters.commentId);
+        selectedComment.Update(Request.Form["comment-main-text"]);
+        model.Add("user", currentUser);
+        model.Add("post", selectedOriginalPost);
+        return View["post.cshtml", model];
+      };
+      Get["/posts/{postId}/{commentId}/remove-comment"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
+        Comment selectedComment = Comment.Find(parameters.commentId);
+        selectedComment.Remove();
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];

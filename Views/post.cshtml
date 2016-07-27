@@ -76,6 +76,21 @@
               <p>
                 @comment.GetMainText()
               </p>
+              @if(comment.GetUserId() == Model["user"].GetId())
+              {
+                <h6><a class="show-form" id="comment-edit">Edit</a></h6>
+                <div class="comment-form" id="comment-edit-form">
+                  <a class="hide-form">Hide</a>
+                  <form class="form-group" action='/posts/@Model["post"].GetId()/@comment.GetId()' method="post">
+                    <input type="hidden" name="_method" value="PATCH">
+                    <label>Main Text:</label>
+                    <input class="form-control" type="text" name="comment-main-text" value='@comment.GetMainText()' required>
+                    <input type="hidden" name="comment-id" value="@comment.GetId()">
+                    <button class="btn btn-primary" type="submit" name="button">Submit</button>
+                  </form>
+                </div>
+                <h6><a href='/posts/@Model["post"].GetId()/@comment.GetId()/remove-comment'>Remove</a></h6>
+              }
             </div>
             <!-- END CONTENT OF COMMENT -->
 
