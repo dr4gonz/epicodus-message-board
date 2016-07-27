@@ -28,6 +28,10 @@ ul {
   height: 100%;
 }
 
+.sidebar ul{
+  padding-left: 0px;
+}
+
 .sidebar-listitem {
   font-size: 1.7em;
 }

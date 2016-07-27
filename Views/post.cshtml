@@ -123,7 +123,7 @@
                           @{int numberOfChildren = grandchildComment.GetChildren().Count;}
                           @if(numberOfChildren > 0)
                           {
-                            <a href="/comments/@grandchildComment.GetId()">View numberOfChildren comments</a>
+                            <a href="/comments/@grandchildComment.GetId()">View @numberOfChildren comment(s)</a>
                           }
                           else
                           {
@@ -155,6 +155,12 @@
             </li class="sidebar-listitem">
             <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
           </ul>
+
+          <h5>Search by Keyword</h5>
+          <form class="form-group" action="/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <button class="btn btn-primary" type="submit" name="button">Search</button>
+          </form>
         </div>
       </div>
 

@@ -23,25 +23,22 @@
         <h1>HEADER</h1>
       </div> -->
       <div class="col-md-10 main-content">
-        <h1>MAIN CONTENT</h1>
-        @if(Model["posts"].Count == 0)
+        <h1>SEARCH RESULTS FOR "@Model["keyword"]"</h1>
+        @if(Model["results"].Count == 0)
         {
-          <h2>No Posts</h2>
+          <h2>No Results</h2>
         }
         else
         {
-          <ul class="list-group">
-            @foreach(var post in Model["posts"])
-            {
-              <div class="post-listing">
-                <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
-                <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
-                <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
-              </div>
-            }
-          </ul>
+          @foreach(var post in Model["results"])
+          {
+            <div class="post-listing">
+              <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
+              <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
+              <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
+            </div>
+          }
         }
-
       </div>
       <div class="col-md-2">
         <div class="sidebar">

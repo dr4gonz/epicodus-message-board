@@ -153,7 +153,19 @@ namespace MessageBoard
         model.Add("validate", validate);
         return View["index.cshtml", model];
       };
-      
+
+      Post["/search"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
+        List<OriginalPost> searchResults = OriginalPost.SearchByKeyword(Request.Form["keyword"]);
+        model.Add("results", searchResults);
+        model.Add("validate", validate);
+        model.Add("keyword", Request.Form["keyword"]);
+        return View["search_results.cshtml", model];
+      };
+
     }
   }
 }
