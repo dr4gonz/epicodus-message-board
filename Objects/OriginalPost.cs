@@ -247,31 +247,6 @@ namespace MessageBoard
       this.Update(_author, newTitle, newMainText);
     }
 
-    public void Update(int newRating)
-     {
-       SqlConnection conn = DB.Connection();
-       SqlDataReader rdr = null;
-       conn.Open();
-
-       SqlCommand cmd = new SqlCommand("UPDATE posts SET rating = @NewRating OUTPUT INSERTED.rating WHERE id = @PostId;", conn);
-
-       SqlParameter newRatingParameter = new SqlParameter("@NewRating", newRating);
-       cmd.Parameters.Add(newRatingParameter);
-
-       SqlParameter postIdParameter = new SqlParameter("@PostId", this.GetId());
-       cmd.Parameters.Add(postIdParameter);
-
-       rdr = cmd.ExecuteReader();
-
-       while(rdr.Read())
-       {
-         this._rating = rdr.GetInt32(0);
-       }
-
-       if(rdr != null) rdr.Close();
-       if(conn != null) conn.Close();
-     }
-
     public static void RemoveById(int id)
     {
       UpdateById("[removed]", "[removed]", "[removed]", id);

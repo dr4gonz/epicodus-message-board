@@ -294,7 +294,6 @@ namespace MessageBoard
       int result = newOriginalPost.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);
-
     }
   }
 }

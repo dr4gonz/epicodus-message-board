@@ -158,9 +158,11 @@ namespace MessageBoard
     {
       Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate, 3);
       newComment.Save();
+      User firstUser = new User("Bob", "password");
+      firstUser.Save();
       //Act
       int expectedResult = 1;
-      newComment.Upvote();
+      newComment.Upvote(firstUser.GetId());
       int result = newComment.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);
@@ -169,11 +171,13 @@ namespace MessageBoard
     [Fact]
     public void Comment_Downvote_Subtracts1ToCommentRating()
     {
-      Comment newComment = new Comment("Matt", "This stuff is really cool!", 1, 1, testDate, 3);
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate, 3);
       newComment.Save();
+      User firstUser = new User("Bob", "password");
+      firstUser.Save();
       //Act
-      int expectedResult = 0;
-      newComment.Downvote();
+      int expectedResult = -1;
+      newComment.Downvote(firstUser.GetId());
       int result = newComment.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);
@@ -196,7 +200,45 @@ namespace MessageBoard
       List<Comment> expectedResult = new List<Comment> {newComment2, newComment1};
       //Assert
       Assert.Equal(expectedResult, result);
+    }
 
+    [Fact]
+    public void Post_Vote_SavesVoteInDatabase()
+    {
+      //Arrange
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate, 3);
+      newComment.Save();
+      User firstUser = new User("Bob", "password");
+      firstUser.Save();
+      User secondUser = new User("John", "password");
+      secondUser.Save();
+      int expectedResult = 2;
+      //Act
+      newComment.Vote(firstUser.GetId(), 1);
+      newComment.Vote(secondUser.GetId(), 1);
+      int result = newComment.GetRating();
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
+
+    [Fact]
+    public void Post_Vote_UserCanOnlyVoteOnce()
+    {
+      //Arrange
+      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate, 3);
+      newComment.Save();
+      User firstUser = new User("Bob", "password");
+      firstUser.Save();
+      User secondUser = new User("John", "password");
+      secondUser.Save();
+      int expectedResult = 2;
+      //Act
+      newComment.Vote(firstUser.GetId(), 1);
+      newComment.Vote(secondUser.GetId(), 1);
+      newComment.Vote(secondUser.GetId(), 1);
+      int result = newComment.GetRating();
+      //Assert
+      Assert.Equal(expectedResult, result);
     }
   }
 }

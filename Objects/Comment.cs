@@ -73,7 +73,7 @@ namespace MessageBoard
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM comments;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM comments; DELETE FROM voting WHERE comment_id IS NOT NULL;", conn);
       cmd.ExecuteNonQuery();
       if(conn!=null) conn.Close();
     }
@@ -288,37 +288,12 @@ namespace MessageBoard
       if(conn != null) conn.Close();
     }
 
-    public void Update(int newRating)
-     {
-       SqlConnection conn = DB.Connection();
-       SqlDataReader rdr = null;
-       conn.Open();
-
-       SqlCommand cmd = new SqlCommand("UPDATE comments SET rating = @NewRating OUTPUT INSERTED.rating WHERE id = @CommentId;", conn);
-
-       SqlParameter newRatingParameter = new SqlParameter("@NewRating", newRating);
-       cmd.Parameters.Add(newRatingParameter);
-
-       SqlParameter commentIdParameter = new SqlParameter("@CommentId", this.GetId());
-       cmd.Parameters.Add(commentIdParameter);
-
-       rdr = cmd.ExecuteReader();
-
-       while(rdr.Read())
-       {
-         this._rating = rdr.GetInt32(0);
-       }
-
-       if(rdr != null) rdr.Close();
-       if(conn != null) conn.Close();
-     }
-
     public void Delete()
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("DELETE FROM comments WHERE id = @CommentId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM comments WHERE id = @CommentId; DELETE FROM voting WHERE comment_id = @CommentId;", conn);
 
       SqlParameter commentIdParameter = new SqlParameter("@CommentId", this.GetId());
       cmd.Parameters.Add(commentIdParameter);
@@ -332,13 +307,42 @@ namespace MessageBoard
     {
       this.Update("[Removed]");
     }
-    public void Upvote()
+    public void Upvote(int userId)
     {
-      this.Update(this.GetRating() + 1);
+      Vote(userId, 1);
     }
-    public void Downvote()
+
+    public void Downvote(int userId)
     {
-      this.Update(this.GetRating() - 1);
+      Vote(userId, -1);
+    }
+
+    public void Unvote(int userId)
+    {
+      Vote(userId, 0);
+    }
+
+    public void Vote(int userId, int voteValue)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND comment_id = @CommentId; INSERT INTO voting (voter_id, comment_id, vote) VALUES (@Voter, @CommentId, @Vote); UPDATE comments SET rating=(SELECT SUM(vote) FROM voting WHERE comment_id = @CommentId) OUTPUT INSERTED.rating WHERE comments.id=@CommentId;", conn);
+      SqlParameter userIdParameter = new SqlParameter("@Voter", userId);
+      SqlParameter commentIdParameter = new SqlParameter("@CommentId", _id);
+      SqlParameter voteParameter = new SqlParameter("@Vote", voteValue);
+      cmd.Parameters.Add(userIdParameter);
+      cmd.Parameters.Add(commentIdParameter);
+      cmd.Parameters.Add(voteParameter);
+
+      rdr = cmd.ExecuteReader();
+      while(rdr.Read())
+      {
+        _rating = rdr.GetInt32(0);
+      }
+
+      if (rdr != null) rdr.Close();
+      if (conn != null) conn.Close();
     }
   }
 }
