@@ -62,8 +62,15 @@ namespace MessageBoard
       Delete["/"] = _ =>
       {
         OriginalPost.DeleteAll();
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
-        return View["index.cshtml", allOriginalPosts];
+        List<Category> allCategories = Category.GetAll();
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
       };
 
       Get["/posts/{id}"] = parameters =>
@@ -83,12 +90,10 @@ namespace MessageBoard
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        List<Category> allCategories = Category.GetAll();
         Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id, DateTime.Now, currentUser.GetId());
         newComment.Save();
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
-        model.Add("categories", allCategories);
         return View["post.cshtml", model];
       };
 

@@ -173,14 +173,7 @@
             <button class="btn btn-primary" type="submit" name="button">Search</button>
           </form>
 
-          <h5>Categories</h5>
-
-          <ul>
-          @foreach(var category in Model["categories"])
-          {
-            <li class="sidebar-listitem"><a href="/categories/@category.GetId()">@category.GetName()</a></li>
-          }
-          </ul>
+        
 
         </div>
       </div>
