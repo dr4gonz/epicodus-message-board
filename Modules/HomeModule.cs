@@ -9,10 +9,10 @@ namespace MessageBoard
 {
   public class HomeModule : NancyModule
   {
-    private string userName = "";
-    private string password = "";
-    private bool validate = true;
-    private bool registrationBool = true;
+    private static string userName = "";
+    private static string password = "";
+    private static bool validate = true;
+    private static bool registrationBool = true;
     public HomeModule()
     {
       Get["/"] = _ =>
@@ -28,8 +28,12 @@ namespace MessageBoard
 
       Get["/new"] = _ =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
         List<Category> categories = Category.GetAll();
-        return View["new_post.cshtml", categories];
+        model.Add("user", currentUser);
+        model.Add("categories", categories);
+        return View["new_post.cshtml", model];
       };
 
       Post["/new"] = _ =>
@@ -56,25 +60,37 @@ namespace MessageBoard
 
       Get["/posts/{id}"] = parameters =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        return View["post.cshtml", selectedOriginalPost];
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("post", selectedOriginalPost);
+        model.Add("user", currentUser);
+        return View["post.cshtml", model];
       };
 
       Post["/posts/{id}"] = parameters =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id, DateTime.Now, 3);
+        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id, DateTime.Now, currentUser.GetId());
         newComment.Save();
-        return View["post.cshtml", selectedOriginalPost];
+        model.Add("user", currentUser);
+        model.Add("post", selectedOriginalPost);
+        return View["post.cshtml", model];
       };
 
       Post["/posts/{id}/reply"] = parameters =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id, DateTime.Now, 3);
+        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id, DateTime.Now, currentUser.GetId());
         newComment.SetParentId(Request.Form["parent-id"]);
         newComment.Save();
-        return View["post.cshtml", selectedOriginalPost];
+        model.Add("user", currentUser);
+        model.Add("post", selectedOriginalPost);
+        return View["post.cshtml", model];
       };
 
       Delete["/posts/{id}/comment"] = parameters =>
@@ -86,18 +102,26 @@ namespace MessageBoard
 
       Get["/comments/{id}"] = parameters =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
         Comment comment = Comment.Find(parameters.id);
-        return View["comment.cshtml", comment];
+        model.Add("user", currentUser);
+        model.Add("comment", comment);
+        return View["comment.cshtml", model];
       };
 
       Post["/comments/{id}"] = parameters =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
         Comment comment = Comment.Find(parameters.id);
         int postId = comment.GetPostId();
-        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, postId, DateTime.Now, 3);
+        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, postId, DateTime.Now, currentUser.GetId());
         newComment.SetParentId(Request.Form["comment-id"]);
         newComment.Save();
-        return View["comment.cshtml", comment];
+        model.Add("user", currentUser);
+        model.Add("comment", comment);
+        return View["comment.cshtml", model];
       };
 
       Get["/register"] = _ => {
