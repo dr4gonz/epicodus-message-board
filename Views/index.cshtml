@@ -54,16 +54,17 @@
         <div class="sidebar">
           <h3>SIDEBAR</h3>
           <ul>
-
             @if(Model["user"] == null)
             {
               <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Post</button></a></li>
+              <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Category</button></a></li>
             }
             else
             {
               <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
+              <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
             }
-            <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
+
 
 
             <li class="sidebar-listitem">
@@ -99,25 +100,52 @@
               </form>
           }
 
-          <h5>Search Posts</h5>
-          <form class="form-group" action="/posts/search" method="post">
-            <input class="form-control" name="keyword" type="text">
-            <button class="btn btn-primary" type="submit" name="button">Search</button>
-          </form>
-          <h5>Search Categories</h5>
-          <form class="form-group" action="/categories/search" method="post">
-            <input class="form-control" name="keyword" type="text">
-            <button class="btn btn-primary" type="submit" name="button">Search</button>
-          </form>
+          @if(Model["user"] == null)
+          {
+            <h5>Search Posts</h5>
+            <form class="form-group" action="/posts/search" method="post">
+              <input class="form-control" name="keyword" type="text">
+              <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
+            </form>
+            <h5>Search Categories</h5>
+            <form class="form-group" action="/categories/search" method="post">
+              <input class="form-control" name="keyword" type="text">
+              <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
+            </form>
+          }
+          else
+          {
+            <h5>Search Posts</h5>
+            <form class="form-group" action="/posts/search" method="post">
+              <input class="form-control" name="keyword" type="text">
+              <button class="btn btn-primary" type="submit" name="button">Search</button>
+            </form>
+            <h5>Search Categories</h5>
+            <form class="form-group" action="/categories/search" method="post">
+              <input class="form-control" name="keyword" type="text">
+              <button class="btn btn-primary" type="submit" name="button">Search</button>
+            </form>
+          }
 
           <h5>Categories</h5>
-
-          <ul>
-          @foreach(var category in Model["categories"])
+          @if(Model["user"] == null)
           {
-            <li class="sidebar-listitem"><a href="/categories/@category.GetId()">@category.GetName()</a></li>
+            <ul>
+            @foreach(var category in Model["categories"])
+            {
+              <li class="sidebar-listitem"><a href="/register">@category.GetName()</a></li>
+            }
+            </ul>
           }
-          </ul>
+          else
+          {
+            <ul>
+              @foreach(var category in Model["categories"])
+              {
+                <li class="sidebar-listitem"><a href="/categories/@category.GetId()">@category.GetName()</a></li>
+              }
+            </ul>
+          }
         </div>
       </div>
     </div>

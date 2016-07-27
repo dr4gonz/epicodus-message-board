@@ -17,6 +17,11 @@ h1, h2, h3 {
   border-bottom: 5px solid #1D70A2;
   border-top: 0px;
   border-radius: 0px;
+  text-shadow:
+      -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+       1px 1px 0 #000;
 }
 
 .page-top-header {
@@ -117,7 +122,7 @@ ul {
 
 footer {
   text-align: right;
-   background-color: rgb(45, 89, 134);
+   background-color: #3FA7D6;
    padding-top: 10px;
    padding-bottom: 0px;
    padding-right: 20px;
