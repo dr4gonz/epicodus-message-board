@@ -82,7 +82,7 @@ namespace MessageBoard
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM posts;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM posts; DELETE FROM voting WHERE post_id IS NOT NULL;", conn);
       cmd.ExecuteNonQuery();
       conn.Close();
     }
@@ -185,7 +185,7 @@ namespace MessageBoard
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM posts WHERE id = @OriginalPostId; DELETE FROM comments WHERE post_id = @OriginalPostId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM posts WHERE id = @OriginalPostId; DELETE FROM comments WHERE post_id = @OriginalPostId; DELETE FROM voting WHERE post_id = @OriginalPostId;", conn);
 
       SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
       cmd.Parameters.Add(postIdParameter);
