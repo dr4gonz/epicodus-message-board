@@ -117,10 +117,8 @@ namespace MessageBoard
             return View["register.cshtml", registrationBool];
           }
         }
-        PasswordHash hash = new PasswordHash(Request.Form["password1"]);
-        byte[] hashBytes = hash.ToArray();
-        string savedPasswordHash = Convert.ToBase64String(hashBytes);
-        User newUser = new User(newUserName, savedPasswordHash);
+        string newUserPassword = User.HashPassword(Request.Form["password1"]);
+        User newUser = new User(newUserName, newUserPassword);
         newUser.Save();
         return View["register_success.cshtml", newUser];
       };
@@ -129,13 +127,8 @@ namespace MessageBoard
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         userName = Request.Form["user-name"];
-        User foundUser = User.Find(userName);
-        string foundPasswordHash = foundUser.GetPassword();
-        byte[] hashBytes = Convert.FromBase64String(foundPasswordHash);
-        PasswordHash hash = new PasswordHash(hashBytes);
-        if(!hash.Verify(Request.Form["password"]))
-          throw new System.UnauthorizedAccessException();
-        User currentUser = User.ValidateUserLogin(userName, foundPasswordHash);
+        password = Request.Form["password"];
+        User currentUser = User.ValidateUserLogin(userName, password);
         if (currentUser == null)
         {
           model.Remove("validate");
