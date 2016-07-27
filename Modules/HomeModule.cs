@@ -114,7 +114,10 @@ namespace MessageBoard
             return View["register.cshtml", registrationBool];
           }
         }
-        User newUser = new User(newUserName, Request.Form["password1"]);
+        PasswordHash hash = new PasswordHash(Request.Form["password1"]);
+        byte[] hashBytes = hash.ToArray();
+        string savedPasswordHash = Convert.ToBase64String(hashBytes);
+        User newUser = new User(newUserName, savedPasswordHash);
         newUser.Save();
         return View["register_success.cshtml", newUser];
       };
@@ -153,7 +156,7 @@ namespace MessageBoard
         model.Add("validate", validate);
         return View["index.cshtml", model];
       };
-      
+
     }
   }
 }

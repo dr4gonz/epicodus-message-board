@@ -11,7 +11,8 @@ namespace MessageBoard
     DateTime testDate = new DateTime(2016, 7, 22);
     public CategoryTest()
     {
-      DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+      // DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+      DBConfiguration.ConnectionString = "Data Source=DESKTOP-7OLC9FT\\SQLEXPRESS;Initial Catalog=message_board_test;Integrated Security=SSPI;";
     }
     public void Dispose()
     {

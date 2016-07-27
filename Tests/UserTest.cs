@@ -11,7 +11,8 @@ namespace MessageBoard
     DateTime testDate = new DateTime(2016, 7, 22);
     public UserTest()
     {
-      DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+      // DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=message_board_test;Integrated Security=SSPI;";
+      DBConfiguration.ConnectionString = "Data Source=DESKTOP-7OLC9FT\\SQLEXPRESS;Initial Catalog=message_board_test;Integrated Security=SSPI;";
     }
     public void Dispose()
     {
@@ -60,6 +61,17 @@ namespace MessageBoard
       testUser.Save();
       //Act
       User foundUser = User.Find(testUser.GetId());
+      //Assert
+      Assert.Equal(testUser, foundUser);
+    }
+    [Fact]
+    public void User_Find_FindsUserInDatabaseByName()
+    {
+      //Arrange
+      User testUser = new User("Homer J. Simpson", "230sfd");
+      testUser.Save();
+      //Act
+      User foundUser = User.Find(testUser.GetName());
       //Assert
       Assert.Equal(testUser, foundUser);
     }
