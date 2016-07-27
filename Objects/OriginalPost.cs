@@ -435,7 +435,7 @@ namespace MessageBoard
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND post_id = @PostId; INSERT INTO voting (voter_id, post_id, vote) VALUES (@Voter, @PostId, @Vote); UPDATE posts SET rating=(SELECT SUM(vote) FROM voting WHERE post_id = @PostId) OUTPUT INSERTED.rating WHERE posts.id=@PostId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND post_id = @PostId; INSERT INTO voting (voter_id, post_id, vote) VALUES (@Voter, @PostId, @Vote); UPDATE posts SET rating=(SELECT SUM(vote) FROM voting WHERE post_id = @PostId) WHERE posts.id=@PostId; SELECT rating FROM posts WHERE posts.id=@PostId", conn);
       SqlParameter userIdParameter = new SqlParameter("@Voter", userId);
       SqlParameter postIdParameter = new SqlParameter("@PostId", _id);
       SqlParameter voteParameter = new SqlParameter("@Vote", voteValue);

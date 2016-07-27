@@ -23,7 +23,7 @@
         }
         else
         {
-          <p class="text-right username">Not logged in</h4>          
+          <p class="text-right username">Not logged in</h4>
         }
       </div><!-- /.container-fluid -->
     </nav>
@@ -44,8 +44,18 @@
             @foreach(var post in Model["posts"])
             {
               <div class="post-listing">
-                <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
-                <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
+                <form action="/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="1">
+                  <input type="hidden" name="post-id" value='@post.GetId()'>
+                  <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                </form>
+                <form action="/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="-1">
+                  <input type="hidden" name="post-id" value='@post.GetId()'>
+                  <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                </form>
                 <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
               </div>
             }

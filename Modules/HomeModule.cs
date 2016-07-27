@@ -195,6 +195,19 @@ namespace MessageBoard
         return View["template.cshtml", model];
       };
 
+      Patch["/vote"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
+        model.Add("validate", validate);
+        OriginalPost post = OriginalPost.Find(Request.Form["post-id"]);
+        post.Vote(currentUser.GetId(), Request.Form["vote"]);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        model.Add("posts", allOriginalPosts);
+        return View["index.cshtml", model];
+      };
+
     }
   }
 }
