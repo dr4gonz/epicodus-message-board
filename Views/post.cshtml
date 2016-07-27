@@ -33,7 +33,18 @@
           </p>
           @if(Model["post"].GetUserId() == Model["user"].GetId())
           {
-            <h6><a href='/posts/@Model["post"].GetId()/edit'>Edit</a></h6>
+            <h6><a class="show-form" id="edit">Edit</a></h6>
+            <div class="comment-form" id="edit-form">
+              <a class="hide-form">Hide</a>
+              <form class="form-group" action='/posts/@Model["post"].GetId()' method="post">
+                <input type="hidden" name="_method" value="PATCH">
+                <input class="form-control" type="hidden" name="author" value='@Model["user"].GetName()'>
+                <input class="form-control" type="hidden" name="title" value='@Model["post"].GetTitle()'>
+                <label>Main Text:</label>
+                <input class="form-control" type="text" name="main-text" value='@Model["post"].GetMainText()' required>
+                <button class="btn btn-primary" type="submit" name="button">Submit</button>
+              </form>
+            </div>
             <h6><a href='/posts/@Model["post"].GetId()/remove'>Remove</a></h6>
           }
         </div>

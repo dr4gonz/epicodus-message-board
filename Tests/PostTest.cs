@@ -99,7 +99,7 @@ namespace MessageBoard
       //Act
       OriginalPost.UpdateById("Fishing at the lake", "I like to fish at the lake", testOriginalPost.GetId());
       string expectedResult = "Fishing at the lake";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }
@@ -113,7 +113,7 @@ namespace MessageBoard
       //Act
       testOriginalPost.Update("Fishing at the lake", "I like to fish at the lake");
       string expectedResult = "Fishing at the lake";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }
@@ -127,7 +127,7 @@ namespace MessageBoard
       //Act
       testOriginalPost.Remove();
       string expectedResult = "[removed]";
-      string result = OriginalPost.Find(testOriginalPost.GetId()).GetTitle();
+      string result = OriginalPost.Find(testOriginalPost.GetId()).GetAuthor();
       //Assert
       Assert.Equal(expectedResult, result);
     }

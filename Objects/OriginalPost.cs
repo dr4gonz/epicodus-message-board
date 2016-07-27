@@ -199,19 +199,19 @@ namespace MessageBoard
       DeleteById(_id);
     }
 
-    public static void UpdateById(string newTitle, string newMainText, int id)
+    public static void UpdateById(string newAuthor, string newMainText, int id)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("UPDATE posts SET title = @Title, main_text = @MainText OUTPUT INSERTED.rating, INSERTED.time WHERE id = @OriginalPostId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE posts SET author = @Author, main_text = @MainText OUTPUT INSERTED.rating, INSERTED.time WHERE id = @OriginalPostId;", conn);
       SqlDataReader rdr = null;
 
       SqlParameter postIdParameter = new SqlParameter("@OriginalPostId", id);
-      SqlParameter titleParameter = new SqlParameter("@Title", newTitle);
+      SqlParameter authorParameter = new SqlParameter("@Author", newAuthor);
       SqlParameter mainTextParameter = new SqlParameter("@MainText", newMainText);
 
       cmd.Parameters.Add(postIdParameter);
-      cmd.Parameters.Add(titleParameter);
+      cmd.Parameters.Add(authorParameter);
       cmd.Parameters.Add(mainTextParameter);
 
       int rating = 0;
@@ -230,10 +230,10 @@ namespace MessageBoard
 
     }
 
-    public void Update(string newTitle, string newMainText)
+    public void Update(string newAuthor, string newMainText)
     {
-      UpdateById(newTitle, newMainText, _id);
-      _title = newTitle;
+      UpdateById(newAuthor, newMainText, _id);
+      _author = newAuthor;
       _mainText = newMainText;
     }
 
