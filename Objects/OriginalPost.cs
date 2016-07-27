@@ -84,7 +84,7 @@ namespace MessageBoard
       conn.Open();
       SqlCommand cmd = new SqlCommand("DELETE FROM posts; DELETE FROM voting WHERE post_id IS NOT NULL;", conn);
       cmd.ExecuteNonQuery();
-      conn.Close();
+      if (conn!=null) conn.Close();
     }
 
     public static List<OriginalPost> GetAll()
