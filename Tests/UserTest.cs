@@ -120,7 +120,10 @@ namespace MessageBoard
     public void User_ValidateUser_ValidatesUserAgainstDatabase()
     {
       //Arrange
-      User testUser = new User("Homer", "230sfd");
+      PasswordHash hash = new PasswordHash("230sfd");
+      byte[] hashBytes = hash.ToArray();
+      string savedPasswordHash = Convert.ToBase64String(hashBytes);
+      User testUser = new User("Homer", savedPasswordHash);
       testUser.Save();
       //Act
       User result = User.ValidateUserLogin("Homer", "230sfd");
