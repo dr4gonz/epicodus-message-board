@@ -12,10 +12,18 @@
     <title>Message Board</title>
   </head>
   <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="logo" href="/"><h1>epicodex</h1></a>
+        </div>
+        <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
+      </div><!-- /.container-fluid -->
+    </nav>
     <div class="container">
-      <div class="page-header">
-        <h1>HEADER</h1>
-      </div>
+
+
+
       <div class="col-md-10 main-content">
 
         <!-- MAIN CONTENT -->
@@ -23,16 +31,15 @@
       </div>
       <div class="col-md-2">
         <div class="sidebar">
-          <h3>SIDEBAR</h3>
           <ul>
-            <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
+            <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success center-block">New Post</button></a></li>
             <li class="sidebar-listitem">
               <form action="/" method="post">
                 <input type="hidden" name="_method" value="DELETE">
-                <button class="btn btn-danger" type="submit">Delete all Posts</button>
+                <button class="btn btn-danger center-block" type="submit">Delete all Posts</button>
               </form>
             </li class="sidebar-listitem">
-            <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
+            <li><a href="/register"><button type="button" class="btn btn-info center-block">Register</button></a></li>
           </ul>
         </div>
       </div>

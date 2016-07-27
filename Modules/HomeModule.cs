@@ -186,6 +186,15 @@ namespace MessageBoard
         return View["index.cshtml", model];
       };
 
+      Get["/template"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
+        model.Add("validate", validate);
+        return View["template.cshtml", model];
+      };
+
     }
   }
 }

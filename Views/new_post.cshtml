@@ -12,10 +12,15 @@
     <title>Message Board</title>
   </head>
   <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="logo" href="/"><h1>epicodex</h1></a>
+        </div>
+        <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
+      </div><!-- /.container-fluid -->
+    </nav>
     <div class="container">
-      <div class="page-header">
-        <h1>HEADER</h1>
-      </div>
       <div class="col-md-10 main-content">
         <form class="form-group" action="/new" method="post">
           <input class="form-control" type="hidden" name="author" value='@Model["user"].GetName()' required>
