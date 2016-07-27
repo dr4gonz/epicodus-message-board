@@ -1,6 +1,9 @@
 using Nancy;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace MessageBoard
 {
@@ -126,8 +129,13 @@ namespace MessageBoard
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         userName = Request.Form["user-name"];
-        password = Request.Form["password"];
-        User currentUser = User.ValidateUserLogin(userName, password);
+        User foundUser = User.Find(userName);
+        string foundPasswordHash = foundUser.GetPassword();
+        byte[] hashBytes = Convert.FromBase64String(foundPasswordHash);
+        PasswordHash hash = new PasswordHash(hashBytes);
+        if(!hash.Verify(Request.Form["password"]))
+          throw new System.UnauthorizedAccessException();
+        User currentUser = User.ValidateUserLogin(userName, foundPasswordHash);
         if (currentUser == null)
         {
           model.Remove("validate");
