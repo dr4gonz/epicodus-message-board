@@ -232,9 +232,11 @@ namespace MessageBoard
     {
       OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, testDate, 1);
       newOriginalPost.Save();
+      User firstUser = new User("Bob", "password");
+      firstUser.Save();
       //Act
       int expectedResult = 1;
-      newOriginalPost.Upvote();
+      newOriginalPost.Upvote(firstUser.GetId());
       int result = newOriginalPost.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);
@@ -243,11 +245,13 @@ namespace MessageBoard
     [Fact]
     public void Post_Downvote_Subtracts1ToPostRating()
     {
-      OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 1, testDate, 1);
+      OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, testDate, 1);
       newOriginalPost.Save();
+      User firstUser = new User("Bob", "password");
+      firstUser.Save();
       //Act
-      int expectedResult = 0;
-      newOriginalPost.Downvote();
+      int expectedResult = -1;
+      newOriginalPost.Downvote(firstUser.GetId());
       int result = newOriginalPost.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);

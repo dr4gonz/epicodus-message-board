@@ -440,13 +440,19 @@ namespace MessageBoard
       if(conn!=null) conn.Close();
     }
 
-    public void Upvote()
+    public void Upvote(int userId)
     {
-      this.Update(this.GetRating() + 1);
+      Vote(userId, 1);
     }
-    public void Downvote()
+
+    public void Downvote(int userId)
     {
-      this.Update(this.GetRating() - 1);
+      Vote(userId, -1);
+    }
+
+    public void Unvote(int userId)
+    {
+      Vote(userId, 0);
     }
 
     public void Vote(int userId, int voteValue)
