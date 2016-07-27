@@ -95,7 +95,7 @@
                   <a class="show-form" id="grandchild-@childComment.GetId()">Reply</a>
                   <div class="comment-form" id="grandchild-@childComment.GetId()-form">
                     <a class="hide-form">Hide</a>
-                    <form action='/posts/@Model["post"].GetId()/reply' method="post">
+                    <form action='/posts/@Model[""].GetId()/reply' method="post">
                       <input class="form-control" type="text" name="reply-author" value='@Model["user"].GetName()'>
                       <label>Main Text:</label>
                       <input class="form-control" type="text" name="reply-main-text" value="">
@@ -154,8 +154,8 @@
           </ul>
         </div>
       </div>
-
     </div>
+    <h4><a href="/">Home</a></h4>
   </div>
 </div>
 </body>

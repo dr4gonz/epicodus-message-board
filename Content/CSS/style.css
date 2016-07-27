@@ -96,3 +96,22 @@ ul {
 .sidebar .btn {
   margin-bottom: 20px;
 }
+
+footer {
+  text-align: right;
+   background-color: rgb(45, 89, 134);
+   padding-top: 10px;
+   padding-bottom: 0px;
+   padding-right: 20px;
+   position:fixed;
+   bottom:0;
+   width:100%;
+   border-top: solid 1px black;
+   color: white;
+   font-size: 15px;
+   text-shadow:
+       -1px -1px 0 #000,
+       1px -1px 0 #000,
+       -1px 1px 0 #000,
+        1px 1px 0 #000;
+}

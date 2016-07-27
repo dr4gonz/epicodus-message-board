@@ -36,7 +36,14 @@
               <div class="post-listing">
                 <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
                 <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
-                <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
+                @if(Model["user"] == null)
+                {
+                <li><a href="/register">@post.GetRating() - @post.GetTitle()</a></li>
+                }
+                else
+                {
+                  <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
+                }
               </div>
             }
           </ul>
@@ -47,7 +54,14 @@
         <div class="sidebar">
           <h3>SIDEBAR</h3>
           <ul>
-            <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
+            @if(Model["user"] == null)
+            {
+              <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Post</button></a></li>
+            }
+            else
+            {
+              <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
+            }
             <li class="sidebar-listitem">
               <form action="/" method="post">
                 <input type="hidden" name="_method" value="DELETE">
@@ -83,5 +97,8 @@
         </div>
       </div>
     </div>
+    <footer>
+      <p>&copy; 2016 Message Board</p>
+    </footer>
   </body>
 </html>
