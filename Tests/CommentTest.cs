@@ -150,37 +150,6 @@ namespace MessageBoard
       List<Comment> testChildren = new List<Comment> {newComment2};
       //Assert
       Assert.Equal(testChildren, allChildren);
-
-    }
-
-    [Fact]
-    public void Comment_Upvote_Adds1ToCommentRating()
-    {
-      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate, 3);
-      newComment.Save();
-      User firstUser = new User("Bob", "password");
-      firstUser.Save();
-      //Act
-      int expectedResult = 1;
-      newComment.Upvote(firstUser.GetId());
-      int result = newComment.GetRating();
-      //Assert
-      Assert.Equal(expectedResult, result);
-    }
-
-    [Fact]
-    public void Comment_Downvote_Subtracts1ToCommentRating()
-    {
-      Comment newComment = new Comment("Matt", "This stuff is really cool!", 0, 1, testDate, 3);
-      newComment.Save();
-      User firstUser = new User("Bob", "password");
-      firstUser.Save();
-      //Act
-      int expectedResult = -1;
-      newComment.Downvote(firstUser.GetId());
-      int result = newComment.GetRating();
-      //Assert
-      Assert.Equal(expectedResult, result);
     }
 
     [Fact]
@@ -214,8 +183,8 @@ namespace MessageBoard
       secondUser.Save();
       int expectedResult = 2;
       //Act
-      newComment.Vote(firstUser.GetId(), 1);
-      newComment.Vote(secondUser.GetId(), 1);
+      newComment = Comment.Vote(newComment.GetId(), firstUser.GetId(), 1);
+      newComment = Comment.Vote(newComment.GetId(), secondUser.GetId(), 1);
       int result = newComment.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);
@@ -233,9 +202,9 @@ namespace MessageBoard
       secondUser.Save();
       int expectedResult = 2;
       //Act
-      newComment.Vote(firstUser.GetId(), 1);
-      newComment.Vote(secondUser.GetId(), 1);
-      newComment.Vote(secondUser.GetId(), 1);
+      newComment = Comment.Vote(newComment.GetId(), firstUser.GetId(), 1);
+      newComment = Comment.Vote(newComment.GetId(), secondUser.GetId(), 1);
+      newComment = Comment.Vote(newComment.GetId(), secondUser.GetId(), 1);
       int result = newComment.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);

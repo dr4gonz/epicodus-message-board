@@ -455,42 +455,43 @@ namespace MessageBoard
       if(conn!=null) conn.Close();
     }
 
-    public void Upvote(int userId)
-    {
-      Vote(userId, 1);
-    }
-
-    public void Downvote(int userId)
-    {
-      Vote(userId, -1);
-    }
-
-    public void Unvote(int userId)
-    {
-      Vote(userId, 0);
-    }
-
-    public void Vote(int userId, int voteValue)
+    public static OriginalPost Vote(int postId, int userId, int voteValue)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND post_id = @PostId; INSERT INTO voting (voter_id, post_id, vote) VALUES (@Voter, @PostId, @Vote); UPDATE posts SET rating=(SELECT SUM(vote) FROM voting WHERE post_id = @PostId) WHERE posts.id=@PostId; SELECT rating FROM posts WHERE posts.id=@PostId", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND post_id = @PostId; INSERT INTO voting (voter_id, post_id, vote) VALUES (@Voter, @PostId, @Vote); UPDATE posts SET rating=(SELECT SUM(vote) FROM voting WHERE post_id = @PostId) WHERE posts.id=@PostId; SELECT * FROM posts WHERE posts.id=@PostId", conn);
       SqlParameter userIdParameter = new SqlParameter("@Voter", userId);
-      SqlParameter postIdParameter = new SqlParameter("@PostId", _id);
+      SqlParameter postIdParameter = new SqlParameter("@PostId", postId);
       SqlParameter voteParameter = new SqlParameter("@Vote", voteValue);
       cmd.Parameters.Add(userIdParameter);
       cmd.Parameters.Add(postIdParameter);
       cmd.Parameters.Add(voteParameter);
 
+      string foundAuthor = null;
+      string foundTitle = null;
+      string foundMainText = null;
+      int foundRating = 0;
+      DateTime? foundTime = null;
+      int foundUserId = 0;
+
       rdr = cmd.ExecuteReader();
+
       while(rdr.Read())
       {
-        _rating = rdr.GetInt32(0);
+        foundAuthor = rdr.GetString(1);
+        foundTitle = rdr.GetString(2);
+        foundMainText = rdr.GetString(3);
+        foundTime = rdr.GetDateTime(5);
+        foundRating = rdr.GetInt32(4);
+        foundUserId = rdr.GetInt32(6);
       }
+      OriginalPost originalPost = new OriginalPost(foundAuthor, foundTitle, foundMainText, foundRating, foundTime, foundUserId, postId);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
+
+      return originalPost;
     }
   }
 }
