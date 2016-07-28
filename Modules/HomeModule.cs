@@ -157,91 +157,111 @@ namespace MessageBoard
         return View["index.cshtml", model];
       };
 
-      Get["/posts/{id}"] = parameters =>
+      Get["/posts/{postId}/{sortingParam}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
-        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
         User currentUser = User.ValidateUserLogin(userName, password);
         List<Category> allCategories = Category.GetAll();
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        model.Add("children", allDirectChildren);
         model.Add("post", selectedOriginalPost);
         model.Add("categories", allCategories);
         model.Add("user", currentUser);
         return View["post.cshtml", model];
       };
 
-      Post["/posts/{id}"] = parameters =>
+      Post["/posts/{postId}/{sortingParam}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
-        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.id, DateTime.Now, currentUser.GetId());
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
+        Comment newComment = new Comment(Request.Form["comment-author"], Request.Form["comment-main-text"], 0, parameters.postId, DateTime.Now, currentUser.GetId());
         newComment.Save();
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        List<Category> allCategories = Category.GetAll();
+        model.Add("children", allDirectChildren);
+        model.Add("categories", allCategories);
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
 
-      Patch["/posts/{id}"] = parameters =>
+      Patch["/posts/{postId}/{sortingParam}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
-        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
         selectedOriginalPost.Update(Request.Form["author"], Request.Form["main-text"]);
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        model.Add("children", allDirectChildren);
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
-      Get["/posts/{id}/remove"] = parameters =>
+      Get["/posts/{postId}/{sortingParam}/remove"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
-        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
         selectedOriginalPost.Remove();
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        model.Add("children", allDirectChildren);
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
 
-      Post["/posts/{id}/reply"] = parameters =>
+      Post["/posts/{postId}/{sortingParam}/reply"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
-        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
-        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.id, DateTime.Now, currentUser.GetId());
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
+        Comment newComment = new Comment(Request.Form["reply-author"], Request.Form["reply-main-text"], 0, parameters.postId, DateTime.Now, currentUser.GetId());
         newComment.SetParentId(Request.Form["parent-id"]);
         newComment.Save();
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        model.Add("children", allDirectChildren);
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
-      Patch["/posts/{postId}/{commentId}"] = parameters =>
+      Patch["/posts/{postId}/{sortingParam}/{commentId}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
         Comment selectedComment = Comment.Find(parameters.commentId);
         selectedComment.Update(Request.Form["comment-main-text"]);
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        model.Add("children", allDirectChildren);
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
-      Get["/posts/{postId}/{commentId}/remove-comment"] = parameters =>
+      Get["/posts/{postId}/{sortingParam}/{commentId}/remove-comment"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
         Comment selectedComment = Comment.Find(parameters.commentId);
         selectedComment.Remove();
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        model.Add("children", allDirectChildren);
         model.Add("user", currentUser);
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
 
-      Delete["/posts/{id}/comment"] = parameters =>
+      Delete["/posts/{postId}/{sortingParam}/comment"] = parameters =>
       {
-        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
         Comment.DeleteAll();
-        return View["post.cshtml", selectedOriginalPost];
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        model.Add("children", allDirectChildren);
+        model.Add("post", selectedOriginalPost);
+        return View["post.cshtml", model];
       };
 
       Get["/comments/{id}"] = parameters =>
@@ -469,14 +489,16 @@ namespace MessageBoard
         return View["profile.cshtml", model];
       };
 
-      Patch["/posts/{id}/vote"] = parameters =>
+      Patch["/posts/{postId}/{sortingParam}/vote"] = parameters =>
       {
         User currentUser = User.ValidateUserLogin(userName, password);
         Comment comment = Comment.Find(Request.Form["comment-id"]);
         comment.Vote(currentUser.GetId(), Request.Form["vote"]);
         Dictionary<string, object> model = new Dictionary<string, object>{};
-        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
         List<Category> allCategories = Category.GetAll();
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
+        model.Add("children", allDirectChildren);
         model.Add("post", selectedOriginalPost);
         model.Add("categories", allCategories);
         model.Add("user", currentUser);
