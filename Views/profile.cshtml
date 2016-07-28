@@ -46,16 +46,20 @@
         }
         else
         {
+
           <ul class="list-group">
             @foreach(var comment in Model["selected"].GetComments())
             {
-              <div class="comment-content">
-                <div class="page-header">
-                  <p>@comment.GetAuthor() - @comment.GetTime() - <a href="/posts/@comment.GetPostId()">Go to post</a></p> 
+              <div class="comment-wrapper">
+                <div class="comment-content">
+                  <div class="page-header">
+                    <p>@comment.GetAuthor() - @comment.GetTime() - <a href="/posts/@comment.GetPostId()">Go to post</a></p>
+                  </div>
+                  <p>
+                    @comment.GetMainText()
+                  </p>
                 </div>
-                <p>
-                  @comment.GetMainText()
-                </p>
+
               </div>
             }
           </ul>
@@ -64,5 +68,8 @@
       </div>
       </div>
     </div>
+    <footer>
+      <p>&copy; 2016 Message Board</p>
+    </footer>
   </body>
 </html>
