@@ -80,18 +80,20 @@
           </p>
           @if(Model["comment"].GetUserId() == Model["user"].GetId())
           {
-            <h6><a class="show-form" id='comment-@Model["comment"].GetId()-edit'>Edit</a></h6>
-            <div class="comment-form" id='comment-@Model["comment"].GetId()-edit-form'>
-              <a class="hide-form">Hide</a>
-              <form class="form-group" action='/comments/@Model["comment"].GetId()' method="post">
-                <input type="hidden" name="_method" value="PATCH">
-                <label>Main Text:</label>
-                <input class="form-control" type="text" name="update-main-text" value='@Model["comment"].GetMainText()' required>
-                <input type="hidden" name="post-id" value='@Model["comment"].GetPostId()'>
-                <button class="btn btn-primary" type="submit" name="button">Submit</button>
-              </form>
-            </div>
-            <h6><a href='/comments/@Model["comment"].GetId()/remove-comment'>Remove</a></h6>
+            <ul class="nav nav-pills">
+              <li role="presentation" class="navigationlinks"><h6><a class="show-form" id='comment-@Model["comment"].GetId()-edit'>Edit</a></h6></li>
+              <div class="comment-form" id='comment-@Model["comment"].GetId()-edit-form'>
+                <a class="hide-form">Hide</a>
+                <form class="form-group" action='/comments/@Model["comment"].GetId()' method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <label>Main Text:</label>
+                  <input class="form-control" type="text" name="update-main-text" value='@Model["comment"].GetMainText()' required>
+                  <input type="hidden" name="post-id" value='@Model["comment"].GetPostId()'>
+                  <button class="btn btn-primary" type="submit" name="button">Submit</button>
+                </form>
+              </div>
+              <li role="presentation" class="navigationlinks"><h6><a href='/comments/@Model["comment"].GetId()/remove-comment'>Remove</a></h6></li>
+            </ul>
           }
         </div>
         <!-- END CONTENT OF COMMENT -->
@@ -135,17 +137,19 @@
               </p>
               @if(comment.GetUserId() == Model["user"].GetId())
               {
-                <h6><a class="show-form" id='comment-@comment.GetId()-edit'>Edit</a></h6>
-                <div class="comment-form" id='comment-@comment.GetId()-edit-form'>
-                  <a class="hide-form">Hide</a>
-                  <form class="form-group" action='/comments/@Model["comment"].GetId()/@comment.GetId()' method="post">
-                    <input type="hidden" name="_method" value="PATCH">
-                    <label>Main Text:</label>
-                    <input class="form-control" type="text" name="update-main-text" value='@comment.GetMainText()' required>
-                    <button class="btn btn-primary" type="submit" name="button">Submit</button>
-                  </form>
-                </div>
-                <h6><a href='/comments/@Model["comment"].GetId()/@comment.GetId()/remove-comment'>Remove</a></h6>
+                <ul class="nav nav-pills">
+                  <li role="presentation" class="navigationlinks"><h6><a class="show-form" id='comment-@comment.GetId()-edit'>Edit</a></h6></li>
+                  <div class="comment-form" id='comment-@comment.GetId()-edit-form'>
+                    <a class="hide-form">Hide</a>
+                    <form class="form-group" action='/comments/@Model["comment"].GetId()/@comment.GetId()' method="post">
+                      <input type="hidden" name="_method" value="PATCH">
+                      <label>Main Text:</label>
+                      <input class="form-control" type="text" name="update-main-text" value='@comment.GetMainText()' required>
+                      <button class="btn btn-primary" type="submit" name="button">Submit</button>
+                    </form>
+                  </div>
+                  <li role="presentation" class="navigationlinks"><h6><a href='/comments/@Model["comment"].GetId()/@comment.GetId()/remove-comment'>Remove</a></h6></li>
+                </ul>
               }
             </div>
             <!-- END CONTENT OF COMMENT -->
@@ -191,17 +195,19 @@
                     </p>
                     @if(childComment.GetUserId() == Model["user"].GetId())
                     {
-                      <h6><a class="show-form" id='comment-@childComment.GetId()-edit'>Edit</a></h6>
-                      <div class="comment-form" id='comment-@childComment.GetId()-edit-form'>
-                        <a class="hide-form">Hide</a>
-                        <form class="form-group" action='/comments/@Model["comment"].GetId()/@childComment.GetId()' method="post">
-                          <input type="hidden" name="_method" value="PATCH">
-                          <label>Main Text:</label>
-                          <input class="form-control" type="text" name="update-main-text" value='@childComment.GetMainText()' required>
-                          <button class="btn btn-primary" type="submit" name="button">Submit</button>
-                        </form>
-                      </div>
-                      <h6><a href='/comments/@Model["comment"].GetId()/@childComment.GetId()/remove-comment'>Remove</a></h6>
+                      <ul class="nav nav-pills">
+                        <li role="presentation" class="navigationlinks"><h6><a class="show-form" id='comment-@childComment.GetId()-edit'>Edit</a></h6></li>
+                        <div class="comment-form" id='comment-@childComment.GetId()-edit-form'>
+                          <a class="hide-form">Hide</a>
+                          <form class="form-group" action='/comments/@Model["comment"].GetId()/@childComment.GetId()' method="post">
+                            <input type="hidden" name="_method" value="PATCH">
+                            <label>Main Text:</label>
+                            <input class="form-control" type="text" name="update-main-text" value='@childComment.GetMainText()' required>
+                            <button class="btn btn-primary" type="submit" name="button">Submit</button>
+                          </form>
+                        </div>
+                        <li role="presentation" class="navigationlinks"><h6><a href='/comments/@Model["comment"].GetId()/@childComment.GetId()/remove-comment'>Remove</a></h6></li>
+                      </ul>
                     }
                   </div>
                   <a class="show-form" id="grandchild-@childComment.GetId()">Reply</a>
@@ -242,17 +248,19 @@
                           </p>
                           @if(childComment.GetUserId() == Model["user"].GetId())
                           {
-                            <h6><a class="show-form" id='comment-@grandchildComment.GetId()-edit'>Edit</a></h6>
-                            <div class="comment-form" id='comment-@grandchildComment.GetId()-edit-form'>
-                              <a class="hide-form">Hide</a>
-                              <form class="form-group" action='/comments/@Model["comment"].GetId()/@grandchildComment.GetId()' method="post">
-                                <input type="hidden" name="_method" value="PATCH">
-                                <label>Main Text:</label>
-                                <input class="form-control" type="text" name="update-main-text" value='@grandchildComment.GetMainText()' required>
-                                <button class="btn btn-primary" type="submit" name="button">Submit</button>
-                              </form>
-                            </div>
-                            <h6><a href='/comments/@Model["comment"].GetId()/@grandchildComment.GetId()/remove-comment'>Remove</a></h6>
+                            <ul class="nav nav-pills">
+                              <li role="presentation" class="navigationlinks"><h6><a class="show-form" id='comment-@grandchildComment.GetId()-edit'>Edit</a></h6></li>
+                              <div class="comment-form" id='comment-@grandchildComment.GetId()-edit-form'>
+                                <a class="hide-form">Hide</a>
+                                <form class="form-group" action='/comments/@Model["comment"].GetId()/@grandchildComment.GetId()' method="post">
+                                  <input type="hidden" name="_method" value="PATCH">
+                                  <label>Main Text:</label>
+                                  <input class="form-control" type="text" name="update-main-text" value='@grandchildComment.GetMainText()' required>
+                                  <button class="btn btn-primary" type="submit" name="button">Submit</button>
+                                </form>
+                              </div>
+                              <li role="presentation" class="navigationlinks"><h6><a href='/comments/@Model["comment"].GetId()/@grandchildComment.GetId()/remove-comment'>Remove</a></h6></li>
+                            </ul>
                           }
                           @{int numberOfChildren = grandchildComment.GetChildren().Count;}
                           @if(numberOfChildren > 0)
