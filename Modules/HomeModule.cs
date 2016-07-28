@@ -333,6 +333,11 @@ namespace MessageBoard
         return View["register_success.cshtml", newUser];
       };
 
+      Get["/login"] = _ =>
+      {
+        return View["login.cshtml"];
+      };
+
       Post["/login"] = _ =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
@@ -375,9 +380,15 @@ namespace MessageBoard
       Post["/posts/search"] = _ =>
       {
         Dictionary<string, object> model = new Dictionary<string, object> {};
+        string keyword =  Request.Form["keyword"];
         User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> searchResults = OriginalPost.SearchByKeyword(keyword);
+        List<Category> allCategories = Category.GetAll();
+        model.Add("keyword", keyword);
         model.Add("user", currentUser);
         model.Add("validate", validate);
+        model.Add("results", searchResults);
+        model.Add("categories", allCategories);
         return View["post_results.cshtml", model];
       };
 
@@ -446,6 +457,16 @@ namespace MessageBoard
         model.Add("categories", allCategories);
         model.Add("validate", validate);
         return View["index.cshtml", model];
+      };
+
+      Get["/profile/{id}"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User selectedUser = User.Find(int.Parse(parameters.id));
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("selected", selectedUser);
+        model.Add("user", currentUser);
+        return View["profile.cshtml", model];
       };
 
       Patch["/posts/{id}/vote"] = parameters =>

@@ -13,11 +13,20 @@
   </head>
   <body>
     <nav class="navbar navbar-inverse">
-      <div class="container">
-        <h1>epicodus</h1>
-      </div>
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="logo" href="/"><h1>epicodex</h1></a>
+        </div>
+        @if(Model["user"] != null)
+        {
+          <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
+        }
+        else
+        {
+          <p class="text-right username">Not logged in</h4>
+        }
+      </div><!-- /.container-fluid -->
     </nav>
-
     <div class="container">
       <div class="col-md-10 main-content">
         <h1>SEARCH RESULTS FOR "@Model["keyword"]"</h1>
@@ -102,5 +111,8 @@
         </div>
       </div>
     </div>
+    <footer>
+      <p>&copy; 2016 Message Board</p>
+    </footer>
   </body>
 </html>

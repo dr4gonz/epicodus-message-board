@@ -28,6 +28,7 @@
         <!-- CONTENT OF COMMENT -->
         <div class="comment-content">
           <div class="page-header">
+            <p><a href='/profile/@Model["comment"].GetUserId()'>@Model["comment"].GetAuthor()</a> - @Model["comment"].GetTime()</p>
             <form action='/comments/@Model["comment"].GetId()/vote' method="post">
               <input type="hidden" name="_method" value="PATCH">
               <input type="hidden" name="vote" value="1">
@@ -83,6 +84,7 @@
             <!-- CONTENT OF COMMENT -->
             <div class="comment-content">
               <div class="page-header">
+                <p><a href="/profile/@comment.GetUserId()">@comment.GetAuthor()</a> - @comment.GetTime()</p>
                 <form action='/comments/@Model["comment"].GetId()/vote' method="post">
                   <input type="hidden" name="_method" value="PATCH">
                   <input type="hidden" name="vote" value="1">
@@ -139,6 +141,7 @@
                 <div class="comment-wrapper">
                   <div class="comment-content">
                     <div class="page-header">
+                      <p><a href="/profile/@childComment.GetUserId()">@childComment.GetAuthor()</a> - @childComment.GetTime()</p>
                       <form action='/comments/@Model["comment"].GetId()/vote' method="post">
                         <input type="hidden" name="_method" value="PATCH">
                         <input type="hidden" name="vote" value="1">
@@ -190,6 +193,7 @@
                       <div class="comment-wrapper">
                         <div class="comment-content">
                           <div class="page-header">
+                            <p><a href="/profile/@grandchildComment.GetUserId()">@grandchildComment.GetAuthor()</a> - @grandchildComment.GetTime()</p>
                             <form action='/comments/@Model["comment"].GetId()/vote' method="post">
                               <input type="hidden" name="_method" value="PATCH">
                               <input type="hidden" name="vote" value="1">
