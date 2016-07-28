@@ -27,7 +27,7 @@ namespace MessageBoard
         model.Add("categories", allCategories);
         return View["index.cshtml", model];
       };
-      
+
       Delete["/"] = _ =>
       {
         OriginalPost.DeleteAll();
@@ -276,8 +276,6 @@ namespace MessageBoard
         User currentUser = User.ValidateUserLogin(userName, password);
         if (currentUser == null)
         {
-          userName = "";
-          password = "";
           model.Remove("validate");
           validate = false;
           model.Add("validate", validate);
