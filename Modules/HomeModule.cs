@@ -404,10 +404,17 @@ namespace MessageBoard
       Patch["/posts/{postId}/{sortingParam}/vote"] = parameters =>
       {
         User currentUser = User.ValidateUserLogin(userName, password);
-        Comment comment = Comment.Find(Request.Form["comment-id"]);
-        comment.Vote(currentUser.GetId(), Request.Form["vote"]);
         Dictionary<string, object> model = new Dictionary<string, object>{};
         OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
+        if (Request.Form["comment-id"] == "op")
+        {
+          selectedOriginalPost.Vote(currentUser.GetId(), Request.Form["vote"]);
+        }
+        else
+        {
+          Comment comment = Comment.Find(Request.Form["comment-id"]);
+          comment.Vote(currentUser.GetId(), Request.Form["vote"]);
+        }
         List<Category> allCategories = Category.GetAll();
         List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
         model.Add("children", allDirectChildren);
