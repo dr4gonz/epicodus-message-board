@@ -61,7 +61,7 @@ namespace MessageBoard
             newOriginalPost.AddCategory(foundCategory);
           }
         }
-        if (Request.Form["new-category"] != null)
+        if ((Request.Form["new-category"] != null) && (Request.Form["new-category"] != ""))
         {
           Category newCategory = new Category(Request.Form["new-category"]);
           newCategory.Save();
