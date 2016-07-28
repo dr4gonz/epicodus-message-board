@@ -69,9 +69,28 @@
             @foreach(var post in Model["posts"])
             {
               <div class="post-listing">
-                <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
-                <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
-                <li><a href="/posts/@post.GetId()/rating">@post.GetRating() - @post.GetTitle()</a></li>
+                <form action="/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="1">
+                  <input type="hidden" name="post-id" value='@post.GetId()'>
+                  <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                </form>
+                <form action="/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="-1">
+                  <input type="hidden" name="post-id" value='@post.GetId()'>
+                  <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                </form>
+
+                @if(Model["user"] == null)
+                {
+                  <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/register">@post.GetTitle()</a></li>
+                }
+                else
+                {
+                  <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/posts/@post.GetId()/rating">@post.GetTitle()</a></li>
+                }
+
               </div>
             }
           </ul>
