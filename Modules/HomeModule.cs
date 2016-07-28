@@ -346,6 +346,8 @@ namespace MessageBoard
         User currentUser = User.ValidateUserLogin(userName, password);
         if (currentUser == null)
         {
+          userName = "";
+          password = "";
           model.Remove("validate");
           validate = false;
           model.Add("validate", validate);
