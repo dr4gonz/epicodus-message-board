@@ -313,8 +313,6 @@ namespace MessageBoard
       //Act
       List<Category> result = testPost.GetCategories();
       //Assert
-      Console.WriteLine("expected Result =" + expectedResult[0].GetName() + "," + expectedResult[1].GetName());
-      Console.WriteLine("Result =" + result[0].GetName() + "," + result[1].GetName());
       Assert.Equal(expectedResult, result);
     }
   }

@@ -467,6 +467,18 @@ namespace MessageBoard
         model.Add("user", currentUser);
         return View["post.cshtml", model];
       };
+
+      Patch["/comments/{id}/vote"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Comment comment = Comment.Find(Request.Form["comment-id"]);
+        comment.Vote(currentUser.GetId(), Request.Form["vote"]);
+        Comment parentComment = Comment.Find(parameters.id);
+        model.Add("user", currentUser);
+        model.Add("comment", parentComment);
+        return View["comment.cshtml", model];
+      };
     }
   }
 }
