@@ -120,6 +120,10 @@ ul {
   margin-bottom: 20px;
 }
 
+.navigationlinks {
+  padding-right: 10px;
+}
+
 footer {
   text-align: right;
    background-color: #3FA7D6;
