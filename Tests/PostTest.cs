@@ -229,36 +229,6 @@ namespace MessageBoard
     }
 
     [Fact]
-    public void Post_Upvote_Adds1ToPostRating()
-    {
-      OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, testDate, 1);
-      newOriginalPost.Save();
-      User firstUser = new User("Bob", "password");
-      firstUser.Save();
-      //Act
-      int expectedResult = 1;
-      newOriginalPost.Upvote(firstUser.GetId());
-      int result = newOriginalPost.GetRating();
-      //Assert
-      Assert.Equal(expectedResult, result);
-    }
-
-    [Fact]
-    public void Post_Downvote_Subtracts1ToPostRating()
-    {
-      OriginalPost newOriginalPost = new OriginalPost("Joe", "Swimming", "I like to swim", 0, testDate, 1);
-      newOriginalPost.Save();
-      User firstUser = new User("Bob", "password");
-      firstUser.Save();
-      //Act
-      int expectedResult = -1;
-      newOriginalPost.Downvote(firstUser.GetId());
-      int result = newOriginalPost.GetRating();
-      //Assert
-      Assert.Equal(expectedResult, result);
-    }
-
-    [Fact]
     public void Post_Vote_SavesVoteInDatabase()
     {
       //Arrange
@@ -270,8 +240,8 @@ namespace MessageBoard
       secondUser.Save();
       int expectedResult = 2;
       //Act
-      newOriginalPost.Vote(firstUser.GetId(), 1);
-      newOriginalPost.Vote(secondUser.GetId(), 1);
+      newOriginalPost = OriginalPost.Vote(newOriginalPost.GetId(), firstUser.GetId(), 1);
+      newOriginalPost = OriginalPost.Vote(newOriginalPost.GetId(), secondUser.GetId(), 1);
       int result = newOriginalPost.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);
@@ -289,9 +259,9 @@ namespace MessageBoard
       secondUser.Save();
       int expectedResult = 2;
       //Act
-      newOriginalPost.Vote(firstUser.GetId(), 1);
-      newOriginalPost.Vote(secondUser.GetId(), 1);
-      newOriginalPost.Vote(secondUser.GetId(), 1);
+      newOriginalPost = OriginalPost.Vote(newOriginalPost.GetId(), firstUser.GetId(), 1);
+      newOriginalPost = OriginalPost.Vote(newOriginalPost.GetId(), secondUser.GetId(), 1);
+      newOriginalPost = OriginalPost.Vote(newOriginalPost.GetId(), secondUser.GetId(), 1);
       int result = newOriginalPost.GetRating();
       //Assert
       Assert.Equal(expectedResult, result);

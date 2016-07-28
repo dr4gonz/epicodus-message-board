@@ -404,13 +404,14 @@ namespace MessageBoard
       {
         User currentUser = User.ValidateUserLogin(userName, password);
         Dictionary<string, object> model = new Dictionary<string, object>{};
-        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
+        OriginalPost selectedOriginalPost = null;
         if (Request.Form["comment-id"] == "op")
         {
-          selectedOriginalPost.Vote(currentUser.GetId(), Request.Form["vote"]);
+          selectedOriginalPost = OriginalPost.Vote(parameters.postId, currentUser.GetId(), Request.Form["vote"]);
         }
         else
         {
+          selectedOriginalPost = OriginalPost.Find(parameters.postId);
           Comment.Vote(Request.Form["comment-id"], currentUser.GetId(), Request.Form["vote"]);
         }
         List<Category> allCategories = Category.GetAll();
@@ -511,8 +512,7 @@ namespace MessageBoard
       Patch["/vote"] = _ =>
       {
         User currentUser = User.ValidateUserLogin(userName, password);
-        OriginalPost post = OriginalPost.Find(Request.Form["post-id"]);
-        post.Vote(currentUser.GetId(), Request.Form["vote"]);
+        OriginalPost post = OriginalPost.Vote(Request.Form["post-id"], currentUser.GetId(), Request.Form["vote"]);
         Dictionary<string, object> model = new Dictionary<string, object> {};
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         List<Category> allCategories = Category.GetAll();
