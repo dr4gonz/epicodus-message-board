@@ -353,6 +353,15 @@ namespace MessageBoard
         model.Add("validate", validate);
         return View["index.cshtml", model];
       };
+      Get["/profile/{id}"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User selectedUser = User.Find(int.Parse(parameters.id));
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("selected", selectedUser);
+        model.Add("user", currentUser);
+        return View["profile.cshtml", model];
+      };
     }
   }
 }

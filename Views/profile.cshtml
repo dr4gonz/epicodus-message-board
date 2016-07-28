@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/Content/CSS/style.css" type="text/css">
+    <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="/Content/JS/script.js" type="text/javascript"></script>
+    <title>Message Board</title>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <h1>HEADER</h1>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="col-md-10">
+        <h2>User Page</h2>
+        <h3>@Model["selected"].GetName()'s Posts</h3>
+        @if(Model["selected"].GetOriginalPosts().Count == 0)
+        {
+          <h2>No Posts</h2>
+        }
+        else
+        {
+          <ul class="list-group">
+            @foreach(var post in Model["selected"].GetOriginalPosts())
+            {
+              <div class="post-listing">
+                <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
+                <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
+
+                  <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
+              </div>
+            }
+          </ul>
+        }
+        <h3>All Comments</h3>
+        @if(Model["selected"].GetComments().Count == 0)
+        {
+          <h2>No Comments</h2>
+        }
+        else
+        {
+          <ul class="list-group">
+            @foreach(var comment in Model["selected"].GetComments())
+            {
+              <div class="comment-content">
+                <div class="page-header">
+                  <p>@comment.GetAuthor() - @comment.GetTime() - <a href="/posts/@comment.GetPostId()">Go to post</a></p> 
+                </div>
+                <p>
+                  @comment.GetMainText()
+                </p>
+              </div>
+            }
+          </ul>
+        }
+        <h4><a href="/">Home</a></h4>
+      </div>
+      </div>
+    </div>
+  </body>
+</html>
