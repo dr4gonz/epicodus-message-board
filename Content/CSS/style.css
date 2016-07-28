@@ -165,11 +165,6 @@ footer {
    border-top: solid 1px black;
    color: white;
    font-size: 15px;
-   text-shadow:
-       -1px -1px 0 #000,
-       1px -1px 0 #000,
-       -1px 1px 0 #000,
-        1px 1px 0 #000;
 }
 
 .post-rating {
@@ -211,4 +206,9 @@ footer {
 .login {
   margin-top: 9px;
   margin-right: 25px;
+}
+
+.top-page {
+  margin-bottom: 50px;
+  text-align: center;
 }

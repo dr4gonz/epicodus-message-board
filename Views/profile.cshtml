@@ -56,7 +56,7 @@
     <div class="container">
       <div class="col-md-10">
         <h2>User Page</h2>
-        <h3>@Model["selected"].GetName()'s Posts</h3>
+        <h3>@Model["selected"].GetName()'s posts</h3>
         @if(Model["selected"].GetOriginalPosts().Count == 0)
         {
           <h2>No Posts</h2>
@@ -70,12 +70,12 @@
                 <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
                 <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
 
-                  <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
+                  <li><a href="/posts/@post.GetId()/rating">@post.GetRating() - @post.GetTitle()</a></li>
               </div>
             }
           </ul>
         }
-        <h3>All Comments</h3>
+        <h3>@Model["selected"].GetName()'s Comments</h3>
         @if(Model["selected"].GetComments().Count == 0)
         {
           <h2>No Comments</h2>
@@ -99,8 +99,12 @@
             }
           </ul>
         }
-        <h4><a href="/">Home</a></h4>
       </div>
+      </div>
+    </div>
+    <div class="container top-page">
+      <div class="col-md-10">
+        <a href='#'>Top</a>
       </div>
     </div>
     <footer>
