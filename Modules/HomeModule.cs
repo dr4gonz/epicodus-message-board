@@ -309,13 +309,23 @@ namespace MessageBoard
         Dictionary<string, object> model = new Dictionary<string, object> {};
         User currentUser = User.ValidateUserLogin(userName, password);
         model.Add("user", currentUser);
-        List<OriginalPost> searchResults = OriginalPost.SearchByKeyword(Request.Form["keyword"]);
-        List<Category> allCategories = Category.GetAll();
-        model.Add("results", searchResults);
-        model.Add("categories", allCategories);
         model.Add("validate", validate);
-        model.Add("keyword", Request.Form["keyword"]);
-        return View["post_results.cshtml", model];
+        return View["template.cshtml", model];
+      };
+
+      Patch["/vote"] = _ =>
+      {
+        User currentUser = User.ValidateUserLogin(userName, password);
+        OriginalPost post = OriginalPost.Find(Request.Form["post-id"]);
+        post.Vote(currentUser.GetId(), Request.Form["vote"]);
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        model.Add("user", currentUser);
+        return View["index.cshtml", model];
       };
 
       Get["/categories/{id}"] = parameters =>
