@@ -56,13 +56,14 @@
                   <input type="hidden" name="post-id" value='@post.GetId()'>
                   <button type="submit" name="downvote" class="votebtn downvote">-</button>
                 </form>
+
                 @if(Model["user"] == null)
                 {
-                <li><a href="/register">@post.GetRating() - @post.GetTitle()</a></li>
+                <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/register">@post.GetTitle()</a></li>
                 }
                 else
                 {
-                  <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
+                  <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/posts/@post.GetId()">@post.GetTitle()</a></li>
                 }
 
               </div>

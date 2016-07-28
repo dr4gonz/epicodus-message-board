@@ -34,16 +34,12 @@
           <p>
             @Model["post"].GetMainText()
           </p>
-<<<<<<< HEAD
           <p><em>Categories:
-
             @foreach(var category in @Model["post"].GetCategories())
             {
               <span class="category"><a href="/categories/@category.GetId()">@category.GetName()</a></span>
             }
-
           </em></p>
-=======
           @if(Model["post"].GetUserId() == Model["user"].GetId())
           {
             <h6><a class="show-form" id="edit">Edit</a></h6>
@@ -60,7 +56,6 @@
             </div>
             <h6><a href='/posts/@Model["post"].GetId()/remove'>Remove</a></h6>
           }
->>>>>>> editposts
         </div>
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
         <a class="show-form" id="top">Reply</a>
@@ -240,7 +235,7 @@
             <button class="btn btn-primary" type="submit" name="button">Search</button>
           </form>
 
-        
+
 
         </div>
       </div>

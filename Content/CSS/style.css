@@ -15,14 +15,14 @@ body {
   margin-top: 34px;
 }
 
-<<<<<<< HEAD
 .logo {
   color: #fff;
 }
 
 .logo:visited {
   color: #fff;
-=======
+}
+
 .navbar h1 {
   color: white;
   font-weight: bold;
@@ -33,7 +33,6 @@ body {
   border-bottom: 5px solid #1D70A2;
   border-top: 0px;
   border-radius: 0px;
->>>>>>> master
 }
 
 .logo:hover {
@@ -131,6 +130,24 @@ ul {
   width: 30px;
   border: none;
   margin-top: 0px;
+  display: inline-block;
+  float: left;
+  margin-right: 10px;
+}
+
+.downvote {
+  background-color: rgba(128, 0, 0, .5)
+}
+.downvote:hover {
+  background-color: rgba(128, 0, 0, .65)
+}
+
+.upvote {
+  background-color: rgba(0, 102, 34, .5);
+}
+
+.upvote:hover {
+  background-color: rgba(0, 102, 34, .65);
 }
 
 footer {
@@ -150,4 +167,13 @@ footer {
        1px -1px 0 #000,
        -1px 1px 0 #000,
         1px 1px 0 #000;
+}
+
+.post-rating {
+  color: #002db3;
+}
+
+.listing:hover {
+  text-decoration: none;
+  color: #000;
 }
