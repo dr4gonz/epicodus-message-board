@@ -26,13 +26,13 @@
           <label>Main Text:</label>
           <input class="form-control" type="text" name="main-text" value="" required>
           <label>Category:</label>
-          <select name="category">
-            <option>None</option>
+          <br>
             @foreach (var category in Model["categories"])
             {
-              <option value=@category.GetId()>@category.GetName()</option>
+              <input name="category-@category.GetId()" value=@category.GetId() type="checkbox">@category.GetName()</input><br>
             }
-          </select>
+          <label>Add new category:</label>
+          <input class="form-control" type="text" name="new-category" value="">
           <button class="btn btn-primary" type="submit" name="button">Submit</button>
         </form>
         <form action="/" method="post">
