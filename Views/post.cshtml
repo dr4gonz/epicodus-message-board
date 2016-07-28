@@ -31,7 +31,7 @@
           <p>
             @Model["post"].GetMainText()
           </p>
-<<<<<<< HEAD
+
           <p><em>Categories:
 
             @foreach(var category in @Model["post"].GetCategories())
@@ -40,7 +40,7 @@
             }
 
           </em></p>
-=======
+
           @if(Model["post"].GetUserId() == Model["user"].GetId())
           {
             <h6><a class="show-form" id="edit">Edit</a></h6>
@@ -57,7 +57,7 @@
             </div>
             <h6><a href='/posts/@Model["post"].GetId()/remove'>Remove</a></h6>
           }
->>>>>>> editposts
+
         </div>
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
         <a class="show-form" id="top">Reply</a>
@@ -153,7 +153,11 @@
                   <div class="comment-form" id="grandchild-@childComment.GetId()-form">
                     <a class="hide-form">Hide</a>
                     <form action='/posts/@Model["post"].GetId()/reply' method="post">
+<<<<<<< HEAD
                       <input class="form-control" type="text" name="reply-author" value='@Model["user"].GetName()'>
+=======
+                      <input class="form-control" type="hidden" name="reply-author" value='@Model["user"].GetName()'>
+>>>>>>> 031a7d0ce11b5348447575029a8a62f7f2c7fa87
                       <label>Main Text:</label>
                       <input class="form-control" type="text" name="reply-main-text" value="">
                       <input type="hidden" name="parent-id" value="@childComment.GetId()">
@@ -236,14 +240,20 @@
             <input class="form-control" name="keyword" type="text">
             <button class="btn btn-primary" type="submit" name="button">Search</button>
           </form>
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 031a7d0ce11b5348447575029a8a62f7f2c7fa87
         </div>
       </div>
     </div>
     <h4><a href="/">Home</a></h4>
   </div>
 </div>
+<footer>
+  <p>&copy; 2016 Message Board</p>
+</footer>
 </body>
 </html>
