@@ -9,7 +9,7 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script src="/Content/JS/script.js" type="text/javascript"></script>
-  <title>Message Board</title>
+  <title>epicodex</title>
 </head>
 <body>
   <nav class="navbar navbar-default">
@@ -25,7 +25,6 @@
       <!-- MAIN CONTENT -->
       <div class="col-md-10 main-content">
         <a href='/posts/@Model["comment"].GetPostId()'>View original post</a>
-
         <!-- CONTENT OF COMMENT -->
         <div class="comment-content">
           <div class="page-header">
@@ -63,7 +62,6 @@
           }
         </div>
         <!-- END CONTENT OF COMMENT -->
-
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
         <a class="show-form" id="top">Reply</a>
         <div class="comment-form" id="top-form">
@@ -78,7 +76,6 @@
           </form>
         </div>
         <!-- END FORM FOR NEW TOP LEVEL COMMENT -->
-
         @foreach(var comment in Model["comment"].GetChildren())
         {
           <!-- WRAPPER AROUND COMMENT + ITS CHILDREN -->
@@ -119,7 +116,6 @@
               }
             </div>
             <!-- END CONTENT OF COMMENT -->
-
             <!-- FORM FOR REPLYING TO TOP LEVEL COMMENT -->
             <a class="show-form" id="child-@comment.GetId()">Reply</a>
             <div class="comment-form" id="child-@comment.GetId()-form">
@@ -135,7 +131,6 @@
               </form>
             </div>
             <!-- END FORM FOR REPLYING TO TOP LEVEL COMMENT -->
-
             <!-- ALL COMMENT CHILDREN -->
             <div class="comment-children">
               @foreach(var childComment in comment.GetChildren())
@@ -188,7 +183,6 @@
                       <button type="submit" name="button" class="btn btn-primary">Submit</button>
                     </form>
                   </div>
-
                   <!-- CHILDREN OF CHILD COMMENT -->
                   <div class="grandchildren">
                     @foreach(var grandchildComment in childComment.GetChildren())
@@ -241,17 +235,13 @@
                     }
                   </div>
                 </div>
-
-
               }
             </div>
           </div>
-
         }
       </div>
       <div class="col-md-2">
         <div class="sidebar">
-          <h3>SIDEBAR</h3>
           <ul>
             <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
             <li class="sidebar-listitem">

@@ -378,7 +378,7 @@ namespace MessageBoard
         User currentUser = User.ValidateUserLogin(userName, password);
         model.Add("user", currentUser);
         model.Add("validate", validate);
-        return View["template.cshtml", model];
+        return View["post_results.cshtml", model];
       };
 
       Patch["/vote"] = _ =>

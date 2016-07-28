@@ -21,7 +21,6 @@
     </div><!-- /.container-fluid -->
   </nav>
   <div class="container">
-
     <div class="row">
       <!-- MAIN CONTENT -->
       <div class="col-md-10 main-content">
@@ -34,7 +33,6 @@
           <p>
             @Model["post"].GetMainText()
           </p>
-
           <p><em>Categories:
             @foreach(var category in @Model["post"].GetCategories())
             {
@@ -43,21 +41,6 @@
           </em></p>
 
           @if(Model["post"].GetUserId() == Model["user"].GetId())
-          {
-            <h6><a class="show-form" id="edit">Edit</a></h6>
-            <div class="comment-form" id="edit-form">
-              <a class="hide-form">Hide</a>
-              <form class="form-group" action='/posts/@Model["post"].GetId()' method="post">
-                <input type="hidden" name="_method" value="PATCH">
-                <input class="form-control" type="hidden" name="author" value='@Model["user"].GetName()'>
-                <input class="form-control" type="hidden" name="title" value='@Model["post"].GetTitle()'>
-                <label>Main Text:</label>
-                <input class="form-control" type="text" name="main-text" value='@Model["post"].GetMainText()' required>
-                <button class="btn btn-primary" type="submit" name="button">Submit</button>
-              </form>
-            </div>
-            <h6><a href='/posts/@Model["post"].GetId()/remove'>Remove</a></h6>
-          }
 
         </div>
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
@@ -74,8 +57,6 @@
         </div>
         <!-- END FORM FOR NEW TOP LEVEL COMMENT -->
         <!-- END POST CONTENT -->
-
-
         @foreach(var comment in Model["post"].GetAllDirectChildren())
         {
           <!-- WRAPPER AROUND COMMENT + ITS CHILDREN -->
@@ -117,7 +98,6 @@
               }
             </div>
             <!-- END CONTENT OF COMMENT -->
-
             <!-- FORM FOR REPLYING TO TOP LEVEL COMMENT -->
             <a class="show-form" id="child-@comment.GetId()">Reply</a>
             <div class="comment-form" id="child-@comment.GetId()-form">
@@ -132,7 +112,6 @@
               </form>
             </div>
             <!-- END FORM FOR REPLYING TO TOP LEVEL COMMENT -->
-
             <!-- ALL COMMENT CHILDREN -->
             <div class="comment-children">
               @foreach(var childComment in comment.GetChildren())
@@ -186,7 +165,6 @@
                       <button type="submit" name="button" class="btn btn-primary">Submit</button>
                     </form>
                   </div>
-
                   <!-- CHILDREN OF CHILD COMMENT -->
                   <div class="grandchildren">
                     @foreach(var grandchildComment in childComment.GetChildren())
@@ -240,17 +218,13 @@
                     }
                   </div>
                 </div>
-
-
               }
             </div>
           </div>
-
         }
       </div>
       <div class="col-md-2">
         <div class="sidebar">
-          <h3>SIDEBAR</h3>
           <ul>
             <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
             <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
@@ -269,7 +243,6 @@
             </li class="sidebar-listitem">
             <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
           </ul>
-
           <h5>Search Posts</h5>
           <form class="form-group" action="/posts/search" method="post">
             <input class="form-control" name="keyword" type="text">
@@ -280,7 +253,6 @@
             <input class="form-control" name="keyword" type="text">
             <button class="btn btn-primary" type="submit" name="button">Search</button>
           </form>
-
         </div>
       </div>
     </div>

@@ -26,7 +26,7 @@ This project will allow users to register for the Epicodus Message Board app and
 * In powershell, enter '>dnu restore' and then '>dnx kestrel'.
 * Navigate your web browser to http://localhost:5004
 
-##Test Instructions
+## Test Instructions
 * Clone the repository
 * Open Microsoft SQL Server Management software and run the included .sql file
 * In atom open Startup.cs and each test file and update 'Data Source=DESKTOP-7OLC9FT\\SQLEXPRESS' or 'Data Source=(localdb)\\mssqllocaldb' to your own server name.
@@ -39,9 +39,9 @@ This project will allow users to register for the Epicodus Message Board app and
 * None
 
 ## Contacts
-<a mailto:"egbertcarl@gmail.com">Carl Egbert</a>
-<a mailto:"benjamin.logue73@gmail.com">Ben Logue</a>
-<a mailto:"georgeolson92@gmail.com">George Olson</a>
+<a mailto:"egbertcarl@gmail.com">Carl Egbert</a> |
+<a mailto:"benjamin.logue73@gmail.com">Ben Logue</a> |
+<a mailto:"georgeolson92@gmail.com">George Olson</a> |
 <a mailto:"mreyez@gmail.com">Matthew Reyes</a>
 
 
@@ -49,4 +49,4 @@ This project will allow users to register for the Epicodus Message Board app and
 
 Licensed under the MIT License.
 
-&copy;Carl Egbert, Ben Logue, George Olson, Matthew Reyes
+&copy; 2016 Carl Egbert, Ben Logue, George Olson, Matthew Reyes
