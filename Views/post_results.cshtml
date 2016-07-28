@@ -12,19 +12,45 @@
     <title>Message Board</title>
   </head>
   <body>
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="logo" href="/"><h1>epicodex</h1></a>
         </div>
-        @if(Model["user"] != null)
-        {
-          <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
-        }
-        else
-        {
-          <p class="text-right username">Not logged in</h4>
-        }
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            @if((Model["user"] == null) && (Model["validate"]==true))
+            {
+              <p class="navform-show navtext login">log in</p>
+              <div class="navform">
+                <form class="navbar-form navbar-left" action="/login" method="post">
+                  <input class="form-control" type="text" name="user-name" placeholder="User Name">
+                  <input class="form-control" type="password" name="password" placeholder="Password">
+                  <button class="btn btn-primary" type="submit" name="button">Login</button>
+                </form>
+              </div>
+            }
+            else if ((Model["user"] == null) && (Model["validate"] == false))
+            {
+              <a class="navform-show navtext">log in</a>
+              <div class="navform">
+                <form class="navbar-form navbar-left" action="/login" method="post">
+                  <input class="form-control" type="text" name="user-name" placeholder="User Name">
+                  <input class="form-control" type="password" name="password" placeholder="Password">
+                  <button class="btn btn-primary" type="submit" name="button">Login</button>
+                </form>
+              </div>
+              <p>User Not Found</p>
+            }
+            else
+            {
+              <form class="navbar-form navbar-left" action="/logout" method="post">
+                <a href='/profile/@Model["user"].GetId()' class='navtext'>logged in as @Model["user"].GetName()</a>
+                <button class="btn-navbar" type="submit" name="button">logout</button>
+              </form>
+            }
+          </li>
+        </ul>
       </div><!-- /.container-fluid -->
     </nav>
     <div class="container">
@@ -41,7 +67,7 @@
             <div class="post-listing">
               <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
               <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
-              <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
+              <li><a href="/posts/@post.GetId()/rating">@post.GetRating() - @post.GetTitle()</a></li>
             </div>
           }
         }

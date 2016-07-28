@@ -193,6 +193,10 @@ namespace MessageBoard
         User foundUser = null;
         return foundUser;
       }
+      else if (password == "") {
+        User foundUser = null;
+        return foundUser;
+      }
       else
       {
         SqlConnection conn = DB.Connection();
@@ -215,6 +219,11 @@ namespace MessageBoard
           foundId = rdr.GetInt32(0);
           foundName = rdr.GetString(1);
           foundPassword = rdr.GetString(2);
+        }
+        if (foundPassword == null)
+        {
+          User foundUser = null;
+          return foundUser;
         }
         string foundPasswordHash = foundPassword;
         byte[] hashBytes = Convert.FromBase64String(foundPasswordHash);
