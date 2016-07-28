@@ -44,7 +44,7 @@
             }
             else
             {
-              <form class="navbar-form navbar-left" action="/logout" method="post">
+              <form name="logout" class="navbar-form navbar-left" action="/logout" method="post">
                 <a href='/profile/@Model["user"].GetId()' class='navtext'>logged in as @Model["user"].GetName()</a>
                 <button class="btn-navbar" type="submit" name="button">logout</button>
               </form>

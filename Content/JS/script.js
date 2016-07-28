@@ -1,4 +1,22 @@
+
+
 $(document).ready(function(){
+
+
+  var counter = 5;
+  var interval = setInterval(function() {
+      counter--;
+      if (counter == 0) {
+          redirect();
+          clearInterval(interval);
+      }
+  }, 60000);
+
+  function redirect() {
+  document.logout.submit();
+  alert("You've been logged out due to inactivity.")
+  }
+
 
   $(".hide-form").click(function(){
     $(".comment-form").hide();
