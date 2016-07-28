@@ -337,42 +337,46 @@ namespace MessageBoard
     {
       this.Update("[Removed]", "[Removed]");
     }
-    public void Upvote(int userId)
-    {
-      Vote(userId, 1);
-    }
 
-    public void Downvote(int userId)
-    {
-      Vote(userId, -1);
-    }
-
-    public void Unvote(int userId)
-    {
-      Vote(userId, 0);
-    }
-
-    public void Vote(int userId, int voteValue)
+    public static Comment Vote(int commentId, int userId, int voteValue)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND comment_id = @CommentId; INSERT INTO voting (voter_id, comment_id, vote) VALUES (@Voter, @CommentId, @Vote); UPDATE comments SET rating=(SELECT SUM(vote) FROM voting WHERE comment_id = @CommentId) OUTPUT INSERTED.rating WHERE comments.id=@CommentId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND comment_id = @CommentId; INSERT INTO voting (voter_id, comment_id, vote) VALUES (@Voter, @CommentId, @Vote); UPDATE comments SET rating=(SELECT SUM(vote) FROM voting WHERE comment_id = @CommentId) WHERE comments.id=@CommentId; SELECT * FROM comments WHERE comments.id=@CommentId", conn);
       SqlParameter userIdParameter = new SqlParameter("@Voter", userId);
-      SqlParameter commentIdParameter = new SqlParameter("@CommentId", _id);
+      SqlParameter commentIdParameter = new SqlParameter("@CommentId", commentId);
       SqlParameter voteParameter = new SqlParameter("@Vote", voteValue);
       cmd.Parameters.Add(userIdParameter);
       cmd.Parameters.Add(commentIdParameter);
       cmd.Parameters.Add(voteParameter);
 
+      string foundCommentAuthor = null;
+      string foundCommentMainText = null;
+      int foundCommentRating = 0;
+      int foundPostId = 0;
+      int foundParentId = 0;
+      DateTime? foundTime = null;
+      int foundUserId = 0;
+
       rdr = cmd.ExecuteReader();
       while(rdr.Read())
       {
-        _rating = rdr.GetInt32(0);
+        foundCommentAuthor = rdr.GetString(1);
+        foundCommentMainText = rdr.GetString(2);
+        foundCommentRating = rdr.GetInt32(3);
+        foundPostId = rdr.GetInt32(4);
+        foundParentId = rdr.GetInt32(5);
+        foundTime = rdr.GetDateTime(6);
+        foundUserId = rdr.GetInt32(7);
       }
+      Comment comment = new Comment(foundCommentAuthor, foundCommentMainText, foundCommentRating, foundPostId, foundTime, foundUserId, commentId);
+      comment.SetParentId(foundParentId);
 
       if (rdr != null) rdr.Close();
       if (conn != null) conn.Close();
+
+      return comment;
     }
   }
 }

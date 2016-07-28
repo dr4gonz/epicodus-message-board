@@ -231,8 +231,7 @@ namespace MessageBoard
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
-        Comment comment = Comment.Find(Request.Form["comment-id"]);
-        comment.Vote(currentUser.GetId(), Request.Form["vote"]);
+        Comment.Vote(Request.Form["comment-id"], currentUser.GetId(), Request.Form["vote"]);
         Comment parentComment = Comment.Find(parameters.id);
         model.Add("user", currentUser);
         model.Add("comment", parentComment);
@@ -412,8 +411,7 @@ namespace MessageBoard
         }
         else
         {
-          Comment comment = Comment.Find(Request.Form["comment-id"]);
-          comment.Vote(currentUser.GetId(), Request.Form["vote"]);
+          Comment.Vote(Request.Form["comment-id"], currentUser.GetId(), Request.Form["vote"]);
         }
         List<Category> allCategories = Category.GetAll();
         List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren(parameters.sortingParam);
