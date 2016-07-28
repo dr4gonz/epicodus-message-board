@@ -67,6 +67,7 @@ namespace MessageBoard
           newCategory.Save();
           newOriginalPost.AddCategory(newCategory);
         }
+        allCategories = Category.GetAll();
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         model.Add("user", currentUser);
         model.Add("posts", allOriginalPosts);
