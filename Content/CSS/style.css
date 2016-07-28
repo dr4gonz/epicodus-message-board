@@ -225,3 +225,7 @@ footer {
 .nav-pills {
   margin: 0px 10px;
 }
+
+.show-form, .hide-form {
+  cursor: pointer;
+}
