@@ -93,7 +93,7 @@
                 <form class="form-group" action='/posts/@Model["post"].GetId()/rating' method="post">
                   <input type="hidden" name="_method" value="PATCH">
                   <label>Main Text:</label>
-                  <input class="form-control" type="text" name="main-text" value='@Model["post"].GetMainText()' required>
+                  <textarea class="form-control" rows="5" name="main-text" required>@Model["post"].GetMainText()</textarea>
                   <input type="hidden" name="post-id" value='@Model["post"].GetId()'>
                   <input type="hidden" name="author" value='@Model["user"].GetName()'>
                   <button class="btn btn-primary" type="submit" name="button">Submit</button>
@@ -115,7 +115,7 @@
           <form class="form-group" action='/posts/@Model["post"].GetId()/default' method="post">
             <input class="form-control" type="hidden" name="comment-author" value='@Model["user"].GetName()'>
             <label>Main Text:</label>
-            <input class="form-control" type="text" name="comment-main-text" value="">
+            <textarea class="form-control" rows="5" name="comment-main-text" value=""></textarea>
             <input type="hidden" name="post-id" value='@Model["post"].GetId()'>
             <button type="submit" name="button" class="btn btn-primary">Submit</button>
           </form>
@@ -155,7 +155,7 @@
                     <form class="form-group" action='/posts/@Model["post"].GetId()/rating/@comment.GetId()' method="post">
                         <input type="hidden" name="_method" value="PATCH">
                         <label>Main Text:</label>
-                        <input class="form-control" type="text" name="comment-main-text" value='@comment.GetMainText()' required>
+                        <textarea class="form-control" rows="5" name="comment-main-text" required>@comment.GetMainText()</textarea>
                         <input type="hidden" name="comment-id" value="@comment.GetId()">
                         <button class="btn btn-primary" type="submit" name="button">Submit</button>
                       </form>
@@ -172,7 +172,7 @@
                 <form action='/posts/@Model["post"].GetId()/rating/reply' method="post">
                   <input class="form-control" type="hidden" name="reply-author" value='@Model["user"].GetName()'>
                   <label>Main Text:</label>
-                  <input class="form-control" type="text" name="reply-main-text" value="">
+                  <textarea class="form-control" rows="5" name="reply-main-text" value=""></textarea>
                   <input type="hidden" name="parent-id" value="@comment.GetId()">
                   <input type="hidden" name="post-id" value='@Model["post"].GetId()'>
                   <button type="submit" name="button" class="btn btn-primary">Submit</button>
@@ -213,7 +213,7 @@
                             <form class="form-group" action='/posts/@Model["post"].GetId()/rating/@childComment.GetId()' method="post">
                               <input type="hidden" name="_method" value="PATCH">
                               <label>Main Text:</label>
-                              <input class="form-control" type="text" name="comment-main-text" value='@childComment.GetMainText()' required>
+                              <textarea class="form-control" rows="5" name="comment-main-text" required>@childComment.GetMainText()</textarea>
                               <input type="hidden" name="comment-id" value="@childComment.GetId()">
                               <button class="btn btn-primary" type="submit" name="button">Submit</button>
                             </form>
@@ -228,7 +228,7 @@
                       <form action='/posts/@Model["post"].GetId()/rating/reply' method="post">
                         <input class="form-control" type="hidden" name="reply-author" value='@Model["user"].GetName()'>
                         <label>Main Text:</label>
-                        <input class="form-control" type="text" name="reply-main-text" value="">
+                        <textarea class="form-control" rows="5" name="reply-main-text" value=""></textarea>
                         <input type="hidden" name="parent-id" value="@childComment.GetId()">
                         <input type="hidden" name="post-id" value='@Model["post"].GetId()'>
                         <button type="submit" name="button" class="btn btn-primary">Submit</button>
@@ -267,7 +267,7 @@
                                 <form class="form-group" action='/posts/@Model["post"].GetId()/rating/@grandchildComment.GetId()' method="post">
                                   <input type="hidden" name="_method" value="PATCH">
                                   <label>Main Text:</label>
-                                  <input class="form-control" type="text" name="comment-main-text" value='@grandchildComment.GetMainText()' required>
+                                  <textarea class="form-control" rows="5" name="comment-main-text" required>@grandchildComment.GetMainText()</textarea>
                                   <input type="hidden" name="comment-id" value="@grandchildComment.GetId()">
                                   <button class="btn btn-primary" type="submit" name="button">Submit</button>
                                 </form>

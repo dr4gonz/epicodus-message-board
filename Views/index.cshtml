@@ -53,127 +53,128 @@
       </ul>
     </div><!-- /.container-fluid -->
   </nav>
-  <div class="container">
-    <div class="col-md-10 main-content">
-      <ul class="nav nav-pills">
-        <li role="presentation" class="navigationlinks"><h6><a href="/popular">Most Popular</a></h6></li>
-        <li role="presentation" class="navigationlinks"><h6><a href="/newest">Newest</a></h6></li>
-        <li role="presentation" class="navigationlinks"><h6><a href="/oldest">Oldest</a></h6></li>
-      </ul>
-      @if(Model["posts"].Count == 0)
-      {
-        <h2>No Posts</h2>
-      }
-      else
-      {
-        <ul class="list-group">
-          @foreach(var post in Model["posts"])
-          {
-            <div class="post-listing">
-              @if(Model["user"] != null)
-              {
-                <form action="/vote" method="post">
-                  <input type="hidden" name="_method" value="PATCH">
-                  <input type="hidden" name="vote" value="1">
-                  <input type="hidden" name="post-id" value='@post.GetId()'>
-                  <button type="submit" name="upvote" class="votebtn upvote">+</button>
-                </form>
-                <form action="/vote" method="post">
-                  <input type="hidden" name="_method" value="PATCH">
-                  <input type="hidden" name="vote" value="-1">
-                  <input type="hidden" name="post-id" value='@post.GetId()'>
-                  <button type="submit" name="downvote" class="votebtn downvote">-</button>
-                </form>
-              }
+  <div class="container main-wrapper">
+    <div class="row">
+      <div class="col-md-10 main-content">
+        <ul class="nav nav-pills">
+          <li role="presentation" class="navigationlinks"><h6><a href="/popular">Most Popular</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href="/newest">Newest</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href="/oldest">Oldest</a></h6></li>
+        </ul>
+        @if(Model["posts"].Count == 0)
+        {
+          <h2>No Posts</h2>
+        }
+        else
+        {
+          <ul class="list-group">
+            @foreach(var post in Model["posts"])
+            {
+              <div class="post-listing">
+                @if(Model["user"] != null)
+                {
+                  <form action="/vote" method="post">
+                    <input type="hidden" name="_method" value="PATCH">
+                    <input type="hidden" name="vote" value="1">
+                    <input type="hidden" name="post-id" value='@post.GetId()'>
+                    <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                  </form>
+                  <form action="/vote" method="post">
+                    <input type="hidden" name="_method" value="PATCH">
+                    <input type="hidden" name="vote" value="-1">
+                    <input type="hidden" name="post-id" value='@post.GetId()'>
+                    <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                  </form>
+                }
 
-              @if(Model["user"] == null)
-              {
-                <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/register">@post.GetTitle()</a></li>
-              }
-              else
-              {
-                <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/posts/@post.GetId()">@post.GetTitle()</a></li>
-              }
+                @if(Model["user"] == null)
+                {
+                  <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/register">@post.GetTitle()</a></li>
+                }
+                else
+                {
+                  <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/posts/@post.GetId()">@post.GetTitle()</a></li>
+                }
 
-            </div>
-          }
+              </div>
+            }
+          </ul>
+        }
+      </div>
+      <div class="col-md-2">
+        <div class="sidebar">
+          <ul>
+            @if(Model["user"] == null)
+            {
+              <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Post</button></a></li>
+              <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Category</button></a></li>
+            }
+            else
+            {
+              <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
+              <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
+            }
+            <li class="sidebar-listitem">
+              <form action="/" method="post">
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="btn btn-danger" type="submit">Delete all Posts</button>
+              </form>
+            </li>
+            <li class="sidebar-listitem">
+              <form action="/categories" method="post">
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="btn btn-danger" type="submit">Delete all Categories</button>
+              </form>
+            </li>
+          </li class="sidebar-listitem">
+          <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
         </ul>
-      }
-    </div>
-    <div class="col-md-2">
-      <div class="sidebar">
-        <ul>
-          @if(Model["user"] == null)
-          {
-            <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Post</button></a></li>
-            <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Category</button></a></li>
-          }
-          else
-          {
-            <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
-            <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
-          }
-          <li class="sidebar-listitem">
-            <form action="/" method="post">
-              <input type="hidden" name="_method" value="DELETE">
-              <button class="btn btn-danger" type="submit">Delete all Posts</button>
-            </form>
-          </li>
-          <li class="sidebar-listitem">
-            <form action="/categories" method="post">
-              <input type="hidden" name="_method" value="DELETE">
-              <button class="btn btn-danger" type="submit">Delete all Categories</button>
-            </form>
-          </li>
-        </li class="sidebar-listitem">
-        <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
-      </ul>
-      @if(Model["user"] == null)
-      {
-        <h5>Search Posts</h5>
-        <form class="form-group" action="/posts/search" method="post">
-          <input class="form-control" name="keyword" type="text">
-          <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
-        </form>
-        <h5>Search Categories</h5>
-        <form class="form-group" action="/categories/search" method="post">
-          <input class="form-control" name="keyword" type="text">
-          <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
-        </form>
-      }
-      else
-      {
-        <h5>Search Posts</h5>
-        <form class="form-group" action="/posts/search" method="post">
-          <input class="form-control" name="keyword" type="text">
-          <button class="btn btn-primary" type="submit" name="button">Search</button>
-        </form>
-        <h5>Search Categories</h5>
-        <form class="form-group" action="/categories/search" method="post">
-          <input class="form-control" name="keyword" type="text">
-          <button class="btn btn-primary" type="submit" name="button">Search</button>
-        </form>
-      }
-      <hr>
-      <h3>Categories</h3>
-      @if(Model["user"] == null)
-      {
-        <ul>
-          @foreach(var category in Model["categories"])
-          {
-            <li class="sidebar-listitem"><a href="/register">@category.GetName()</a></li>
-          }
-        </ul>
-      }
-      else
-      {
-        <ul>
-          @foreach(var category in Model["categories"])
-          {
-            <li class="sidebar-listitem"><a href="/categories/@category.GetId()">@category.GetName()</a></li>
-          }
-        </ul>
-      }
+        @if(Model["user"] == null)
+        {
+          <h5>Search Posts</h5>
+          <form class="form-group" action="/posts/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
+          </form>
+          <h5>Search Categories</h5>
+          <form class="form-group" action="/categories/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
+          </form>
+        }
+        else
+        {
+          <h5>Search Posts</h5>
+          <form class="form-group" action="/posts/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <button class="btn btn-primary" type="submit" name="button">Search</button>
+          </form>
+          <h5>Search Categories</h5>
+          <form class="form-group" action="/categories/search" method="post">
+            <input class="form-control" name="keyword" type="text">
+            <button class="btn btn-primary" type="submit" name="button">Search</button>
+          </form>
+        }
+        <h5>Categories</h5>
+        @if(Model["user"] == null)
+        {
+          <ul>
+            @foreach(var category in Model["categories"])
+            {
+              <li class="sidebar-listitem"><a href="/register">@category.GetName()</a></li>
+            }
+          </ul>
+        }
+        else
+        {
+          <ul>
+            @foreach(var category in Model["categories"])
+            {
+              <li class="sidebar-listitem"><a href="/categories/@category.GetId()">@category.GetName()</a></li>
+            }
+          </ul>
+        }
+      </div>
     </div>
   </div>
 </div>

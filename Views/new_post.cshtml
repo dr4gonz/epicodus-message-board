@@ -60,7 +60,7 @@
           <label>Title:</label>
           <input class="form-control" type="text" name="title" value="" required>
           <label>Main Text:</label>
-          <input class="form-control" type="text" name="main-text" value="" required>
+          <textarea class="form-control" rows="8" name="main-text" value="" required></textarea>
           <label>Category:</label>
           <br>
             @foreach (var category in Model["categories"])
@@ -74,7 +74,8 @@
         <form action="/" method="post">
           <input type="hidden" name="_method" value="DELETE">
           <button class="btn btn-danger" type="submit" name="button">Delete all Posts</button>
-        </form>      </div>
+        </form>
+      </div>
         <div class="col-md-2">
           <div class="sidebar">
             <ul>

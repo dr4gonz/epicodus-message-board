@@ -229,3 +229,7 @@ footer {
 .show-form, .hide-form {
   cursor: pointer;
 }
+
+textarea {
+  resize: none;
+}
