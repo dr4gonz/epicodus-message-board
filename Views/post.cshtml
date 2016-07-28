@@ -127,7 +127,6 @@
             <!-- CONTENT OF COMMENT -->
             <div class="comment-content">
               <div class="page-header">
-                <p><a href="/profile/@comment.GetUserId()">@comment.GetAuthor()</a> - @comment.GetTime()</p>
                 <form action="/posts/@comment.GetPostId()/rating/vote" method="post">
                   <input type="hidden" name="_method" value="PATCH">
                   <input type="hidden" name="vote" value="1">
