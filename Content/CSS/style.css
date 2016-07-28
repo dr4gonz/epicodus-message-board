@@ -155,6 +155,10 @@ ul {
   background-color: rgba(0, 102, 34, .65);
 }
 
+.navigationlinks {
+  padding-right: 10px;
+}
+
 footer {
   text-align: right;
    background-color: #3FA7D6;

@@ -34,6 +34,12 @@
       </div> -->
       <div class="col-md-10 main-content">
         <h1>MAIN CONTENT</h1>
+        <ul class="nav nav-pills">
+          <li role="presentation" class="navigationlinks"><h6><a href="/popular">Most Popular</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href="/newest">Newest</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href="/oldest">Oldest</a></h6></li>
+        </ul>
+
         @if(Model["posts"].Count == 0)
         {
           <h2>No Posts</h2>
@@ -94,6 +100,13 @@
                 <input type="hidden" name="_method" value="DELETE">
                 <button class="btn btn-danger" type="submit">Delete all Posts</button>
               </form>
+            </li>
+            <li class="sidebar-listitem">
+              <form action="/categories" method="post">
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="btn btn-danger" type="submit">Delete all Categories</button>
+              </form>
+            </li>
             </li class="sidebar-listitem">
             <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
           </ul>

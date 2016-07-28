@@ -20,7 +20,7 @@ namespace MessageBoard
         Dictionary<string, object> model = new Dictionary<string, object> {};
         User currentUser = User.ValidateUserLogin(userName, password);
         model.Add("user", currentUser);
-        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll("rating");
         List<Category> allCategories = Category.GetAll();
         model.Add("posts", allOriginalPosts);
         model.Add("validate", validate);
@@ -67,6 +67,7 @@ namespace MessageBoard
           newCategory.Save();
           newOriginalPost.AddCategory(newCategory);
         }
+        allCategories = Category.GetAll();
         List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         model.Add("user", currentUser);
         model.Add("posts", allOriginalPosts);
@@ -78,6 +79,73 @@ namespace MessageBoard
       Delete["/"] = _ =>
       {
         OriginalPost.DeleteAll();
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Get["/newest"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll("newest");
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Get["/oldest"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll("oldest");
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Get["/popular"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll("popular");
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Delete["/categories"] = _ =>
+      {
+        Category.DeleteAll();
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Delete["/categories/{id}"] = parameters =>
+      {
+        Category.DeleteById(parameters.id);
         Dictionary<string, object> model = new Dictionary<string, object> {};
         User currentUser = User.ValidateUserLogin(userName, password);
         model.Add("user", currentUser);
