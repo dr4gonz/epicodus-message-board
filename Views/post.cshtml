@@ -84,59 +84,73 @@
                 <span class="category"><a href="/categories/@category.GetId()">@category.GetName()</a></span><span class="punctuation">, </span>
               }
             </em></p>
-
-            @if(Model["post"].GetUserId() == Model["user"].GetId())
-
-          </div>
-          <!-- FORM FOR NEW TOP LEVEL COMMENT -->
-          <ul class="nav nav-pills">
-            <li role="presentation" class="navigationlinks"><h6><a class="show-form" id="top">Reply</a></h6></li>
-            <li role="presentation" class="navigationlinks"><h6><a href='/posts/@Model["post"].GetId()/popular'>Most Popular</a></h6></li>
-            <li role="presentation" class="navigationlinks"><h6><a href='/posts/@Model["post"].GetId()/newest'>Newest</a></h6></li>
-            <li role="presentation" class="navigationlinks"><h6><a href='/posts/@Model["post"].GetId()/oldest'>Oldest</a></h6></li>
-          </ul>
-          <div class="comment-form" id="top-form">
-            <a class="hide-form">Hide</a>
-            <form class="form-group" action='/posts/@Model["post"].GetId()/rating' method="post">
-              <input class="form-control" type="hidden" name="comment-author" value='@Model["user"].GetName()'>
-              <label>Main Text:</label>
-              <input class="form-control" type="text" name="comment-main-text" value="">
-              <input type="hidden" name="post-id" value='@Model["post"].GetId()'>
-              <button type="submit" name="button" class="btn btn-primary">Submit</button>
-            </form>
-          </div>
-          <!-- END FORM FOR NEW TOP LEVEL COMMENT -->
-          <!-- END POST CONTENT -->
-          @foreach(var comment in Model["children"])
+          @if(Model["post"].GetUserId() == Model["user"].GetId())
           {
-            <!-- WRAPPER AROUND COMMENT + ITS CHILDREN -->
-            <div class="comment-wrapper">
-              <!-- CONTENT OF COMMENT -->
-              <div class="comment-content">
-                <div class="page-header">
-                  <form action="/posts/@comment.GetPostId()/rating/vote" method="post">
-                    <input type="hidden" name="_method" value="PATCH">
-                    <input type="hidden" name="vote" value="1">
-                    <input type="hidden" name="comment-id" value='@comment.GetId()'>
-                    <button type="submit" name="upvote" class="votebtn upvote">+</button>
-                  </form>
-                  <form action="/posts/@comment.GetPostId()/rating/vote" method="post">
-                    <input type="hidden" name="_method" value="PATCH">
-                    <input type="hidden" name="vote" value="-1">
-                    <input type="hidden" name="comment-id" value='@comment.GetId()'>
-                    <button type="submit" name="downvote" class="votebtn downvote">-</button>
-                  </form>
-                  <p>@comment.GetRating() | <a href="/profile/@comment.GetUserId()">@comment.GetAuthor()</a> - @comment.GetTime()</p>
-                </div>
-                <p>
-                  @comment.GetMainText()
-                </p>
-                @if(comment.GetUserId() == Model["user"].GetId())
-                {
-                  <h6><a class="show-form" id="comment-edit">Edit</a></h6>
-                  <div class="comment-form" id="comment-edit-form">
-                    <a class="hide-form">Hide</a>
-                    <form class="form-group" action='/posts/@Model["post"].GetId()/rating/@comment.GetId()' method="post">
+            <h6><a class="show-form" id="comment-edit">Edit</a></h6>
+            <div class="comment-form" id="comment-edit-form">
+              <a class="hide-form">Hide</a>
+              <form class="form-group" action='/posts/@Model["post"].GetId()/rating' method="post">
+                <input type="hidden" name="_method" value="PATCH">
+                <label>Main Text:</label>
+                <input class="form-control" type="text" name="main-text" value='@Model["post"].GetMainText()' required>
+                <input type="hidden" name="post-id" value='@Model["post"].GetId()'>
+                <input type="hidden" name="author" value='@Model["user"].GetName()'>
+                <button class="btn btn-primary" type="submit" name="button">Submit</button>
+              </form>
+            </div>
+            <h6><a href='/posts/@Model["post"].GetId()/rating/remove'>Remove</a></h6>
+          }
+        </div>
+        <!-- FORM FOR NEW TOP LEVEL COMMENT -->
+        <ul class="nav nav-pills">
+          <li role="presentation" class="navigationlinks"><h6><a class="show-form" id="top">Reply</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href='/posts/@Model["post"].GetId()/popular'>Most Popular</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href='/posts/@Model["post"].GetId()/newest'>Newest</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href='/posts/@Model["post"].GetId()/oldest'>Oldest</a></h6></li>
+        </ul>
+        <div class="comment-form" id="top-form">
+          <a class="hide-form">Hide</a>
+          <form class="form-group" action='/posts/@Model["post"].GetId()/default' method="post">
+            <input class="form-control" type="hidden" name="comment-author" value='@Model["user"].GetName()'>
+            <label>Main Text:</label>
+            <input class="form-control" type="text" name="comment-main-text" value="">
+            <input type="hidden" name="post-id" value='@Model["post"].GetId()'>
+            <button type="submit" name="button" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+        <!-- END FORM FOR NEW TOP LEVEL COMMENT -->
+        <!-- END POST CONTENT -->
+        @foreach(var comment in Model["children"])
+        {
+          <!-- WRAPPER AROUND COMMENT + ITS CHILDREN -->
+          <div class="comment-wrapper">
+            <!-- CONTENT OF COMMENT -->
+            <div class="comment-content">
+              <div class="page-header">
+                <p><a href="/profile/@comment.GetUserId()">@comment.GetAuthor()</a> - @comment.GetTime()</p>
+                <form action="/posts/@comment.GetPostId()/rating/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="1">
+                  <input type="hidden" name="comment-id" value='@comment.GetId()'>
+                  <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                </form>
+                <form action="/posts/@comment.GetPostId()/rating/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="-1">
+                  <input type="hidden" name="comment-id" value='@comment.GetId()'>
+                  <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                </form>
+                <p>@comment.GetRating() | <a href="/profile/@comment.GetUserId()">@comment.GetAuthor()</a> - @comment.GetTime()</p>
+              </div>
+              <p>
+                @comment.GetMainText()
+              </p>
+              @if(comment.GetUserId() == Model["user"].GetId())
+              {
+                <h6><a class="show-form" id="comment-edit">Edit</a></h6>
+                <div class="comment-form" id="comment-edit-form">
+                  <a class="hide-form">Hide</a>
+                  <form class="form-group" action='/posts/@Model["post"].GetId()/rating/@comment.GetId()' method="post">
                       <input type="hidden" name="_method" value="PATCH">
                       <label>Main Text:</label>
                       <input class="form-control" type="text" name="comment-main-text" value='@comment.GetMainText()' required>
