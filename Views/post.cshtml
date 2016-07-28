@@ -147,8 +147,8 @@
               </p>
               @if(comment.GetUserId() == Model["user"].GetId())
               {
-                <h6><a class="show-form" id="comment-edit">Edit</a></h6>
-                <div class="comment-form" id="comment-edit-form">
+                <h6><a class="show-form" id="comment-@comment.GetId()-edit">Edit</a></h6>
+                <div class="comment-form" id="comment-@comment.GetId()-edit-form">
                   <a class="hide-form">Hide</a>
                   <form class="form-group" action='/posts/@Model["post"].GetId()/rating/@comment.GetId()' method="post">
                       <input type="hidden" name="_method" value="PATCH">
@@ -203,8 +203,8 @@
                       </p>
                       @if(childComment.GetUserId() == Model["user"].GetId())
                       {
-                        <h6><a class="show-form" id="comment-edit">Edit</a></h6>
-                        <div class="comment-form" id="comment-edit-form">
+                        <h6><a class="show-form" id="comment-@childComment.GetId()-edit">Edit</a></h6>
+                        <div class="comment-form" id="comment-@childComment.GetId()-edit-form">
                           <a class="hide-form">Hide</a>
                           <form class="form-group" action='/posts/@Model["post"].GetId()/rating/@childComment.GetId()' method="post">
                             <input type="hidden" name="_method" value="PATCH">
@@ -255,8 +255,8 @@
                             </p>
                             @if(grandchildComment.GetUserId() == Model["user"].GetId())
                             {
-                              <h6><a class="show-form" id="comment-edit">Edit</a></h6>
-                              <div class="comment-form" id="comment-edit-form">
+                              <h6><a class="show-form" id="comment-@grandchildComment.GetId()-edit">Edit</a></h6>
+                              <div class="comment-form" id="comment-@grandchildComment.GetId()-edit-form">
                                 <a class="hide-form">Hide</a>
                                 <form class="form-group" action='/posts/@Model["post"].GetId()/rating/@grandchildComment.GetId()' method="post">
                                   <input type="hidden" name="_method" value="PATCH">
