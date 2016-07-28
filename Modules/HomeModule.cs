@@ -344,6 +344,20 @@ namespace MessageBoard
         return View["post.cshtml", model];
       };
 
+      Get["/posts/{postId}"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.postId);
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<Category> allCategories = Category.GetAll();
+        List<Comment> allDirectChildren = selectedOriginalPost.GetAllDirectChildren();
+        model.Add("children", allDirectChildren);
+        model.Add("post", selectedOriginalPost);
+        model.Add("categories", allCategories);
+        model.Add("user", currentUser);
+        return View["post.cshtml", model];
+      };
+
       Post["/posts/{postId}/{sortingParam}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
@@ -385,7 +399,7 @@ namespace MessageBoard
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
-
+      
       Post["/posts/{postId}/{sortingParam}/reply"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};

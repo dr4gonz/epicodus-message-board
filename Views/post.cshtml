@@ -85,7 +85,7 @@
         </ul>
         <div class="comment-form" id="top-form">
           <a class="hide-form">Hide</a>
-          <form class="form-group" action='/posts/@Model["post"].GetId()' method="post">
+          <form class="form-group" action='/posts/@Model["post"].GetId()/default' method="post">
             <input class="form-control" type="hidden" name="comment-author" value='@Model["user"].GetName()'>
             <label>Main Text:</label>
             <input class="form-control" type="text" name="comment-main-text" value="">
