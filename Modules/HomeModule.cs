@@ -336,10 +336,16 @@ namespace MessageBoard
       Post["/posts/search"] = _ =>
       {
         Dictionary<string, object> model = new Dictionary<string, object> {};
+        string keyword =  Request.Form["keyword"];
         User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> searchResults = OriginalPost.SearchByKeyword(keyword);
+        List<Category> allCategories = Category.GetAll();
+        model.Add("keyword", keyword);
         model.Add("user", currentUser);
         model.Add("validate", validate);
-        return View["template.cshtml", model];
+        model.Add("results", searchResults);
+        model.Add("categories", allCategories);
+        return View["post_results.cshtml", model];
       };
 
       Patch["/vote"] = _ =>
