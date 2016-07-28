@@ -332,6 +332,11 @@ namespace MessageBoard
         newUser.Save();
         return View["register_success.cshtml", newUser];
       };
+      
+      Get["/login"] = _ =>
+      {
+        return View["login.cshtml"];
+      };
 
       Post["/login"] = _ =>
       {
