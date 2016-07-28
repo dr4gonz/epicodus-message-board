@@ -11,9 +11,47 @@
     <title>Message Board</title>
   </head>
   <body>
-    <div class="page-header">
-      <h1><a href="/">epicodex</a></h1>
-    </div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="logo" href="/"><h1>epicodex</h1></a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            @if((Model["user"] == null) && (Model["validate"]==true))
+            {
+              <p class="navform-show navtext login">log in</p>
+              <div class="navform">
+                <form class="navbar-form navbar-left" action="/login" method="post">
+                  <input class="form-control" type="text" name="user-name" placeholder="User Name">
+                  <input class="form-control" type="password" name="password" placeholder="Password">
+                  <button class="btn btn-primary" type="submit" name="button">Login</button>
+                </form>
+              </div>
+            }
+            else if ((Model["user"] == null) && (Model["validate"] == false))
+            {
+              <a class="navform-show navtext">log in</a>
+              <div class="navform">
+                <form class="navbar-form navbar-left" action="/login" method="post">
+                  <input class="form-control" type="text" name="user-name" placeholder="User Name">
+                  <input class="form-control" type="password" name="password" placeholder="Password">
+                  <button class="btn btn-primary" type="submit" name="button">Login</button>
+                </form>
+              </div>
+              <p>User Not Found</p>
+            }
+            else
+            {
+              <form class="navbar-form navbar-left" action="/logout" method="post">
+                <a href='/profile/@Model["user"].GetId()' class='navtext'>logged in as @Model["user"].GetName()</a>
+                <button class="btn-navbar" type="submit" name="button">logout</button>
+              </form>
+            }
+          </li>
+        </ul>
+      </div><!-- /.container-fluid -->
+    </nav>
     <h1>Registration Successful. Welcome, @Model.GetName()</h1>
     <a href="/">Home</a>
   </body>

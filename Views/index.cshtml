@@ -1,178 +1,180 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="/Content/CSS/style.css" type="text/css">
-    <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="/Content/JS/script.js" type="text/javascript"></script>
-    <title>epicodex</title>
-  </head>
-  <body>
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="logo" href="/"><h1>epicodex</h1></a>
-        </div>
-        @if(Model["user"] != null)
-        {
-          <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
-        }
-        else
-        {
-          <p class="text-right username">Not logged in</h4>
-        }
-      </div><!-- /.container-fluid -->
-    </nav>
-    <div class="container">
-      <div class="col-md-10 main-content">
-        <ul class="nav nav-pills">
-          <li role="presentation" class="navigationlinks"><h6><a href="/popular">Most Popular</a></h6></li>
-          <li role="presentation" class="navigationlinks"><h6><a href="/newest">Newest</a></h6></li>
-          <li role="presentation" class="navigationlinks"><h6><a href="/oldest">Oldest</a></h6></li>
-        </ul>
-        @if(Model["posts"].Count == 0)
-        {
-          <h2>No Posts</h2>
-        }
-        else
-        {
-          <ul class="list-group">
-            @foreach(var post in Model["posts"])
-            {
-              <div class="post-listing">
-                <form action="/vote" method="post">
-                  <input type="hidden" name="_method" value="PATCH">
-                  <input type="hidden" name="vote" value="1">
-                  <input type="hidden" name="post-id" value='@post.GetId()'>
-                  <button type="submit" name="upvote" class="votebtn upvote">+</button>
-                </form>
-                <form action="/vote" method="post">
-                  <input type="hidden" name="_method" value="PATCH">
-                  <input type="hidden" name="vote" value="-1">
-                  <input type="hidden" name="post-id" value='@post.GetId()'>
-                  <button type="submit" name="downvote" class="votebtn downvote">-</button>
-                </form>
-
-                @if(Model["user"] == null)
-                {
-                <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/register">@post.GetTitle()</a></li>
-                }
-                else
-                {
-                  <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/posts/@post.GetId()">@post.GetTitle()</a></li>
-                }
-
-              </div>
-            }
-          </ul>
-        }
+<head>
+  <meta charset="utf-8">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/Content/CSS/style.css" type="text/css">
+  <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="/Content/JS/script.js" type="text/javascript"></script>
+  <title>epicodex</title>
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="logo" href="/"><h1>epicodex</h1></a>
       </div>
-      <div class="col-md-2">
-        <div class="sidebar">
-          <ul>
-            @if(Model["user"] == null)
-            {
-              <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Post</button></a></li>
-              <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Category</button></a></li>
-            }
-            else
-            {
-              <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
-              <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
-            }
-            <li class="sidebar-listitem">
-              <form action="/" method="post">
-                <input type="hidden" name="_method" value="DELETE">
-                <button class="btn btn-danger" type="submit">Delete all Posts</button>
-              </form>
-            </li>
-            <li class="sidebar-listitem">
-              <form action="/categories" method="post">
-                <input type="hidden" name="_method" value="DELETE">
-                <button class="btn btn-danger" type="submit">Delete all Categories</button>
-              </form>
-            </li>
-            </li class="sidebar-listitem">
-            <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
-          </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
           @if((Model["user"] == null) && (Model["validate"]==true))
           {
-            <form class="form-group" action="/login" method="post">
-              <input class="form-control" type="text" name="user-name" placeholder="User Name">
-              <input class="form-control" type="password" name="password" placeholder="Password">
-              <button class="btn btn-primary" type="submit" name="button">Login</button>
-            </form>
+            <p class="navform-show navtext login">log in</p>
+            <div class="navform">
+              <form class="navbar-form navbar-left" action="/login" method="post">
+                <input class="form-control" type="text" name="user-name" placeholder="User Name">
+                <input class="form-control" type="password" name="password" placeholder="Password">
+                <button class="btn btn-primary" type="submit" name="button">Login</button>
+              </form>
+            </div>
           }
           else if ((Model["user"] == null) && (Model["validate"] == false))
           {
-            <form class="form-group" action="/login" method="post">
-              <input class="form-control" type="text" name="user-name" placeholder="User Name">
-              <input class="form-control" type="password" name="password" placeholder="Password">
-              <button class="btn btn-primary" type="submit" name="button">Login</button>
-            </form>
+            <a class="navform-show navtext">log in</a>
+            <div class="navform">
+              <form class="navbar-form navbar-left" action="/login" method="post">
+                <input class="form-control" type="text" name="user-name" placeholder="User Name">
+                <input class="form-control" type="password" name="password" placeholder="Password">
+                <button class="btn btn-primary" type="submit" name="button">Login</button>
+              </form>
+            </div>
             <p>User Not Found</p>
           }
           else
           {
-              <a href='/profile/@Model["user"].GetId()'><h5>@Model["user"].GetName()</h5></a>
-              <form class="form-group" action="/logout" method="post">
-                <button class="btn btn-primary" type="submit" name="button">Logout</button>
+            <form class="navbar-form navbar-left" action="/logout" method="post">
+              <a href='/profile/@Model["user"].GetId()' class='navtext'>logged in as @Model["user"].GetName()</a>
+              <button class="btn-navbar" type="submit" name="button">logout</button>
+            </form>
+          }
+        </li>
+      </ul>
+    </div><!-- /.container-fluid -->
+  </nav>
+  <div class="container">
+    <div class="col-md-10 main-content">
+      <ul class="nav nav-pills">
+        <li role="presentation" class="navigationlinks"><h6><a href="/popular">Most Popular</a></h6></li>
+        <li role="presentation" class="navigationlinks"><h6><a href="/newest">Newest</a></h6></li>
+        <li role="presentation" class="navigationlinks"><h6><a href="/oldest">Oldest</a></h6></li>
+      </ul>
+      @if(Model["posts"].Count == 0)
+      {
+        <h2>No Posts</h2>
+      }
+      else
+      {
+        <ul class="list-group">
+          @foreach(var post in Model["posts"])
+          {
+            <div class="post-listing">
+              <form action="/vote" method="post">
+                <input type="hidden" name="_method" value="PATCH">
+                <input type="hidden" name="vote" value="1">
+                <input type="hidden" name="post-id" value='@post.GetId()'>
+                <button type="submit" name="upvote" class="votebtn upvote">+</button>
               </form>
-          }
-          @if(Model["user"] == null)
-          {
-            <h5>Search Posts</h5>
-            <form class="form-group" action="/posts/search" method="post">
-              <input class="form-control" name="keyword" type="text">
-              <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
-            </form>
-            <h5>Search Categories</h5>
-            <form class="form-group" action="/categories/search" method="post">
-              <input class="form-control" name="keyword" type="text">
-              <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
-            </form>
-          }
-          else
-          {
-            <h5>Search Posts</h5>
-            <form class="form-group" action="/posts/search" method="post">
-              <input class="form-control" name="keyword" type="text">
-              <button class="btn btn-primary" type="submit" name="button">Search</button>
-            </form>
-            <h5>Search Categories</h5>
-            <form class="form-group" action="/categories/search" method="post">
-              <input class="form-control" name="keyword" type="text">
-              <button class="btn btn-primary" type="submit" name="button">Search</button>
-            </form>
-          }
-          <h5>Categories</h5>
-          @if(Model["user"] == null)
-          {
-            <ul>
-            @foreach(var category in Model["categories"])
-            {
-              <li class="sidebar-listitem"><a href="/register">@category.GetName()</a></li>
-            }
-            </ul>
-          }
-          else
-          {
-            <ul>
-              @foreach(var category in Model["categories"])
+              <form action="/vote" method="post">
+                <input type="hidden" name="_method" value="PATCH">
+                <input type="hidden" name="vote" value="-1">
+                <input type="hidden" name="post-id" value='@post.GetId()'>
+                <button type="submit" name="downvote" class="votebtn downvote">-</button>
+              </form>
+
+              @if(Model["user"] == null)
               {
-                <li class="sidebar-listitem"><a href="/categories/@category.GetId()">@category.GetName()</a></li>
+                <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/register">@post.GetTitle()</a></li>
               }
-            </ul>
+              else
+              {
+                <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/posts/@post.GetId()">@post.GetTitle()</a></li>
+              }
+
+            </div>
           }
-        </div>
-      </div>
+        </ul>
+      }
     </div>
-    <footer>
-      <p>&copy; 2016 Message Board</p>
-    </footer>
-  </body>
+    <div class="col-md-2">
+      <div class="sidebar">
+        <ul>
+          @if(Model["user"] == null)
+          {
+            <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Post</button></a></li>
+            <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-success">New Category</button></a></li>
+          }
+          else
+          {
+            <li class="sidebar-listitem"><a href="/new"><button type="button" class="btn btn-success">New Post</button></a></li>
+            <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
+          }
+          <li class="sidebar-listitem">
+            <form action="/" method="post">
+              <input type="hidden" name="_method" value="DELETE">
+              <button class="btn btn-danger" type="submit">Delete all Posts</button>
+            </form>
+          </li>
+          <li class="sidebar-listitem">
+            <form action="/categories" method="post">
+              <input type="hidden" name="_method" value="DELETE">
+              <button class="btn btn-danger" type="submit">Delete all Categories</button>
+            </form>
+          </li>
+        </li class="sidebar-listitem">
+        <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
+      </ul>
+@if(Model["user"] == null)
+{
+  <h5>Search Posts</h5>
+  <form class="form-group" action="/posts/search" method="post">
+    <input class="form-control" name="keyword" type="text">
+    <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
+  </form>
+  <h5>Search Categories</h5>
+  <form class="form-group" action="/categories/search" method="post">
+    <input class="form-control" name="keyword" type="text">
+    <a href="/register"><button class="btn btn-primary" type="button" name="button">Search</button></a>
+  </form>
+}
+else
+{
+  <h5>Search Posts</h5>
+  <form class="form-group" action="/posts/search" method="post">
+    <input class="form-control" name="keyword" type="text">
+    <button class="btn btn-primary" type="submit" name="button">Search</button>
+  </form>
+  <h5>Search Categories</h5>
+  <form class="form-group" action="/categories/search" method="post">
+    <input class="form-control" name="keyword" type="text">
+    <button class="btn btn-primary" type="submit" name="button">Search</button>
+  </form>
+}
+<h5>Categories</h5>
+@if(Model["user"] == null)
+{
+  <ul>
+    @foreach(var category in Model["categories"])
+    {
+      <li class="sidebar-listitem"><a href="/register">@category.GetName()</a></li>
+    }
+  </ul>
+}
+else
+{
+  <ul>
+    @foreach(var category in Model["categories"])
+    {
+      <li class="sidebar-listitem"><a href="/categories/@category.GetId()">@category.GetName()</a></li>
+    }
+  </ul>
+}
+</div>
+</div>
+</div>
+<footer>
+  <p>&copy; 2016 Message Board</p>
+</footer>
+</body>
 </html>
