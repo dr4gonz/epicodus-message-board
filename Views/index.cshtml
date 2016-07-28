@@ -12,10 +12,20 @@
     <title>Message Board</title>
   </head>
   <body>
-    <nav class="navbar navbar-inverse">
-      <div class="container">
-        <h1>HEADER</h1>
-      </div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="logo" href="/"><h1>epicodex</h1></a>
+        </div>
+        @if(Model["user"] != null)
+        {
+          <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
+        }
+        else
+        {
+          <p class="text-right username">Not logged in</h4>
+        }
+      </div><!-- /.container-fluid -->
     </nav>
 
     <div class="container">
@@ -24,6 +34,12 @@
       </div> -->
       <div class="col-md-10 main-content">
         <h1>MAIN CONTENT</h1>
+        <ul class="nav nav-pills">
+          <li role="presentation" class="navigationlinks"><h6><a href="/popular">Most Popular</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href="/newest">Newest</a></h6></li>
+          <li role="presentation" class="navigationlinks"><h6><a href="/oldest">Oldest</a></h6></li>
+        </ul>
+
         @if(Model["posts"].Count == 0)
         {
           <h2>No Posts</h2>
@@ -34,16 +50,28 @@
             @foreach(var post in Model["posts"])
             {
               <div class="post-listing">
-                <button id="upvote" type="button" name="upvote" class="btn btn-success">+</button>
-                <button id="downvote" type="button" name="downvote" class="btn btn-danger">-</button>
+                <form action="/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="1">
+                  <input type="hidden" name="post-id" value='@post.GetId()'>
+                  <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                </form>
+                <form action="/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="-1">
+                  <input type="hidden" name="post-id" value='@post.GetId()'>
+                  <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                </form>
+
                 @if(Model["user"] == null)
                 {
-                <li><a href="/register">@post.GetRating() - @post.GetTitle()</a></li>
+                <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/register">@post.GetTitle()</a></li>
                 }
                 else
                 {
-                  <li><a href="/posts/@post.GetId()">@post.GetRating() - @post.GetTitle()</a></li>
+                  <li><span class="post-rating">@post.GetRating() | </span><a class="listing" href="/posts/@post.GetId()">@post.GetTitle()</a></li>
                 }
+
               </div>
             }
           </ul>
@@ -72,6 +100,13 @@
                 <input type="hidden" name="_method" value="DELETE">
                 <button class="btn btn-danger" type="submit">Delete all Posts</button>
               </form>
+            </li>
+            <li class="sidebar-listitem">
+              <form action="/categories" method="post">
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="btn btn-danger" type="submit">Delete all Categories</button>
+              </form>
+            </li>
             </li class="sidebar-listitem">
             <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
           </ul>

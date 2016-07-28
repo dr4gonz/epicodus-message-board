@@ -20,7 +20,7 @@ namespace MessageBoard
         Dictionary<string, object> model = new Dictionary<string, object> {};
         User currentUser = User.ValidateUserLogin(userName, password);
         model.Add("user", currentUser);
-        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll("rating");
         List<Category> allCategories = Category.GetAll();
         model.Add("posts", allOriginalPosts);
         model.Add("validate", validate);
@@ -44,14 +44,31 @@ namespace MessageBoard
         User currentUser = User.ValidateUserLogin(userName, password);
         OriginalPost newOriginalPost = new OriginalPost(Request.Form["author"], Request.Form["title"], Request.Form["main-text"], 0, DateTime.Now, currentUser.GetId());
         newOriginalPost.Save();
-        string categoryString = Request.Form["category"];
-        if (categoryString != "None")
-        {
-          Category foundCategory = Category.Find(Request.Form["category"]);
-          newOriginalPost.AddCategory(foundCategory);
-        }
-        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         List<Category> allCategories = Category.GetAll();
+        // string categoryString = Request.Form["category"];
+        // if (categoryString != "None")
+        // {
+        //   Category foundCategory = Category.Find(Request.Form["category"]);
+        //   newOriginalPost.AddCategory(foundCategory);
+        // }
+        foreach(var category in allCategories)
+        {
+          string inputString = "category-" + category.GetId();
+          if (Request.Form[inputString] != null)
+          {
+            int newInt = Request.Form[inputString];
+            Category foundCategory = Category.Find(newInt);
+            newOriginalPost.AddCategory(foundCategory);
+          }
+        }
+        if ((Request.Form["new-category"] != null) && (Request.Form["new-category"] != ""))
+        {
+          Category newCategory = new Category(Request.Form["new-category"]);
+          newCategory.Save();
+          newOriginalPost.AddCategory(newCategory);
+        }
+        allCategories = Category.GetAll();
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
         model.Add("user", currentUser);
         model.Add("posts", allOriginalPosts);
         model.Add("categories", allCategories);
@@ -62,6 +79,73 @@ namespace MessageBoard
       Delete["/"] = _ =>
       {
         OriginalPost.DeleteAll();
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Get["/newest"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll("newest");
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Get["/oldest"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll("oldest");
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Get["/popular"] = _ =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll("popular");
+        List<Category> allCategories = Category.GetAll();
+        model.Add("user", currentUser);
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Delete["/categories"] = _ =>
+      {
+        Category.DeleteAll();
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Delete["/categories/{id}"] = parameters =>
+      {
+        Category.DeleteById(parameters.id);
         Dictionary<string, object> model = new Dictionary<string, object> {};
         User currentUser = User.ValidateUserLogin(userName, password);
         model.Add("user", currentUser);
@@ -249,6 +333,11 @@ namespace MessageBoard
         return View["register_success.cshtml", newUser];
       };
 
+      Get["/login"] = _ =>
+      {
+        return View["login.cshtml"];
+      };
+
       Post["/login"] = _ =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
@@ -291,15 +380,31 @@ namespace MessageBoard
       Post["/posts/search"] = _ =>
       {
         Dictionary<string, object> model = new Dictionary<string, object> {};
+        string keyword =  Request.Form["keyword"];
         User currentUser = User.ValidateUserLogin(userName, password);
-        model.Add("user", currentUser);
-        List<OriginalPost> searchResults = OriginalPost.SearchByKeyword(Request.Form["keyword"]);
+        List<OriginalPost> searchResults = OriginalPost.SearchByKeyword(keyword);
         List<Category> allCategories = Category.GetAll();
+        model.Add("keyword", keyword);
+        model.Add("user", currentUser);
+        model.Add("validate", validate);
         model.Add("results", searchResults);
         model.Add("categories", allCategories);
-        model.Add("validate", validate);
-        model.Add("keyword", Request.Form["keyword"]);
         return View["post_results.cshtml", model];
+      };
+
+      Patch["/vote"] = _ =>
+      {
+        User currentUser = User.ValidateUserLogin(userName, password);
+        OriginalPost post = OriginalPost.Find(Request.Form["post-id"]);
+        post.Vote(currentUser.GetId(), Request.Form["vote"]);
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        model.Add("user", currentUser);
+        return View["index.cshtml", model];
       };
 
       Get["/categories/{id}"] = parameters =>
@@ -353,6 +458,7 @@ namespace MessageBoard
         model.Add("validate", validate);
         return View["index.cshtml", model];
       };
+
       Get["/profile/{id}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
@@ -361,6 +467,32 @@ namespace MessageBoard
         model.Add("selected", selectedUser);
         model.Add("user", currentUser);
         return View["profile.cshtml", model];
+      };
+
+      Patch["/posts/{id}/vote"] = parameters =>
+      {
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Comment comment = Comment.Find(Request.Form["comment-id"]);
+        comment.Vote(currentUser.GetId(), Request.Form["vote"]);
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        List<Category> allCategories = Category.GetAll();
+        model.Add("post", selectedOriginalPost);
+        model.Add("categories", allCategories);
+        model.Add("user", currentUser);
+        return View["post.cshtml", model];
+      };
+
+      Patch["/comments/{id}/vote"] = parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Comment comment = Comment.Find(Request.Form["comment-id"]);
+        comment.Vote(currentUser.GetId(), Request.Form["vote"]);
+        Comment parentComment = Comment.Find(parameters.id);
+        model.Add("user", currentUser);
+        model.Add("comment", parentComment);
+        return View["comment.cshtml", model];
       };
     }
   }

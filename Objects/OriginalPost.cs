@@ -87,12 +87,27 @@ namespace MessageBoard
       if (conn!=null) conn.Close();
     }
 
-    public static List<OriginalPost> GetAll()
+    public static List<OriginalPost> GetAll(string orderBy = "default")
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("SELECT * FROM posts ORDER BY rating;", conn); //remove ORDER BY
+      SqlCommand cmd = null;
+      switch(orderBy)
+      {
+        case "rating":
+          cmd = new SqlCommand("SELECT * FROM posts ORDER BY rating DESC;", conn);
+          break;
+        case "newest":
+          cmd = new SqlCommand("SELECT * FROM posts ORDER BY time DESC;", conn);
+          break;
+        case "oldest":
+          cmd = new SqlCommand("SELECT * FROM posts ORDER BY time ASC;", conn);
+          break;
+        default:
+          cmd = new SqlCommand("SELECT * FROM posts ORDER BY id;", conn);
+          break;
+      }
       rdr = cmd.ExecuteReader();
       List<OriginalPost> allOriginalPosts = new List<OriginalPost>{};
       while(rdr.Read())
@@ -261,10 +276,10 @@ namespace MessageBoard
           cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY rating DESC;", conn);
           break;
         case "newest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY time ASC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY time DESC;", conn);
           break;
         case "oldest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY time DESC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY time ASC;", conn);
           break;
         default:
           cmd = new SqlCommand("SELECT * FROM comments WHERE post_id = @PostId ORDER BY id;", conn);
@@ -311,10 +326,10 @@ namespace MessageBoard
           cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY rating DESC;", conn);
           break;
         case "newest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY time ASC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY time DESC;", conn);
           break;
         case "oldest":
-          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY time DESC;", conn);
+          cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY time ASC;", conn);
           break;
         default:
           cmd = new SqlCommand("SELECT * FROM comments WHERE (post_id = @PostId AND parent_id = 0) ORDER BY id;", conn);
@@ -460,7 +475,7 @@ namespace MessageBoard
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlDataReader rdr = null;
-      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND post_id = @PostId; INSERT INTO voting (voter_id, post_id, vote) VALUES (@Voter, @PostId, @Vote); UPDATE posts SET rating=(SELECT SUM(vote) FROM voting WHERE post_id = @PostId) OUTPUT INSERTED.rating WHERE posts.id=@PostId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM voting WHERE voter_id = @Voter AND post_id = @PostId; INSERT INTO voting (voter_id, post_id, vote) VALUES (@Voter, @PostId, @Vote); UPDATE posts SET rating=(SELECT SUM(vote) FROM voting WHERE post_id = @PostId) WHERE posts.id=@PostId; SELECT rating FROM posts WHERE posts.id=@PostId", conn);
       SqlParameter userIdParameter = new SqlParameter("@Voter", userId);
       SqlParameter postIdParameter = new SqlParameter("@PostId", _id);
       SqlParameter voteParameter = new SqlParameter("@Vote", voteValue);

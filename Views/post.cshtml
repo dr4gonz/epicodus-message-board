@@ -12,10 +12,13 @@
   <title>Message Board</title>
 </head>
 <body>
-  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <h1>HEADER</h1>
-    </div>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="logo" href="/"><h1>epicodex</h1></a>
+      </div>
+      <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
+    </div><!-- /.container-fluid -->
   </nav>
   <div class="container">
 
@@ -33,12 +36,10 @@
           </p>
 
           <p><em>Categories:
-
             @foreach(var category in @Model["post"].GetCategories())
             {
-              <span class="category"><a href="/categories/@category.GetId()">@category.GetName()</a></span>
+              <span class="category"><a href="/categories/@category.GetId()">@category.GetName()</a></span><span class="punctuation">, </span>
             }
-
           </em></p>
 
           @if(Model["post"].GetUserId() == Model["user"].GetId())
@@ -83,6 +84,19 @@
             <div class="comment-content">
               <div class="page-header">
                 <p><a href="/profile/@comment.GetUserId()">@comment.GetAuthor()</a> - @comment.GetTime()</p>
+                <form action="/posts/@comment.GetPostId()/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="1">
+                  <input type="hidden" name="comment-id" value='@comment.GetId()'>
+                  <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                </form>
+                <form action="/posts/@comment.GetPostId()/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="-1">
+                  <input type="hidden" name="comment-id" value='@comment.GetId()'>
+                  <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                </form>
+                <p>@comment.GetRating() | @comment.GetAuthor() - @comment.GetTime()</p>
               </div>
               <p>
                 @comment.GetMainText()
@@ -129,6 +143,19 @@
                   <div class="comment-content">
                     <div class="page-header">
                       <p><a href="/profile/@childComment.GetUserId()">@childComment.GetAuthor()</a> - @childComment.GetTime()</p>
+                      <form action="/posts/@childComment.GetPostId()/vote" method="post">
+                        <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden" name="vote" value="1">
+                        <input type="hidden" name="comment-id" value='@childComment.GetId()'>
+                        <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                      </form>
+                      <form action="/posts/@childComment.GetPostId()/vote" method="post">
+                        <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden" name="vote" value="-1">
+                        <input type="hidden" name="comment-id" value='@childComment.GetId()'>
+                        <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                      </form>
+                      <p>@childComment.GetRating() | @childComment.GetAuthor() - @childComment.GetTime()</p>
                     </div>
                     <p>
                       @childComment.GetMainText()
@@ -170,6 +197,19 @@
                         <div class="comment-content">
                           <div class="page-header">
                             <p><a href="/profile/@grandchildComment.GetUserId()">@grandchildComment.GetAuthor()</a> - @grandchildComment.GetTime()</p>
+                            <form action="/posts/@grandchildComment.GetPostId()/vote" method="post">
+                              <input type="hidden" name="_method" value="PATCH">
+                              <input type="hidden" name="vote" value="1">
+                              <input type="hidden" name="comment-id" value='@grandchildComment.GetId()'>
+                              <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                            </form>
+                            <form action="/posts/@grandchildComment.GetPostId()/vote" method="post">
+                              <input type="hidden" name="_method" value="PATCH">
+                              <input type="hidden" name="vote" value="-1">
+                              <input type="hidden" name="comment-id" value='@grandchildComment.GetId()'>
+                              <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                            </form>
+                            <p>@grandchildComment.GetRating() | @grandchildComment.GetAuthor() - @grandchildComment.GetTime()</p>
                           </div>
                           <p>
                             @grandchildComment.GetMainText()
@@ -222,6 +262,13 @@
                 <input type="hidden" name="_method" value="DELETE">
                 <button class="btn btn-danger" type="submit">Delete all Posts</button>
               </form>
+            </li>
+            <li class="sidebar-listitem">
+              <form action="/categories" method="post">
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="btn btn-danger" type="submit">Delete all Categories</button>
+              </form>
+            </li>
             </li class="sidebar-listitem">
             <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
           </ul>
@@ -236,6 +283,7 @@
             <input class="form-control" name="keyword" type="text">
             <button class="btn btn-primary" type="submit" name="button">Search</button>
           </form>
+
         </div>
       </div>
     </div>
