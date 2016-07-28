@@ -83,7 +83,19 @@
             <!-- CONTENT OF COMMENT -->
             <div class="comment-content">
               <div class="page-header">
-                <p>@comment.GetAuthor() - @comment.GetTime()</p>
+                <form action="/posts/@comment.GetPostId()/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="1">
+                  <input type="hidden" name="comment-id" value='@comment.GetId()'>
+                  <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                </form>
+                <form action="/posts/@comment.GetPostId()/vote" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="hidden" name="vote" value="-1">
+                  <input type="hidden" name="comment-id" value='@comment.GetId()'>
+                  <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                </form>
+                <p>@comment.GetRating() | @comment.GetAuthor() - @comment.GetTime()</p>
               </div>
               <p>
                 @comment.GetMainText()
@@ -129,7 +141,19 @@
                 <div class="comment-wrapper">
                   <div class="comment-content">
                     <div class="page-header">
-                      <p>@childComment.GetAuthor() - @childComment.GetTime()</p>
+                      <form action="/posts/@childComment.GetPostId()/vote" method="post">
+                        <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden" name="vote" value="1">
+                        <input type="hidden" name="comment-id" value='@childComment.GetId()'>
+                        <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                      </form>
+                      <form action="/posts/@childComment.GetPostId()/vote" method="post">
+                        <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden" name="vote" value="-1">
+                        <input type="hidden" name="comment-id" value='@childComment.GetId()'>
+                        <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                      </form>
+                      <p>@childComment.GetRating() | @childComment.GetAuthor() - @childComment.GetTime()</p>
                     </div>
                     <p>
                       @childComment.GetMainText()
@@ -170,7 +194,19 @@
                       <div class="comment-wrapper">
                         <div class="comment-content">
                           <div class="page-header">
-                            <p>@grandchildComment.GetAuthor() - @grandchildComment.GetTime()</p>
+                            <form action="/posts/@grandchildComment.GetPostId()/vote" method="post">
+                              <input type="hidden" name="_method" value="PATCH">
+                              <input type="hidden" name="vote" value="1">
+                              <input type="hidden" name="comment-id" value='@grandchildComment.GetId()'>
+                              <button type="submit" name="upvote" class="votebtn upvote">+</button>
+                            </form>
+                            <form action="/posts/@grandchildComment.GetPostId()/vote" method="post">
+                              <input type="hidden" name="_method" value="PATCH">
+                              <input type="hidden" name="vote" value="-1">
+                              <input type="hidden" name="comment-id" value='@grandchildComment.GetId()'>
+                              <button type="submit" name="downvote" class="votebtn downvote">-</button>
+                            </form>
+                            <p>@grandchildComment.GetRating() | @grandchildComment.GetAuthor() - @grandchildComment.GetTime()</p>
                           </div>
                           <p>
                             @grandchildComment.GetMainText()

@@ -363,6 +363,20 @@ namespace MessageBoard
         model.Add("validate", validate);
         return View["index.cshtml", model];
       };
+
+      Patch["/posts/{id}/vote"] = parameters =>
+      {
+        User currentUser = User.ValidateUserLogin(userName, password);
+        Comment comment = Comment.Find(Request.Form["comment-id"]);
+        comment.Vote(currentUser.GetId(), Request.Form["vote"]);
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        OriginalPost selectedOriginalPost = OriginalPost.Find(parameters.id);
+        List<Category> allCategories = Category.GetAll();
+        model.Add("post", selectedOriginalPost);
+        model.Add("categories", allCategories);
+        model.Add("user", currentUser);
+        return View["post.cshtml", model];
+      };
     }
   }
 }
