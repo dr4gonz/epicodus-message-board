@@ -46,6 +46,24 @@ namespace MessageBoard
       conn.Close();
     }
 
+    public static void DeleteById(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("DELETE FROM categories WHERE id = @CategoryId;", conn);
+
+      SqlParameter categoryIdParameter = new SqlParameter("@CategoryId", id);
+      cmd.Parameters.Add(categoryIdParameter);
+
+      cmd.ExecuteNonQuery();
+      conn.Close();
+    }
+
+    public void Delete()
+    {
+      DeleteById(_id);
+    }
+
     public static List<Category> GetAll()
     {
       SqlConnection conn = DB.Connection();

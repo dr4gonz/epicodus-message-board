@@ -89,6 +89,34 @@ namespace MessageBoard
         return View["index.cshtml", model];
       };
 
+      Delete["/categories"] = _ =>
+      {
+        Category.DeleteAll();
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
+      Delete["/categories/{id}"] = parameters =>
+      {
+        Category.DeleteById(parameters.id);
+        Dictionary<string, object> model = new Dictionary<string, object> {};
+        User currentUser = User.ValidateUserLogin(userName, password);
+        model.Add("user", currentUser);
+        List<OriginalPost> allOriginalPosts = OriginalPost.GetAll();
+        List<Category> allCategories = Category.GetAll();
+        model.Add("posts", allOriginalPosts);
+        model.Add("validate", validate);
+        model.Add("categories", allCategories);
+        return View["index.cshtml", model];
+      };
+
       Get["/posts/{id}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
