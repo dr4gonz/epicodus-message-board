@@ -16,6 +16,7 @@
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
+          <img src="../Content/img/book.png">
           <a class="logo" href="/"><h1>episcribe</h1></a>
         </div>
         <ul class="nav navbar-nav navbar-right">
@@ -116,34 +117,6 @@
             </li class="sidebar-listitem">
             <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
           </ul>
-<<<<<<< HEAD
-          @if((Model["user"] == null) && (Model["validate"]==true))
-          {
-            <form class="form-group" action="/login" method="post">
-              <input class="form-control" type="text" name="user-name" placeholder="User Name">
-              <input class="form-control" type="password" name="password" placeholder="Password">
-              <button class="btn btn-primary" type="submit" name="button">Login</button>
-            </form>
-          }
-          else if ((Model["user"] == null) && (Model["validate"] == false))
-          {
-            <form class="form-group" action="/login" method="post">
-              <input class="form-control" type="text" name="user-name" placeholder="User Name">
-              <input class="form-control" type="password" name="password" placeholder="Password">
-              <button class="btn btn-primary" type="submit" name="button">Login</button>
-            </form>
-            <p>User Not Found</p>
-          }
-          else
-          {
-              <h5>@Model["user"].GetName()</h5>
-              <form name="logout" class="form-group" action="/logout" method="post">
-                <button class="btn btn-primary" type="submit" name="button">Logout</button>
-              </form>
-          }
-
-=======
->>>>>>> master
           <h5>Search Posts</h5>
           <form class="form-group" action="/posts/search" method="post">
             <input class="form-control" name="keyword" type="text">
