@@ -182,3 +182,7 @@ footer {
   text-decoration: none;
   color: #000;
 }
+
+.punctuation:last-child{
+  display: none;
+}
