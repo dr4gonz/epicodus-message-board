@@ -94,6 +94,7 @@ ul {
 
 .post-listing button {
   display: inline-block;
+  margin-top: 5px;
 }
 
 .post-content {
