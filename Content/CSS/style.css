@@ -25,7 +25,6 @@ body {
 
 .navbar h1 {
   color: white;
-  font-weight: bold;
 }
 
 .navbar {
@@ -33,11 +32,6 @@ body {
   border-bottom: 5px solid #1D70A2;
   border-top: 0px;
   border-radius: 0px;
-  text-shadow:
-      -1px -1px 0 #000,
-      1px -1px 0 #000,
-      -1px 1px 0 #000,
-       1px 1px 0 #000;
 }
 
 .logo:hover {
@@ -171,11 +165,6 @@ footer {
    border-top: solid 1px black;
    color: white;
    font-size: 15px;
-   text-shadow:
-       -1px -1px 0 #000,
-       1px -1px 0 #000,
-       -1px 1px 0 #000,
-        1px 1px 0 #000;
 }
 
 .post-rating {
@@ -189,6 +178,34 @@ footer {
 
 .punctuation:last-child{
   display: none;
+}
+
+.btn-navbar {
+  background-color: inherit;
+  border: none;
+}
+
+.btn-navbar:hover {
+  color: #cce6ff;
+}
+
+.navtext {
+  color: #fff;
+}
+
+.navtext:hover {
+  text-decoration: none;
+  color: #cce6ff;
+  cursor: pointer;
+}
+
+.navform {
+  display: none;
+}
+
+.login {
+  margin-top: 9px;
+  margin-right: 25px;
 }
 
 .top-page {

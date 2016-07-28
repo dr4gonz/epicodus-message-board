@@ -17,20 +17,46 @@
         <div class="navbar-header">
           <a class="logo" href="/"><h1>epicodex</h1></a>
         </div>
-        @if(Model["user"] != null)
-        {
-          <p class="text-right username">Logged in as @Model["user"].GetName()</h4>
-        }
-        else
-        {
-          <p class="text-right username">Not logged in</h4>
-        }
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            @if((Model["user"] == null) && (Model["validate"]==true))
+            {
+              <p class="navform-show navtext login">log in</p>
+              <div class="navform">
+                <form class="navbar-form navbar-left" action="/login" method="post">
+                  <input class="form-control" type="text" name="user-name" placeholder="User Name">
+                  <input class="form-control" type="password" name="password" placeholder="Password">
+                  <button class="btn btn-primary" type="submit" name="button">Login</button>
+                </form>
+              </div>
+            }
+            else if ((Model["user"] == null) && (Model["validate"] == false))
+            {
+              <a class="navform-show navtext">log in</a>
+              <div class="navform">
+                <form class="navbar-form navbar-left" action="/login" method="post">
+                  <input class="form-control" type="text" name="user-name" placeholder="User Name">
+                  <input class="form-control" type="password" name="password" placeholder="Password">
+                  <button class="btn btn-primary" type="submit" name="button">Login</button>
+                </form>
+              </div>
+              <p>User Not Found</p>
+            }
+            else
+            {
+              <form class="navbar-form navbar-left" action="/logout" method="post">
+                <a href='/profile/@Model["user"].GetId()' class='navtext'>logged in as @Model["user"].GetName()</a>
+                <button class="btn-navbar" type="submit" name="button">logout</button>
+              </form>
+            }
+          </li>
+        </ul>
       </div><!-- /.container-fluid -->
     </nav>
     <div class="container">
       <div class="col-md-10">
         <h2>User Page</h2>
-        <h3>@Model["selected"].GetName()'s Posts</h3>
+        <h3>@Model["selected"].GetName()'s posts</h3>
         @if(Model["selected"].GetOriginalPosts().Count == 0)
         {
           <h2>No Posts</h2>
@@ -49,14 +75,13 @@
             }
           </ul>
         }
-        <h3>All Comments</h3>
+        <h3>@Model["selected"].GetName()'s Comments</h3>
         @if(Model["selected"].GetComments().Count == 0)
         {
           <h2>No Comments</h2>
         }
         else
         {
-
           <ul class="list-group">
             @foreach(var comment in Model["selected"].GetComments())
             {

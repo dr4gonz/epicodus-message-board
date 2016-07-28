@@ -13,6 +13,11 @@ $(document).ready(function(){
     $("#"+id).hide();
   });
 
+  $(".navform-show").click(function(){
+    $(".navform").show();
+    $(".navform-show").hide();
+  });
+
 
   $("#register").validate({
     rules: {
