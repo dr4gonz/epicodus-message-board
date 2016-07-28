@@ -74,7 +74,20 @@
           </em></p>
 
           @if(Model["post"].GetUserId() == Model["user"].GetId())
-
+          {
+            <h6><a class="show-form" id="comment-edit">Edit</a></h6>
+            <div class="comment-form" id="comment-edit-form">
+              <a class="hide-form">Hide</a>
+              <form class="form-group" action='/posts/@Model["post"].GetId()/rating' method="post">
+                <input type="hidden" name="_method" value="PATCH">
+                <label>Main Text:</label>
+                <input class="form-control" type="text" name="main-text" value='@Model["post"].GetMainText()' required>
+                <input type="hidden" name="post-id" value='@Model["post"].GetId()'>
+                <button class="btn btn-primary" type="submit" name="button">Submit</button>
+              </form>
+            </div>
+            <h6><a href='/posts/@Model["post"].GetId()/rating/remove'>Remove</a></h6>
+          }
         </div>
         <!-- FORM FOR NEW TOP LEVEL COMMENT -->
         <ul class="nav nav-pills">
