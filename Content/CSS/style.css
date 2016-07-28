@@ -190,3 +190,8 @@ footer {
 .punctuation:last-child{
   display: none;
 }
+
+.top-page {
+  margin-bottom: 50px;
+  text-align: center;
+}
