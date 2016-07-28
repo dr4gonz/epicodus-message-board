@@ -9,6 +9,7 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script src="/Content/JS/script.js" type="text/javascript"></script>
+  <link rel="icon" href="/Content/img/book.png">
   <title>episcribe</title>
 </head>
 <body>
@@ -44,7 +45,7 @@
           }
           else
           {
-            <form class="navbar-form navbar-left" action="/logout" method="post">
+            <form name="logout" class="navbar-form navbar-left" action="/logout" method="post">
               <a href='/profile/@Model["user"].GetId()' class='navtext'>logged in as @Model["user"].GetName()</a>
               <button class="btn-navbar" type="submit" name="button">logout</button>
             </form>

@@ -9,7 +9,8 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="/Content/JS/script.js" type="text/javascript"></script>
-    <title>Message Board</title>
+    <link rel="icon" href="/Content/img/book.png">
+    <title>episcribe</title>
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -136,7 +137,7 @@
           else
           {
               <h5>@Model["user"].GetName()</h5>
-              <form class="form-group" action="/logout" method="post">
+              <form name="logout" class="form-group" action="/logout" method="post">
                 <button class="btn btn-primary" type="submit" name="button">Logout</button>
               </form>
           }
