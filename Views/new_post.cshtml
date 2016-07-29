@@ -16,7 +16,7 @@
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <img src="../Content/img/book.png">
+          <img src="~/Content/img/book.png">
           <a class="logo" href="/"><h1>episcribe</h1></a>
         </div>
         <ul class="nav navbar-nav navbar-right">
@@ -75,22 +75,12 @@
           <input class="form-control" type="text" name="new-category" value="">
           <button class="btn btn-primary" type="submit" name="button">Submit</button>
         </form>
-        <form action="/" method="post">
-          <input type="hidden" name="_method" value="DELETE">
-          <button class="btn btn-danger" type="submit" name="button">Delete all Posts</button>
-        </form>
       </div>
         <div class="col-md-2">
           <div class="sidebar">
             <ul>
               <li class="sidebar-listitem"><a href="/new_category"><button type="button" class="btn btn-success">New Category</button></a></li>
-              <li class="sidebar-listitem">
-                <form action="/" method="post">
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button class="btn btn-danger" type="submit">Delete all Posts</button>
-                </form>
-              </li class="sidebar-listitem">
-              <li><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
+              <li class="sidebar-listitem"><a href="/register"><button type="button" class="btn btn-info">Register</button></a></li>
             </ul>
           </div>
         </div>
