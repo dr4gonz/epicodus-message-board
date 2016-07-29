@@ -216,7 +216,7 @@ namespace MessageBoard
         return View["comment.cshtml", model];
       };
 
-      Get["/comments/{id}/remove-comment"] = parameters =>
+      Delete["/comments/{id}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
@@ -250,7 +250,7 @@ namespace MessageBoard
         return View["comment.cshtml", model];
       };
 
-      Get["/comments/{origCommentId}/{commentId}/remove-comment"] = parameters =>
+      Delete["/comments/{origCommentId}/{commentId}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
@@ -388,7 +388,7 @@ namespace MessageBoard
         return View["post.cshtml", model];
       };
 
-      Get["/posts/{postId}/{sortingParam}/remove"] = parameters =>
+      Delete["/posts/{postId}/{sortingParam}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);
@@ -400,7 +400,7 @@ namespace MessageBoard
         model.Add("post", selectedOriginalPost);
         return View["post.cshtml", model];
       };
-      
+
       Post["/posts/{postId}/{sortingParam}/reply"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
@@ -468,7 +468,7 @@ namespace MessageBoard
         return View["post_results.cshtml", model];
       };
 
-      Get["/posts/{postId}/{sortingParam}/{commentId}/remove-comment"] = parameters =>
+      Delete["/posts/{postId}/{sortingParam}/{commentId}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
         User currentUser = User.ValidateUserLogin(userName, password);

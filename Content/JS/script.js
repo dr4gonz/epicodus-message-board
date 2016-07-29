@@ -3,7 +3,7 @@
 $(document).ready(function(){
 
 
-  var counter = 5;
+  var counter = 8;
   var interval = setInterval(function() {
       counter--;
       if (counter == 0) {

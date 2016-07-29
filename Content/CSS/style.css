@@ -248,3 +248,9 @@ footer {
 textarea {
   resize: none;
 }
+
+.unstyledbtn {
+  background-color: inherit;
+  border: none;
+  color: #337ab7;
+}

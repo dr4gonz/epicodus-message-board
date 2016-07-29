@@ -260,6 +260,8 @@ namespace MessageBoard
     public void Remove()
     {
       RemoveById(_id);
+      _author = "[removed]";
+      _mainText = "[removed]";
     }
 
     public List<Comment> GetAllChildComments(string orderBy = "default")

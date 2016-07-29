@@ -65,10 +65,12 @@
           <textarea class="form-control" rows="8" name="main-text" value="" required></textarea>
           <label>Category:</label>
           <br>
+          <ul class="nav nav-pills">
             @foreach (var category in Model["categories"])
             {
-              <input name="category-@category.GetId()" value=@category.GetId() type="checkbox">@category.GetName()</input><br>
+              <li role="presentation" class="navigationlinks"><input name="category-@category.GetId()" value=@category.GetId() type="checkbox">@category.GetName()</input></li>
             }
+          </ul>
           <label>Add new category:</label>
           <input class="form-control" type="text" name="new-category" value="">
           <button class="btn btn-primary" type="submit" name="button">Submit</button>
